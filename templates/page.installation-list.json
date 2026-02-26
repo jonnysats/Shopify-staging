@@ -44,42 +44,6 @@
     "install-blocks": {
       "type": "installation-blocks",
       "blocks": {
-        "installation_UcwQtj": {
-          "type": "installation",
-          "settings": {
-            "page": "ceramic-install-guide",
-            "copy": "",
-            "btn_copy": "Download pdf",
-            "btn_copy_2": "See page"
-          }
-        },
-        "installation_KxBbtX": {
-          "type": "installation",
-          "settings": {
-            "page": "engineered-hardwood-flooring-installation-guide",
-            "copy": "",
-            "btn_copy": "Download pdf",
-            "btn_copy_2": "See page"
-          }
-        },
-        "installation_hx6mVz": {
-          "type": "installation",
-          "settings": {
-            "page": "large-format-porcelain-tile-installation-guide",
-            "copy": "",
-            "btn_copy": "Download pdf",
-            "btn_copy_2": "See page"
-          }
-        },
-        "installation_atVYfR": {
-          "type": "installation",
-          "settings": {
-            "page": "tile-install-guide",
-            "copy": "",
-            "btn_copy": "Download pdf",
-            "btn_copy_2": "See page"
-          }
-        },
         "installation_ceramic": {
           "type": "installation",
           "settings": {
@@ -145,10 +109,6 @@
         }
       },
       "block_order": [
-        "installation_UcwQtj",
-        "installation_KxBbtX",
-        "installation_hx6mVz",
-        "installation_atVYfR",
         "installation_ceramic",
         "installation_hardwood",
         "installation_large_format",
