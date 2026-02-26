@@ -1,0 +1,129 @@
+{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom -%}
+{%- assign limit_by = settings.search_limit_by -%}
+{%- paginate search.results by limit_by -%}
+	<div class="container">
+		<div class="row">
+			<div class="col py-3 text-center">
+				<h1 class="h2">
+					{%- if search.performed -%}
+						<span class="visually-hidden">{{ 'general.search.heading' | t: count: search.results_count }}:</span>{{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+					{%- else -%}
+						{{ 'general.search.title' | t }}
+					{%- endif -%}
+				</h1>
+			</div>
+		</div>
+		<!-- search form -->
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-5">
+				<form action="/search" method="get" role="search" data-needs-validation="true" novalidate="true">
+					<input type="hidden" name="type" value="product">
+					<label for="Search" class="visually-hidden">{{ 'general.search.placeholder' | t }}</label>
+					<div class="input-group">
+						<input type="search" class="form-control" name="q" id="Search" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" required>
+						<button type="submit" class="btn btn-primary">
+							<span class="anim-wrapper">
+								<span class="initial"><span class="icon-fallback-text">{{ 'general.search.submit' | t }}</span></span>
+								<span class="end"><span class="icon-fallback-text">{{ 'general.search.submit' | t }}</span></span>
+							</span>
+						</button>
+						<div class="invalid-feedback">{{ 'general.search.required' | t }}</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- Results -->
+		<div class="row pt-5">
+			{%- if search.performed -%}
+				{%- if search.results_count == 0 -%}
+					<div class="col text-center">
+						<p>{{ 'general.search.no_results_html' | t: terms: search.terms }}</p>
+					</div>
+				{%- else -%}
+					<h2 class="visually-hidden">{{ 'general.search.heading' | t: count: search.results_count }}</h2>
+					<div class="col-12">
+						<div class="row row-cols-2 row-cols-lg-4 gx-3 gy-4 gx-lg-4 product-grid pb-4">
+							{%- for item in search.results -%}
+								{%- render 'product-grid', product: item, col_sm: 2, col_md: 3, col_lg: 4 -%}
+							{%- endfor -%}
+						</div>
+						{%- liquid 
+							if paginate.pages > 1
+								render 'pagination', paginate: paginate
+							endif 
+						-%}
+					</div>
+				{%- endif -%}
+			{%- endif -%}
+		</div>
+	</div>
+{%- endpaginate -%}
+{% schema %}
+{
+  "name": "Search Page",
+  "class": "search-section", 
+  "tag": "section",
+  "settings": [
+	{
+		"type": "header",
+		"content": "Section Settings"
+	},
+	{
+		"type": "select",
+		"id": "padding_amount_top",
+		"label": "Top Section Padding",
+		"options": [
+			{
+				"value": "no",
+				"label": "None"
+			},
+			{
+				"value": "small",
+				"label": "Small"
+			},
+			{
+				"value": "default",
+				"label": "Medium (Default)"
+			},
+			{
+				"value": "large",
+				"label": "Large"
+			},
+			{
+				"value": "xlarge",
+				"label": "Extra Large"
+			}
+		],
+		"default": "default"
+	},
+	{
+		"type": "select",
+		"id": "padding_amount_bottom",
+		"label": "Bottom Section Padding",
+		"options": [
+			{
+				"value": "no",
+				"label": "None"
+			},
+			{
+				"value": "small",
+				"label": "Small"
+			},
+			{
+				"value": "default",
+				"label": "Medium (Default)"
+			},
+			{
+				"value": "large",
+				"label": "Large"
+			},
+			{
+				"value": "xlarge",
+				"label": "Extra Large"
+			}
+		],
+		"default": "default"
+	}
+  ]
+}
+{% endschema %}

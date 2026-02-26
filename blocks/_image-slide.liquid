@@ -1,0 +1,61 @@
+{%- if block.settings.image != blank -%}
+	<div class="image-slide w-100" {{ block.shopify_attributes }}>
+		<div class="container-lg gx-0 gx-lg-4 w-100">
+			<div class="position-relative">
+				{%- if block.settings.show_overlay == true and block.settings.overlay_color != blank -%}<div class="overlay" style="background-color: {{ block.settings.overlay_color }}; opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"></div>{%- endif -%}
+				{%- render 'responsive-bg-image' image: block.settings.image -%}
+				{% content_for "blocks" %}
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Slider Image",
+  "tag": null,
+  "blocks": [{ "type": "_product-dot" }],
+  "settings": [
+	{
+		"type": "header",
+		"content": "Background images"
+	},
+	{
+		"type": "image_picker",
+		"id": "image",
+		"label": "Background Image"
+	},
+	{
+		"type": "header",
+		"content": "Overlay"
+	},
+	{
+		"type": "checkbox",
+		"id": "show_overlay",
+		"label": "Show Overlay?",
+		"default": false
+	},
+	{
+		"type": "color",
+		"id": "overlay_color",
+		"label": "Overlay Color",
+		"default": "#000000"
+	},
+	{
+		"type": "range",
+		"id": "overlay_opacity",
+		"min": 0,
+		"max": 100,
+		"step": 10,
+		"unit": "%",
+		"label": "Opacity",
+		"default": 0
+	}
+],
+  "presets": [
+    {
+      "name": "Slider Image",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}

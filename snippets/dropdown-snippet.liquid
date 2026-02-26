@@ -1,0 +1,14 @@
+{%- comment -%}
+	Renders HTML for tooltip of Shop Accessories feature
+
+	Accepts:
+	- content: {DOM} The HTML you want displayed inside dropdown
+	Usage:
+	{%- render 'dropdown-snippet', content: content -%}
+
+{%- endcomment -%}
+{%- if content != blank -%}
+	<div class="dropdown-menu">
+		{{ content }}
+	</div>
+{%- endif -%}

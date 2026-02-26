@@ -1,0 +1,195 @@
+{%- comment -%}
+	Structure:
+	- Two Snippets for mobile and desktop versions
+	- Use special blocks section
+	- Settings:
+		- Announcement bar settings
+		- Activate sticky menu (checkbox)
+		- Link list/Menu
+		- Contact Box btn label
+		- Contact Box btn link
+		- Contact Box Phone
+		- Contact Box Email
+		- Blocks Section: Mega menu
+		- Blocks:
+			Name - Mega Menu:
+			- Use Mega menu, default: true
+			- New Arrival product
+			- New Arrival Product Button Label (IF not selected default: shop tiles)
+			- Top Selling Product
+			- Top Selling Product Button Label (IF not selected default: shop tiles)
+			- blocks:
+				Name - Menu Category:
+				- Name
+				- Image
+				- Image Mobile
+				- blocks:
+					Name - Sub Category
+					- Label
+					- Link
+{%- endcomment -%}
+{%- if section.settings.sticky_menu == false -%}
+	<style>
+		#shopify-section-{{ section.id }}.sticky-top { position: relative; }
+	</style>
+{%- endif -%}
+<script src="{{ 'header.js' | asset_url }}" defer crossorigin="anonymous"></script>
+<header class="section-header-inner bg-primary position-relative w-100 h-100" data-section-id="{{ section.id }}" data-section-type="header" data-sticky="{{ section.settings.sticky_menu }}">
+	{%- comment -%} Info Mobile Block {%- endcomment -%}
+	{%- capture info_block -%}
+		{%- if section.settings.btn_url != blank or section.settings.copy_1 != blank or section.settings.copy_2 != blank -%}
+			<div class="info-wrapper bg-primary mx-3 mt-5 p-4">
+				{%- if section.settings.btn_url != blank and section.settings.btn_label != blank -%}
+					<a class="btn btn-ternary w-100" href="{{ section.settings.btn_url }}" title="{{ section.settings.btn_label | escape }}">
+						{%- render 'icons' with 'account', icon_classes: 'me-2' -%}
+						{{ section.settings.btn_label }}
+					</a>
+				{%- endif -%}
+				<ul class="list-unstyled mb-0{% if section.settings.btn_url != blank and section.settings.btn_label != blank %} mt-3{% endif %}">
+					{%- if section.settings.copy_1 != blank -%}
+						<li>
+							<p class="text-center text-white mb-2">
+								{%- if section.settings.label_1 != blank -%}
+									<span class="fw-semibold me-1">{{ section.settings.label_1 }}:</span>
+								{%- endif -%}
+								<span>{{ section.settings.copy_1 }}</span>
+							</p>
+						</li>
+					{%- endif -%}
+					{%- if section.settings.copy_2 != blank -%}
+						<li>
+							<p class="text-center text-white mb-0">
+								{%- if section.settings.label_2 != blank -%}
+									<span class="fw-semibold me-1">{{ section.settings.label_2 }}:</span>
+								{%- endif -%}
+								<span>{{ section.settings.copy_2 }}</span>
+							</p>
+						</li>
+					{%- endif -%}
+				</ul>
+			</div>
+		{%- endif -%}
+	{%- endcapture -%}
+	{%- comment -%} Menu mobile {%- endcomment -%}
+	{%-  render 'navigation-mobile', menu: section.settings.menu, info_block: info_block -%}
+	{%- comment -%} Navigation bar {%- endcomment -%}
+	<nav id="mainNavGroup" class="navbar navbar-expand-lg navbar-light py-2">
+		<div class="container-xl py-lg-3 px-xl-0">
+			<div class="navbar-wrapper row justify-content-between align-items-center flex-lg-nowrap gx-3">
+				{%- comment -%} Mobile Navbar button {%- endcomment -%}
+				{%- if section.settings.menu != blank -%}
+					<div class="col-auto d-lg-none">
+						<button class="navbar-toggler d-flex flex-column align-items-start p-0 border-0 collapsed position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMobileMenu" aria-controls="offcanvasMobileMenu">
+							<div aria-hidden="true"></div>
+							<div aria-hidden="true"></div>
+							<div aria-hidden="true"></div>
+							<span class="visually-hidden">Hamburger menu</span>
+						</button>
+					</div>
+				{%- endif -%}
+				{%- comment -%} Desktop Menu {%- endcomment -%}
+				{%-  render 'navigation-desktop', menu: section.settings.menu -%}
+				{%- comment -%} Render Mega-menu blocks {%- endcomment -%}
+				{%- content_for 'blocks' -%}
+				{%- comment -%} Search {%- endcomment -%}
+				<div class="col-auto order-lg-3">
+					{%- render 'predictive-search', context: 'desktop' -%}
+					{%- render 'predictive-search', context: 'mobile' -%}
+				</div>
+				{%- comment -%} LOGO {%- endcomment -%}
+				<div class="col col-lg-auto order-lg-1">
+					<a class="navbar-brand d-flex justify-content-center me-0 py-0" title="brand" href="{{ shop.url }}">
+						<div class="logo">{%- render 'reno-logo-white-svg' -%}</div>
+					</a>
+				</div>
+				{%- comment -%} Account Icon {%- endcomment -%}
+				<div class="col-auto order-lg-4">
+					<a class="account-icon d-flex" href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" title="account">
+						{%- render 'icons' with 'account' -%}
+					</a>
+				</div>
+				{%- comment -%} Cart off-canvas {%- endcomment -%}
+				<div class="col-auto order-lg-5">
+					<a class="cart-link" href="#drawerCart" title="cart"{% unless template.name == 'cart' %} data-bs-toggle="offcanvas" role="button" aria-controls="drawerCart"{% else %} onclick="return false;"{% endunless %}>
+						<div class="cart-icon position-relative ms-lg-1">
+							{%- render 'icons' with 'bag' -%}
+							{%- render 'cart-count-icon', item_count: cart.items.size -%}
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+</header>
+{% schema %}
+{
+	"name": "Header",
+	"class": "section-header sticky-top bg-white shadow-sm",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Header Settings"
+		},
+		{
+			"type": "link_list",
+			"id": "menu",
+			"label": "Main Menu"
+		},
+		{
+			"type": "checkbox",
+			"id": "sticky_menu",
+			"label": "Activate sticky Menu",
+			"info": "When this option is activated the navigation will stick on the top of the screen on scroll."
+		},
+		{
+			"type": "header",
+			"content": "Contact Info Button",
+			"info": "Visible only on Mobile"
+		},
+		{
+			"type": "text",
+			"id": "btn_label",
+			"label": "Button Label"
+		},
+		{
+			"type": "url",
+			"id": "btn_url",
+			"label": "Button Link"
+		},
+		{
+			"type": "header",
+			"content": "Contact Info 1",
+			"info": "Contact information displayed below contact info button. Visible only on mobile."
+		},
+		{
+			"type": "text",
+			"id": "label_1",
+			"label": "Label"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "copy_1",
+			"label": "Copy"
+		},
+		{
+			"type": "header",
+			"content": "Contact Info 2",
+			"info": "Contact information displayed below contact info button. Visible only on mobile."
+		},
+		{
+			"type": "text",
+			"id": "label_2",
+			"label": "Label"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "copy_2",
+			"label": "Copy"
+		}
+	],
+	"blocks": [
+		{ "type": "_mega-menu" }
+	]
+}
+{% endschema %}

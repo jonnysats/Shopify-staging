@@ -1,0 +1,41 @@
+{%- comment -%}
+	Renders an Accordion that displays the product categories using metaobjects
+	
+	Accepts:
+	- product: {Object} Product Object
+	
+	Usage:
+	{%- render 'product-category-accordion' with product as product -%}
+	
+{%- endcomment -%}
+{{ 'product-extra-info.css' | asset_url | stylesheet_tag }}
+{%- assign metadata = product.metafields.shopify -%}
+{%- if metadata != blank -%}
+	<div class="product-extra-info accordion py-3" id="extraContentAccordion">
+		{%- for metaobject in metadata -%}
+			{%- liquid
+				assign key = metaobject[0]
+				assign metaobject_label = metaobject[0] | replace: '-', ' ' | capitalize
+				assign metaobject_content = product.metafields.shopify[key].value
+			-%}
+			<div class="accordion-item">
+				<h2 class="accordion-header no-animation" id="accordionHeading{{ forloop.index0 }}">
+					<button class="accordion-button text-uppercase collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfo{{ forloop.index0 }}" aria-expanded="false" aria-controls="collapseInfo{{ forloop.index0 }}">{{ metaobject_label }}</button>
+				</h2>
+				<div id="collapseInfo{{ forloop.index0 }}" class="accordion-collapse collapse" aria-labelledby="accordionHeading{{ forloop.index0 }}">
+					<div class="accordion-body">
+						<div class="content">
+							{%- if metaobject_content != blank -%}
+								<ul>
+									{%- for item in metaobject_content -%}
+										<li>{{ item.label }}</li>
+									{%- endfor -%}
+								</ul>
+							{%- endif -%}
+						</div>
+					</div>
+				</div>
+			</div>
+		{%- endfor -%}
+	</div>
+{%- endif -%}

@@ -1,0 +1,35 @@
+{%- if block.settings.title != blank and block.settings.url != blank -%}
+	<li class="border-bottom bg-transparent py-3 py-lg-2">
+		<a class="submenu-link text-black d-flex justify-content-between align-items-center w-100 p-relative text-decoration-none" href="{{ block.settings.url }}" title="{{ block.settings.title | escape }}">
+			<span class="fw-medium">{{- block.settings.title -}}</span>
+			{%- render 'icons' with 'arrow-right-chevron', icon_classes: 'd-lg-none' -%}
+		</a>
+	</li>
+{%- endif -%}
+
+{% schema %}
+{
+	"name": "Sub Category Item",
+	"tag": null,
+	"settings": [
+		{
+			"type": "header",
+			"content": "Sub Menu Item",
+			"info": "Menu item link that will show inside the current category item."
+		},
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Category Name"
+		},
+		{
+			"type": "url",
+			"id": "url",
+			"label": "Category URL"
+		},
+	],
+	"presets": [
+		{ "name": "Sub Category Item" }
+	]
+}
+{% endschema %}

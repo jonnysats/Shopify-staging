@@ -1,0 +1,242 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "hero",
+      "settings": {
+        "height": "800px",
+        "height_mobile": "500px",
+        "show_overlay": false,
+        "overlay_option": "gradient",
+        "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "image": "shopify://shop_images/Showroom_6.jpg",
+        "heading": "",
+        "heading_color": "#ffffff",
+        "subheading": "",
+        "subheading_color": "#ffffff",
+        "copy": "",
+        "copy_color": "#ffffff",
+        "button_copy_1": "",
+        "button_url_1": "",
+        "button_copy_2": "",
+        "button_url_2": "",
+        "vertical_alignment_desktop": "end",
+        "horizontal_alignment_desktop": "start",
+        "text_alignment_desktop": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_mobile": "center",
+        "text_alignment_mobile": "center",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "intro-section": {
+      "type": "intro-section",
+      "settings": {
+        "horizontal_alignment_desktop": "center",
+        "alignment_desktop": "center",
+        "horizontal_alignment_mobile": "center",
+        "alignment_mobile": "center",
+        "heading": "Become A Vendor",
+        "is_h1": false,
+        "copy": "<p>Reno Source partners with manufacturers who create design-forward materials with real character, consistency, and quality. We curate a focused assortment across tile, stone, flooring, and architectural finishes, working closely with our vendors to build long-term partnerships, clear assortments, and strong storytelling—so thoughtfully made materials reach a wider audience while helping customers get more design from their budget.</p>",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "no"
+      }
+    },
+    "custom_contact_form": {
+      "type": "custom-contact-form",
+      "blocks": {
+        "text_inputs_Bnh77Q": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Full Name:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_mqBKhx": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Company Name",
+            "placeholder": "",
+            "input_type": "email",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_N4rHpG": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Email Address:",
+            "placeholder": "",
+            "input_type": "email",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_KafH9N": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Phone:",
+            "placeholder": "",
+            "input_type": "tel",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_znbQNj": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Website:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_9wHFpA": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Social Media Handle:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": false,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_t66FAh": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Country:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_zGebNi": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "State:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": false,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_7m9Dnn": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "full",
+            "heading": "City:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_wtVYT8": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "full",
+            "heading": "What Items Do You Produce?",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "textarea_LWHyTR": {
+          "type": "textarea",
+          "settings": {
+            "heading": "Message:",
+            "placeholder": "",
+            "required": false
+          }
+        }
+      },
+      "block_order": [
+        "text_inputs_Bnh77Q",
+        "text_inputs_mqBKhx",
+        "text_inputs_N4rHpG",
+        "text_inputs_KafH9N",
+        "text_inputs_znbQNj",
+        "text_inputs_9wHFpA",
+        "text_inputs_t66FAh",
+        "text_inputs_zGebNi",
+        "text_inputs_7m9Dnn",
+        "text_inputs_wtVYT8",
+        "textarea_LWHyTR"
+      ],
+      "settings": {
+        "bg_color": "#ffffff",
+        "header": "Submit your application",
+        "copy": "If you produce design-oriented materials and believe your products align with our point of view, we’d love to connect. Share details about your company, products, and production capabilities using the form below, and our team will review your submission and reach out if there’s a potential fit.",
+        "submit_btn_copy": "Submit",
+        "success_header": "Thank You For Inquiring",
+        "success_copy": "We'll review and be in touch shortly.",
+        "error_header": "",
+        "error_copy": "",
+        "error_btn_copy": "Try Again",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "no"
+      }
+    },
+    "follow-us-social": {
+      "type": "follow-us-social",
+      "settings": {
+        "title": "",
+        "social_links": [],
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "intro-section",
+    "custom_contact_form",
+    "follow-us-social"
+  ]
+}

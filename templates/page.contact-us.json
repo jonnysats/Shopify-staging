@@ -1,0 +1,77 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_LTVT8r": {
+      "type": "hero",
+      "name": "Hero",
+      "settings": {
+        "height": "500px",
+        "height_mobile": "500px",
+        "show_overlay": false,
+        "overlay_option": "gradient",
+        "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "image": "shopify://shop_images/Bardiglio_12x12_Tumbled_Marble_Mosaic_60a50259-ad4c-4d64-976f-3d2320d2d9b3.jpg",
+        "heading": "",
+        "heading_color": "#ffffff",
+        "subheading": "",
+        "subheading_color": "#ffffff",
+        "copy": "",
+        "copy_color": "#ffffff",
+        "button_copy_1": "",
+        "button_url_1": "",
+        "button_copy_2": "",
+        "button_url_2": "",
+        "vertical_alignment_desktop": "end",
+        "horizontal_alignment_desktop": "start",
+        "text_alignment_desktop": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_mobile": "center",
+        "text_alignment_mobile": "center",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "intro_section_aRhTcQ": {
+      "type": "intro-section",
+      "blocks": {
+        "links_AnqPdp": {
+          "type": "links",
+          "settings": {
+            "title": "",
+            "link": "",
+            "button_style": "outline-primary"
+          }
+        }
+      },
+      "block_order": [
+        "links_AnqPdp"
+      ],
+      "name": "Intro Section",
+      "settings": {
+        "horizontal_alignment_desktop": "center",
+        "alignment_desktop": "left",
+        "horizontal_alignment_mobile": "center",
+        "alignment_mobile": "center",
+        "heading": "",
+        "is_h1": false,
+        "copy": "",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    }
+  },
+  "order": [
+    "hero_LTVT8r",
+    "intro_section_aRhTcQ"
+  ]
+}

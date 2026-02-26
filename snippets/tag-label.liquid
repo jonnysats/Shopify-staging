@@ -1,0 +1,35 @@
+{%- comment -%}
+	Render Tags Wrapper
+
+	Accepts:
+	- product_count: {Number} Product count
+	- featured_tag : {String} Featured product (usually comes from metadata)
+	- tags: {Array} Array of strings
+	- wrapper_classes: {String} Extra classes to add to the tags wrapper
+
+	Usage:
+	{%- render 'tag-label', product_count: collection.products_count, featured_tag: collection.metafields.theme.featured_tag.value, tags: collection.metafields.theme.tags.value, wrapper_classes: 'pb-3 pt-lg-2 pb-lg-4 mb-lg-1' -%}
+
+{%- endcomment -%}
+{%- assign tags_block = section.blocks | find: 'type', 'product-tags' -%}
+<div class="tags-wrapper{% if wrapper_classes != blank %} {{ wrapper_classes }}{% endif %}" {{ tags_block.shopify_attributes }}>
+	<div class="row row-cols-auto g-2">
+		{%- if product_count != blank and product_count != 0 -%}
+			<div class="col">
+				<span class="badge badge-outline">{%- render 'icons' with 'item' -%}{%- unless template.name == '404' -%}{{ 'collections.general.item_count' | t: count: product_count }}{%- else -%}{{ 'collections.general.products_count' | t: count: product_count }}{%- endunless -%}</span>
+			</div>
+		{%- endif -%}
+		{%- if featured_tag != blank -%}
+			<div class="col">
+				<span class="badge badge-outline">{{- featured_tag -}}</span>
+			</div>
+		{%- endif -%}
+		{%- if tags != blank -%}
+			{%- for tag in tags -%}
+				<div class="col">
+					<span class="badge badge-outline">{{- tag -}}</span>
+				</div>
+			{%- endfor -%}
+		{%- endif -%}
+	</div>
+</div>

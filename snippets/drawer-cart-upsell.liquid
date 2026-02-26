@@ -1,0 +1,48 @@
+{%- comment -%}
+	Drawer cart upsell carousel
+
+	Accepts:
+		- upsell_products {Array} - Array of products to show as upsell
+		- product_count {Number} - Number of products in upsell array
+		- title {String} - Title of the drawer cart upsell component
+		- show_arrows {Boolean} - Show navigation arrows
+	
+	Usage:
+		{%- render 'drawer-cart-upsell', upsell_products: upsell_products, product_count: product_count, title: settings.drawer_cart_upsell_title -%}
+
+{%- endcomment -%}
+{%- if settings.drawer_cart_upsell_enable == true and upsell_products != blank and product_count > 0-%}
+	{%- liquid
+		assign flickity_arrows = false
+		assign flickity_dots = false
+		assign flickity_loop = false 
+		assign flickity_group_cells = true
+		assign flickity_adaptive_height = false
+		assign flickity_drag_threshold = 80
+	-%}
+	<div class="drawer-cart-upsell pb-3 pb-lg-4">
+		{%- if title != blank or product_count >= 3 -%}
+			<div class="container-fluid gx-4 gx-sm-5 gx-lg-6 pb-3 pb-lg-4 mb-1">
+				<div class="row gx-3">
+					{%- if title != blank -%}
+						<div class="col-7">
+							<h2 class="h4 text-start mb-0">{{ title }}</h2>
+						</div>
+					{%- endif -%}
+					{%- if product_count >= 3 and show_arrows != false -%}
+						<div class="col">
+							{%- render 'slider-custom-nav-buttons', border: "none", padding_type: "none", gap_size: 4, justify_style: "end" -%}
+						</div>
+					{%- endif -%}
+				</div>
+			</div>
+		{%- endif -%}
+		<div class="container-fluid gx-4 gx-sm-5 gx-lg-6 pe-0">
+			<div class="row gx-0 flex-nowrap{% if product_count > 2 %} upsell-enable-flickity{% else %} upsell-overflow-slider flex-nowrap{% endif %}" data-generic-slider data-arrows="{{ flickity_arrows }}" data-dots="{{ flickity_dots }}" data-loop="{{ flickity_loop }}" data-adaptive-height="{{ flickity_adaptive_height }}" data-group-cells="{{ flickity_group_cells }}" data-drag-threshold="{{ flickity_drag_threshold }}">
+				{%- for product in upsell_products -%}
+					{%- render 'drawer-cart-upsell-product-item', product: product, classes: "pe-3 col-6 col-custom", no_truncate: no_truncate -%}
+				{%- endfor -%}
+			</div>
+		</div>
+	</div>
+{%- endif -%}

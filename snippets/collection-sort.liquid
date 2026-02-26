@@ -1,0 +1,21 @@
+{%- comment -%}
+	Sorts order of products on collection page by adding URL parameters
+
+	Usage:
+	{%- render 'collection-sort' -%}
+
+{%- endcomment -%}
+{%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+<ul class="sort-list list-unstyled mb-0 mb-lg-2 pb-lg-1">
+	{%- for option in collection.sort_options -%}
+		{%- assign unique_id = "now" | date: "%N" | modulo: 100 | append: option.value | capitalize -%}
+		<li class="border-bottom border-light bg-transparent p-3 px-lg-2 pb-lg-0 pt-lg-2">
+			<div class="d-flex align-items-center justify-content-between form-check position-relative p-0 m-0 px-lg-1 pt-lg-1">
+				<input class="form-check-input position-absolute w-100 h-100 end-0 opacity-0" type="radio" name="sort_by" id="sortBy{{ unique_id }}" value="{{ option.value }}"{% if sort_by == option.value %} checked{% endif %}>
+				<label class="form-check-label text-black fw-medium" for="sortBy{{ unique_id }}">{{ option.name }}</label>
+				{%- render 'icons' with 'arrow-right-chevron', icon_classes: 'd-lg-none' -%}
+				{%- render 'icons' with 'checkmark', icon_classes: 'd-none d-lg-block' -%}
+			</div>
+		</li>
+	{%- endfor -%}
+</ul>

@@ -1,0 +1,78 @@
+{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom -%}
+<div class="col">
+	<hr>
+</div>
+{% schema %}
+{
+	"name": "Line Separator",
+	"tag": "section",
+	"class": "section-line-separator",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"presets": [
+		{
+			"name": "Line Separator"
+		}
+	]
+}
+{% endschema %}

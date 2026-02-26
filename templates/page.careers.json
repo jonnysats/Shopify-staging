@@ -1,0 +1,35 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "hero",
+      "settings": {}
+    },
+    "intro-section": {
+      "type": "intro-section",
+      "settings": {}
+    },
+    "careers-positions": {
+      "type": "careers-positions",
+      "settings": {}
+    },
+    "follow-us-social": {
+      "type": "follow-us-social",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "intro-section",
+    "careers-positions",
+    "follow-us-social"
+  ]
+}

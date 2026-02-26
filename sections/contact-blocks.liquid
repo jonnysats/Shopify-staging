@@ -1,0 +1,175 @@
+{%- if section.blocks.size > 0 -%}
+{%- liquid
+	comment
+	  Check is this is the first section on the page
+	endcomment
+	assign is_first_section = false
+	if section.index == 1
+		assign is_first_section = true
+	endif
+-%}
+	{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom -%}
+	{{ 'contact-blocks.css' | asset_url | stylesheet_tag }}
+	<div class="container">
+		<div class="row gy-4 g-lg-custom px-xxl-custom">
+			{%- if section.settings.header != blank -%}
+			<div class="col-12">
+				<div class="header-wrapper text-center mt-4 mb-3 mb-lg-0 pt-3">
+					{%- if is_first_section == true or section.settings.is_h1 == true -%}
+						<h1 class="h1">{{ section.settings.header }}</h1>
+					{%- else -%}
+						<h2 class="h1">{{ section.settings.header }}</h2>
+					{%- endif -%}
+				</div>
+			</div>
+			{%- endif -%}
+			{%- for block in section.blocks -%}
+				{%- if block.settings.title != blank and block.settings.icon != blank -%}
+					<div class="col-12 col-lg-6" {{ block.shopify_attributes }}>
+						<div class="contact-wrapper border p-4 d-lg-flex flex-lg-column">
+							<div class="icon-wrapper mb-3 mb-lg-custom icon-wrapper-no-padding"{% if block.settings.icon_bg != blank %} style="--icon-bg-color: {{ block.settings.icon_bg }}"{% endif %}>
+								{%- render 'responsive-image', image: block.settings.icon -%}
+							</div>
+							<div class="copy-wrapper{% unless block.settings.icon_bg == "rgba(0,0,0,0)" or block.settings.icon_bg == "#ffffff" %} pb-lg-3{% endunless %} pe-3">
+								<h2 class="h5">{{ block.settings.title }}</h2>
+								{%- if block.settings.copy != blank -%}
+									<p>{{ block.settings.copy }}</p>
+								{%- endif -%}
+							</div>
+							{%- if block.settings.btn_link != blank and block.settings.btn_copy != blank -%}
+								<div class="btn-wrapper mt-lg-auto pt-2">
+									<a href="{{ block.settings.btn_link }}" class="btn btn-primary btn-lg-long" title="{{ block.settings.btn_copy | escape }}">
+										<span class="anim-wrapper">
+											<span class="initial">{{ block.settings.btn_copy }}</span>
+											<span class="end">{{ block.settings.btn_copy }}</span>
+										</span>
+									</a>
+								</div>
+							{%- endif -%}
+						</div>
+					</div>
+				{%- endif -%}
+			{%- endfor -%}
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Contact Blocks",
+	"class": "section-contact-blocks",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "text",
+			"id": "header",
+			"label": "Header"
+		},
+		{
+			"type": "checkbox",
+			"id": "is_h1",
+			"label": "Show this Heading as H1",
+			"default": false,
+			"info": "Use ONE H1 per page, if you don't have one already. Tips: If you have a Hero with text at the top of the page you already have a H1"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"blocks": [
+		{
+			"type": "contact",
+			"name": "Contact Block",
+			"settings": [
+				{
+					"type": "color",
+					"id": "icon_bg",
+					"label": "Icon Background Color",
+					"default": "#F5F5F7"
+				},
+				{
+					"type": "image_picker",
+					"id": "icon",
+					"label": "Icon"
+				},
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Title"
+				},
+				{
+					"type": "inline_richtext",
+					"id": "copy",
+					"label": "Copy"
+				},
+				{
+					"type": "text",
+					"id": "btn_copy",
+					"label": "Button Copy"
+				},
+				{
+					"type": "url",
+					"id": "btn_link",
+					"label": "Button Link"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

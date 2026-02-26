@@ -1,0 +1,12 @@
+<div class="shop-the-look" data-shop-the-look>
+	<div class="icon-wrapper position-absolute" data-shop data-product-list-index="{{ index | default: '1' }}">
+		<a href="#" data-toggle-shop>{%- render 'icons' with 'bag' -%}<span class="visually-hidden">Shop the Look</span></a>
+	</div>
+	<div id="productList-{% if index != blank %}{{ index }}{% else %}1{% endif %}">
+		<div class="row product-grid gy-1 gy-lg-3" data-product-list>
+			{%- for product in product_list -%}
+				{%- render 'product-grid', shop_the_look: true, col_sm: 2, product: product -%}
+			{%- endfor -%}
+		</div>
+	</div>
+</div>

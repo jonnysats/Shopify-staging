@@ -1,0 +1,80 @@
+{%- comment -%}
+	Renders Main Megamenus for mobile navigation
+	
+	Accepts:
+	- menu: {Shopify Object} Shopify Menu links Array
+	- info_block: {Shopify Object} Content for info block part on megamenu
+
+	Usage:
+	{%-  render 'navigation-mobile', menu: section.settings.menu, info_block: info_block -%}
+	
+{%- endcomment -%}
+{%- if menu.links.size > 0 -%}
+	<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMobileMenu" aria-labelledby="offcanvasMobileMenuLabel" {{ block.shopify_attributes }}>
+		<div class="offcanvas-header border-bottom border-dark-subtle">
+			<div class="header-wrapper w-100 d-flex align-items-center justify-content-center position-relative">
+				<h5 class="visually-hidden" id="offcanvasMobileMenuLabel">Offcanvas mobile</h5>
+				<a class="navigation-logo" title="brand logo menu" href="{{ shop.url }}">
+					<div class="logo">{%- render 'reno-logo-svg' -%}</div>
+				</a>
+				<button type="button" class="btn-close position-absolute end-0" data-bs-dismiss="offcanvas" aria-label="Close"><span class="visually-hidden">Close Button</span></button>
+			</div>
+		</div>
+		<div class="offcanvas-body d-flex flex-column justify-content-between pt-0 px-0">
+			<div class="accordion" id="mobileNavigationAccordion">
+				{%- assign has_child_index = 0 -%}
+				{%- for link in menu.links -%}
+					{%- liquid
+						assign has_child = link.links.size
+						assign prev_link_index = forloop.index0 | minus: 1
+					-%}
+					{%- if has_child > 0 -%}
+						<div class="{% if prev_link_index != -1 and menu.links[prev_link_index].links.size == 0 %}border-top {% endif %}border-bottom border-dark-subtle bg-transparent p-3">
+							<a class="submenu-link text-black d-flex justify-content-between align-items-center w-100 p-relative text-decoration-none" href="{{ link.url }}" title="{{ link.title | escape }}"{% if section.blocks[has_child_index] != blank %} data-megamenu-id="#offCanvasMegamenu_{{ link.handle }}"{% else %} data-megamenu-id="#offCanvasMegamenu_{{ forloop.index0 }}"{% endif %}>
+								<span class="fw-medium pe-none">{{- link.title -}}</span>
+								{%- render 'icons' with 'arrow-right-chevron' -%}
+							</a>
+						</div>
+						{%- assign has_child_index = has_child_index | plus: 1 -%}
+					{%- else -%}
+						<div class="link-item p-3">
+							<a class="text-black w-100 fw-medium text-decoration-none" href="{{ link.url }}" title="{{ link.title | escape }}">
+								{{- link.title -}}
+							</a>
+						</div>
+					{%- endif -%}
+				{%- endfor -%}
+			</div>
+			{{- info_block -}}
+		</div>
+		{%- comment -%} Render Regular Menus {%- endcomment -%}
+		{%- for link in menu.links -%}
+			{%- assign has_child = link.links.size -%}
+			{%- if has_child > 0 and section.blocks[forloop.index0] == blank -%}
+				<div class="custom-offcanvas position-fixed start-0 top-0 w-100 h-100 bg-white d-flex flex-column justify-content-between hide" data-submenu id="offCanvasMegamenu_{{ forloop.index0 }}">
+					<div class="menu-wrapper">
+						<div class="border-bottom border-dark-subtle p-3">
+							<div class="header-wrapper w-100 d-flex align-items-center justify-content-center position-relative">
+								<button class="custom-offcanvas-close px-0 border-0 bg-transparent position-absolute start-0" data-close-submenu>{%- render 'icons' with 'arrow-left-chevron' -%}<span class="visually-hidden">Go back</span></button>
+								<p class="text-black fw-medium mb-0">{{ link.title }}</p>
+								<button type="button" class="btn-close position-absolute end-0" data-bs-dismiss="offcanvas" aria-label="Close"><span class="visually-hidden">Close Sub-menu Button</span></button>
+							</div>
+						</div>
+						<div class="accordion">
+							<ul class="subcategories list-unstyled mb-0 px-3">
+								{%- for childlink in link.links -%}
+									<li class="border-bottom bg-transparent py-3">
+										<a class="submenu-link text-black d-flex justify-content-between align-items-center w-100 p-relative text-decoration-none" href="{{ childlink.url }}" title="{{ childlink.title | escape }}">
+											<span class="fw-medium">{{- childlink.title -}}</span>
+											{%- render 'icons' with 'arrow-right-chevron' -%}
+										</a>
+									</li>
+								{%- endfor -%}
+							</ul>
+						</div>
+					</div>
+				</div>
+			{%- endif -%}
+		{%- endfor -%}
+	</div>
+{%- endif -%}

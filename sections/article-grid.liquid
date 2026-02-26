@@ -1,0 +1,220 @@
+<script src="{{ 'featured-collection-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+{{ 'article-grid.css' | asset_url | stylesheet_tag }}
+{%- liquid
+	comment
+		Used to create array of tags from all articles
+	endcomment
+	capture tags
+		assign current_blog = blogs[blog.handle]
+		for article in current_blog.articles
+			for tag in article.tags
+				echo tag | append: ','
+			endfor
+		endfor
+	endcapture
+	render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom
+-%}
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+			<div class="nav-wrapper mt-lg-2 mb-3 mb-lg-0 py-3 pb-lg-custom">
+				<div class="row gx-2 gx-lg-4">
+					{%- liquid
+						comment
+							This is used to create array of unique tags, no repeating values
+						endcomment
+						assign tags_arr = tags | strip | split: ','
+						assign tags_arr = tags_arr | uniq | join: ','
+						assign tags_arr = tags_arr | split: ','
+						assign current_tag_handle = ''
+						if request.path contains 'tagged'
+							assign current_tag_handle = request.path | split: '/' | last
+						endif
+					-%}
+					<div class="col-12">
+						<div class="dropdown d-lg-none">
+							<p class="mb-2 pb-1">{{ 'blogs.general.topics' | t }}</p>
+							<button class="dropdown-toggle form-select text-start text-capitalize{% if tags.size < 1 %} disabled{% endif %}" type="button" id="dropdownTags" data-bs-toggle="dropdown" data-bs-close="outside" data-bs-offset="0,9" aria-expanded="false">{%- if current_tag_handle != '' -%}{{ current_tag_handle }}{%- else -%}Choose Topic{%- endif -%}</button>
+							<ul class="dropdown-menu w-100" aria-labelledby="dropdownTags">
+								<li><a href="{{ blog.url }}" title="{{ 'blogs.general.topics' | t }}" class="dropdown-item text-capitalize">{{ 'blogs.general.all_topics' | t }}</a></li>
+								{%- for tag in tags_arr -%}
+									{%- assign lower_tag = tag | downcase | handleize  -%}
+									<li><a href="{{ blog.url | append: '/tagged/' | append: lower_tag }}" class="dropdown-item text-capitalize">{{ tag }}</a></li>
+								{%- endfor -%}
+							</ul>
+						</div>
+						<div class="desktop-topics d-none d-lg-flex align-items-center">
+							<p class="mb-0">{{ 'blogs.general.topics' | t }}:</p>
+							{%- liquid
+								if request.path contains 'tagged'
+									assign request_arr = request.path | split: '/'
+									assign selected_tag = request_arr | last | downcase
+								endif
+							-%}
+							<div class="btns-wrapper d-flex flex-wrap">
+								<a href="{{ blog.url }}" class="btn{% unless request.path contains 'tagged' %} active{% endunless %}" title="{{ blog.title | escape }}">
+									<span class="anim-wrapper">
+										<span class="initial">{{ 'blogs.general.all_topics' | t }}</span>
+										<span class="end">{{ 'blogs.general.all_topics' | t }}</span>
+									</span>
+								</a>
+								{%- for tag in tags_arr -%}
+									{%- assign lower_tag = tag | downcase | handleize -%}
+									<a href="{{ blog.url | append: '/tagged/' | append: lower_tag }}" class="btn{% if selected_tag != blank and selected_tag == lower_tag %} active{% endif %}" title="{{ tag | escape }}">
+										<span class="anim-wrapper">
+											<span class="initial">{{ tag }}</span>
+											<span class="end">{{ tag }}</span>
+										</span>
+									</a>
+								{%- endfor -%}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-12{% if section.settings.product_list.count > 0 %} col-lg-8 col-xxl-9{% endif %} d-flex flex-column mt-lg-custom articles-wrapper">
+			<div class="row row-cols-1{% if blog.articles_count > 0 %} row-cols-lg-2{% else %} h-100 justify-content-center align-items-center text-center{% endif %} gy-lg-3 gx-lg-custom articles{% if section.settings.product_list.count > 0 %} pe-lg-3{% endif %}">
+				{%- paginate blog.articles by settings.articles_per_page -%}
+					{%- if blog.articles_count > 0 -%}
+						{%- for article in blog.articles -%}
+							{%- render 'article-grid-item', article: article -%}
+						{%- endfor %}
+						{%- else -%}
+							<div class="col">
+								<div class="copy-wrapper{% if section.settings.product_list.count > 0 %} pt-5 pb-4{% else %} mb-2 mb-lg-0 py-5{% endif %} py-lg-8">
+									<h2 class="h3">No Articles</h2>
+								</div>
+							</div>
+					{%- endif -%}
+				{%- endpaginate -%} 
+			</div>
+			{%- paginate blog.articles by settings.articles_per_page -%}
+				{%- if paginate.pages > 1 -%}
+					<div class="col-12 mb-lg-3 pb-3 py-lg-4">
+						<div class="row">
+							<div class="col">
+								{%- render 'pagination', paginate: paginate, context: 'blog' -%}
+							</div>
+						</div>
+					</div>	
+				{%- endif -%}
+			{%- endpaginate -%}
+		</div>
+		{%- if section.settings.product_list.count > 0 -%}
+			<div class="col-lg-4 col-xxl-3 d-none d-lg-block pt-lg-custom featured-products-wrapper pb-lg-5 pe-lg-0">
+				{%- render 'featured-products', product_list: section.settings.product_list, header: section.settings.products_header, best_sellers_header: section.settings.best_sellers_header, best_sellers_image: section.settings.best_sellers_image, btn_copy: section.settings.best_sellers_btn_copy, btn_link: section.settings.best_sellers_btn_link -%}
+			</div>
+		{%- endif -%}
+	</div>
+</div>
+
+{%- if section.settings.product_list.count > 0 -%}
+	<div class="featured-products d-lg-none" data-section-id="{{ section.id }}" data-section-type="featuredCollectionSlider">
+		{%- render 'featured-products', product_list: section.settings.product_list, header: section.settings.products_header, best_sellers_header: section.settings.best_sellers_header, best_sellers_image: section.settings.best_sellers_image, btn_copy: section.settings.best_sellers_btn_copy, btn_link: section.settings.best_sellers_btn_link, slider: true -%}
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Articles Grid",
+	"class": "articles-grid",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Featured Products"
+		},
+		{
+			"type": "text",
+			"id": "products_header",
+			"label": "Product List Header"
+		},
+		{
+			"type": "product_list",
+			"id": "product_list",
+			"label": "Featured Products",
+			"limit": 4
+		},
+		{
+			"type": "text",
+			"id": "best_sellers_header",
+			"label": "Best Sellers Header"
+		},
+		{
+			"type": "image_picker",
+			"id": "best_sellers_image",
+			"label": "Best Sellers Image"
+		},
+		{
+			"type": "text",
+			"id": "best_sellers_btn_copy",
+			"label": "Featured Products Button Copy"
+		},
+		{
+			"type": "url",
+			"id": "best_sellers_btn_link",
+			"label": "Featured Products Button Link"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "no"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "no"
+		}
+	]
+}
+{% endschema %}

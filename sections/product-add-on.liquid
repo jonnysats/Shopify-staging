@@ -1,0 +1,126 @@
+{%- comment -%}
+	# initialize dynamic content section
+{%- endcomment -%}
+{%- liquid
+	assign current_variant = product.selected_or_first_available_variant
+	assign add_on_products = blank
+	assign use_content_section_from_variant = product.metafields.theme.content_section_from_variant.value
+
+	comment
+	  # Select add on collection from settings, if variant mode is set to true, overwrite the value
+	endcomment
+	assign add_on_products = section.settings.add_on_products
+	assign add_on_products_size = add_on_products.count
+
+	if use_content_section_from_variant == true
+		assign add_on_products = current_variant.metafields.theme.add_on.value
+		assign add_on_products_size = add_on_products.count
+	endif
+-%}
+{%- if use_content_section_from_variant == true -%}
+	<script src="{{ 'variant-sections.js' | asset_url }}" defer crossorigin="anonymous"></script>
+{%- endif -%}
+<div {% if request.design_mode == false %}{% if use_content_section_from_variant == true %}class="loading-state" {% endif %}{% endif %}{%- if use_content_section_from_variant == true -%} data-section-type="dynamicVariantSectionContent" data-section-id="dynamicContent-{{ section.id }}" data-product-handle="{{ product.handle }}"{% endif %}>
+	{%- if add_on_products != blank -%}
+		{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom -%}
+		{{ 'product-add-on.css' | asset_url | stylesheet_tag }}
+		<script src="{{ 'upsell-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+		{%- if use_content_section_from_variant == true -%}
+			{%- comment -%} Dynamic section loader {%- endcomment -%}
+			{%- render 'dynamic-section-loader' -%}
+		{%- endif -%}
+		<div class="container-lg" data-content-loaded data-section-id="{{ section.id }}" data-section-type="upsellSlider">
+			<div class="row g-lg-0">
+				<div class="col-12 border-top border-bottom border-light-subtle pt-4 pb-3 pe-0">
+					{%- render 'drawer-cart-upsell', upsell_products: add_on_products, product_count: add_on_products_size, title: section.settings.heading, show_arrows: true -%}
+				</div>
+			</div>
+		</div>
+	{%- endif -%}
+</div>
+{% schema %}
+{
+	"name": "Product Add-On",
+	"class": "section-product-add-on section-dynamic-content",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Heading"
+		},
+		{
+			"type": "product_list",
+			"id": "add_on_products",
+			"label": "Add-on Products",
+			"info": "If dynamic content from variant is enabled on section, content will rely on variant metadata and update will be triggered when variant changes",
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"presets": [
+		{ "name": "Product Add-On" }
+	],
+	"enabled_on": {
+		"templates": ["product"]
+	}
+}
+{% endschema %}

@@ -1,0 +1,32 @@
+{%- comment -%}
+	Renders the total percentage discounted and a list of discounts applied to cart
+
+	Accepts:
+		- desktop_only: {Boolean} - Show discounts only on desktop
+		- break_point: {String} - BT Breakpoint (sm | md | lg | xl | xxl)
+		- limit_by: {Number} - Limit discounts displayed
+	
+	Usage:
+		{%- render 'cart-discount-list',  desktop_only: true, break_point: "lg", limit_by: 2 -%}
+
+{%- endcomment -%}
+{%- assign break_point = break_point | default: "lg" -%}
+<div class="cart-discounts-container d-flex flex-nowrap gap-2 ps-0{% if mobile_only == true %} d-block d-{{ break_point }}-none{% elsif desktop_only == true %} d-none d-{{ break_point }}-block{% endif %}">
+	{%- if limit_by -%}
+		{%- for discount in cart.discount_applications limit: limit_by -%}
+			<div class="cart-discount border border-primary discounts-item d-flex align-items-center">
+				<span class="text-primary mb-0 text-truncate">
+					{{- discount.title -}}
+				</span>
+			</div>
+		{%- endfor -%}
+	{%- else -%}
+		{%- for discount in cart.discount_applications -%}
+			<div class="cart-discount border border-primary discounts-item d-flex align-items-center">
+				<span class="text-primary mb-0 text-truncate">
+					{{- discount.title -}}
+				</span>
+			</div>
+		{%- endfor -%}
+	{%- endif -%}
+</div>

@@ -1,0 +1,132 @@
+{%- if block.settings.heading != blank -%}
+	<p class="block-bulletpoint-with-icon g-col-6 mb-0" {{ block.shopify_attributes }}>
+		{%- if block.settings.icon != blank -%}
+			{%- unless block.settings.icon == "none" -%}
+				<span class="bulletpoint-icon d-inline-block me-2">
+					{%- render 'icons' with block.settings.icon -%}
+				</span>
+			{%- endunless -%}
+		{%- endif -%}	
+		<span class="bulletpoint-text fs-5 text-black fw-medium">
+			{{ block.settings.heading }}
+		</span>
+	</p>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Bulletpoint with icon",
+	"tag": null,
+	"settings": [
+		{
+			"type": "header",
+			"content": "Icon"
+		},
+		{
+			"type": "select",
+			"id": "icon",
+			"label": "Icon",
+			"options": [
+				{
+					"value": "none",
+					"label": "None"
+				},
+				{
+					"value": "orange-checkmark",
+					"label": "Orange checkmark"
+				},
+				{
+					"value": "account",
+					"label": "Account"
+				},
+				{
+					"value": "alert-circle-error",
+					"label": "Alert circle error"
+				},
+				{
+					"value": "bag",
+					"label": "Bag"
+				},
+				{
+					"value": "camera",
+					"label": "Camera"
+				},
+				{
+					"value": "chevron-down",
+					"label": "Chevron down"
+				},
+				{
+					"value": "checkmark",
+					"label": "Checkmark"
+				},
+				{
+					"value": "check-circle-success",
+					"label": "Check circle success"
+				},
+				{
+					"value": "discount",
+					"label": "Discount"
+				},
+				{
+					"value": "filter",
+					"label": "Filter"
+				},
+				{
+					"value": "help-circle",
+					"label": "Help circle"
+				},
+				{
+					"value": "item",
+					"label": "Item"
+				},
+				{
+					"value": "mail",
+					"label": "Mail"
+				},
+				{
+					"value": "phone",
+					"label": "Phone"
+				},
+				{
+					"value": "search",
+					"label": "Search"
+				},
+				{
+					"value": "sort",
+					"label": "Sort"
+				},
+				{
+					"value": "star",
+					"label": "Star"
+				},
+				{
+					"value": "tick",
+					"label": "Tick"
+				},
+				{
+					"value": "zoom-icon",
+					"label": "Zoom icon"
+				},
+				{
+					"value": "trash",
+					"label": "Trash"
+				}
+			],
+			"default": "none"
+		},
+		{
+			"type": "header",
+			"content": "Copy"
+		},
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Header"
+		}
+	],
+	"presets": [
+		{
+			"name": "Bulletpoint with icon"
+		}
+	]
+}
+{% endschema %}

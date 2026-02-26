@@ -1,0 +1,37 @@
+{%- comment -%} Announcement bar {%- endcomment -%}
+{%- render 'announcement-bar', copy: section.settings.announcement_copy, copy_mobile: section.settings.mobile_announcement_copy, background_color: section.settings.announcement_background_color, copy_color: section.settings.announcement_copy_color -%}
+{% schema %}
+{
+	"name": "Announcement Bar",
+	"class": "section-announcement",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "color",
+			"id": "announcement_background_color",
+			"label": "Background Color",
+			"default": "#184A3E"
+		},
+		{
+			"type": "color",
+			"id": "announcement_copy_color",
+			"label": "Copy Color",
+			"default": "#FFFFFF"
+		},
+		{
+			"type": "header",
+			"content": "Announcement Bar Copy"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "announcement_copy",
+			"label": "Copy"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "mobile_announcement_copy",
+			"label": "Mobile Copy"
+		}
+	]
+}
+{% endschema %}

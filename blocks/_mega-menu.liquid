@@ -1,0 +1,270 @@
+{%- liquid
+	comment
+		Dynamically render megamenu blocks, using JS will open the block (based on index)
+	endcomment
+	assign menu = section.settings.menu
+
+	comment
+		Find current submenu
+		?info: Currently You cannot access data outside the block, only main section object neither you can pass down vars to section blocks
+	endcomment
+	assign menu_index = 0
+	assign current_menu_link = blank
+	assign has_children_index = 0
+
+	comment
+		Loop for each main menu link
+	endcomment
+	for link in menu.links
+		assign has_child = link.links.size
+
+		comment
+			If menu has sub links
+		endcomment
+		if has_child > 0
+			comment
+				Loop for each blocks from the section object
+				?info Since we cannot access info outside block we need to look for the corresponding menu link data for current block
+			endcomment
+			for section_block in section.blocks
+				comment
+					If block id from loop match current block id and the current block index is the same as the menu link with child index,
+					get current data from link (used to look for sub-blocks and heading)
+				endcomment
+				if section_block.id contains block.id and has_children_index == forloop.index0
+					assign current_menu_link = menu.links[menu_index]
+				endif
+			endfor
+
+			comment
+				Increase index of the current items with children
+			endcomment
+			assign has_children_index = has_children_index | plus: 1
+		endif
+
+		comment
+			Increase index of menu loop counter, helps to grab the real link data
+		endcomment
+		assign menu_index = menu_index | plus: 1
+	endfor
+-%}
+{%- if menu != blank and current_menu_link != blank -%}
+	{%- comment -%} Content for Blocks {%- endcomment -%}
+	{%- capture blocks -%}
+		{%- content_for 'blocks' -%}
+	{%- endcapture -%}
+	{%- comment -%} Featured/New Arrival Product grid item {%- endcomment -%}
+	{%- capture featured_product -%}
+		{%- if block.settings.new_arrival != blank -%}
+			<div class="new-arrival-wrapper px-3 pt-3 pb-4 mb-2 pt-lg-0 px-lg-0 mb-lg-0 pb-lg-3">
+				{%- liquid
+					assign product_grid_classes = "new-arrival-product"
+					
+					comment
+						If copy to override found, wrap copy inside <p> to emulate product description
+					endcomment
+					assign short_description = blank
+
+					if block.settings.copy != blank
+						assign short_description = '<p>' | append: block.settings.copy | append: '</p>'
+					endif
+
+					comment
+						If mobile image found use a second product-grid with different image
+					endcomment
+					if block.settings.new_img_mobile != blank
+						assign product_grid_classes = "new-arrival-product d-none d-lg-flex"
+
+						render 'product-grid', product: block.settings.new_arrival, product_short_name: block.settings.title, product_short_description: short_description, product_image: block.settings.new_img_mobile, classes: "new-arrival-product d-lg-none", show_secondary_image: false, show_description: true, show_swatches: false
+					endif
+
+					comment
+						Show Desktop item
+					endcomment
+					render 'product-grid', product: block.settings.new_arrival, product_short_name: block.settings.title, product_short_description: short_description, product_image: block.settings.new_img, classes: product_grid_classes, show_secondary_image: false, show_description: true, show_swatches: false
+				-%}
+				<a class="mx-lg-3" href="{{ block.settings.new_arrival.url }}" title="{{ block.settings.new_arrival.title | escape }}">{{ block.settings.label | default: 'Shop' }}</a>
+			</div>
+		{%- endif -%}
+	{%- endcapture -%}
+	{%- comment -%} Top Selling Product {%- endcomment -%}
+	{%- capture top_selling_product -%}
+		{%- if block.settings.top_selling != blank -%}
+			<div class="top-selling-wrapper bg-primary pb-5 pb-lg-0 d-lg-flex align-items-lg-center justify-content-lg-between">
+				{%- liquid
+					assign product_grid_classes = "top-selling-product"
+
+					comment
+						If copy to override found, wrap copy inside <p> to emulate product description
+					endcomment
+					assign short_description = blank
+
+					if block.settings.copy_2 != blank
+						assign short_description = '<p>' | append: block.settings.copy_2 | append: '</p>'
+					endif
+
+					comment
+						If mobile image found use a second product-grid with different image
+					endcomment
+					if block.settings.top_img_mobile != blank
+						assign product_grid_classes = "top-selling-product d-none d-lg-flex"
+
+						render 'product-grid', product: block.settings.top_selling, product_short_name: block.settings.title_2, product_short_description: short_description, product_image: block.settings.top_img_mobile, classes: "top-selling-product d-lg-none", show_secondary_image: false, show_description: true, show_swatches: false
+					endif
+
+					render 'product-grid', product: block.settings.top_selling, product_short_name: block.settings.title_2, product_short_description: short_description, product_image: block.settings.top_img, classes: product_grid_classes, show_secondary_image: false, show_description: true, show_swatches: false
+				-%}
+				<a class="btn btn btn-ternary mx-3 mt-2 ms-lg-0 me-lg-4 my-lg-0" href="{{ block.settings.new_arrival.url }}" title="{{ block.settings.new_arrival.title | escape }}">
+					<span class="anim-wrapper">
+						<span class="initial">{{ block.settings.label_2 | default: 'Shop' }}</span>
+						<span class="end">{{ block.settings.label_2 | default: 'Shop' }}</span>
+					</span>
+				</a>
+			</div>
+		{%- endif -%}
+	{%- endcapture -%}
+	{%- comment -%} Mobile Version {%- endcomment -%}
+	<div class="custom-offcanvas position-fixed start-0 top-0 w-100 h-100 bg-white hide d-lg-none" data-submenu id="offCanvasMegamenu_{{ current_menu_link.handle }}" {{ block.shopify_attributes }}>
+		<div class="header-wrapper border-bottom border-dark-subtle bg-white position-sticky top-0 p-3">
+			<div class="w-100 d-flex align-items-center justify-content-center position-relative">
+				<button class="custom-offcanvas-close d-flex align-items-center px-0 border-0 bg-transparent position-absolute start-0" data-close-submenu>{%- render 'icons' with 'arrow-left-chevron' -%}<span class="visually-hidden">Go back</span></button>
+				<p class="text-black fw-medium mb-0">{{ current_menu_link.title }}</p>
+				<button type="button" class="btn-close position-absolute end-0" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasMobileMenu" aria-label="Close"><span class="visually-hidden">Close Mega-menu Button</span></button>
+			</div>
+		</div>
+		<div class="menu-wrapper d-flex flex-column justify-content-between h-100">
+			{%- assign has_categories = current_menu_link.links.size -%}
+			{%- if has_categories > 0 -%}
+				<div class="accordion px-3 pb-3" id="accordionSubmenu{{ current_menu_link.handle }}">
+					{{- blocks -}}
+				</div>
+			{%- endif -%}
+			{%- if block.settings.new_arrival != blank or block.settings.top_selling != blank -%}
+				<div class="product-grid-wrapper">
+					{{- featured_product -}}
+					{{- top_selling_product -}}
+				</div>
+			{%- endif -%}
+		</div>
+	</div>
+	{%- comment -%} Desktop Version {%- endcomment -%}
+	<div class="collapse desktop-megamenu position-fixed bg-white w-100 d-none d-lg-block" data-desktop-menu id="collapse{{ current_menu_link.handle }}" data-bs-parent=".section-header">
+		<div class="container-xl py-4 px-xl-0">
+			<div class="row">
+				{%- comment -%} Add content for blocks here {%- endcomment -%}
+				{%- if block.settings.new_arrival != blank -%}
+					<div class="col-3 pe-lg-0">
+						<div class="h-100 bg-light-subtle">
+							{{- featured_product -}}
+						</div>
+					</div>
+				{%- endif -%}
+				<div class="col{% if block.settings.new_arrival != blank %}-9{% endif %}">
+					<div class="h-100 bg-light-subtle d-flex flex-column justify-content-between">
+						<div class="row">
+							<div class="col-12 pt-3 pb-1">
+								<div class="category-menu row row-cols-5 align-items-start gx-0">
+									{{- blocks -}}
+								</div>
+							</div>
+						</div>
+						{{- top_selling_product -}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+
+{% schema %}
+{
+	"name": "Mega Menu",
+	"tag": null,
+	"settings": [
+		{
+			"type": "header",
+			"content": "New Arrival Card",
+			"info": "Product Card will be visible below the mega menu lists on Mobile, and on the left side on Desktop."
+		},
+		{
+			"type": "image_picker",
+			"id": "new_img",
+			"label": "Card Image"
+		},
+		{
+			"type": "image_picker",
+			"id": "new_img_mobile",
+			"label": "Card Image Mobile"
+		},
+		{
+			"type": "product",
+			"id": "new_arrival",
+			"label": "New Arrival Product",
+			"info": "Card title, button link and description will come from this product. Required for the card to show."
+		},
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Card Title",
+			"info": "Overrides the default Product title on the Card."
+		},
+		{
+			"type": "inline_richtext",
+			"id": "copy",
+			"label": "Card copy",
+			"info": "Overrides the default Product description on the Card."
+		},
+		{
+			"type": "text",
+			"id": "label",
+			"label": "Button Label",
+			"info": "Override default label for the Card button."
+		},
+		{
+			"type": "header",
+			"content": "Top Selling Card",
+			"info": "Product Card will be visible below New Arrival Card on Mobile, and below the mega menu list on Desktop."
+		},
+		{
+			"type": "image_picker",
+			"id": "top_img",
+			"label": "Card Image"
+		},
+		{
+			"type": "image_picker",
+			"id": "top_img_mobile",
+			"label": "Card Image Mobile"
+		},
+		{
+			"type": "product",
+			"id": "top_selling",
+			"label": "Top Selling Product",
+			"info": "Card title, button link and description will come from this product. Required for the card to show."
+		},
+		{
+			"type": "text",
+			"id": "title_2",
+			"label": "Card Title",
+			"info": "Overrides the default Product title on the Card."
+		},
+		{
+			"type": "inline_richtext",
+			"id": "copy_2",
+			"label": "Card copy",
+			"info": "Overrides the default Product description on the Card."
+		},
+		{
+			"type": "text",
+			"id": "label_2",
+			"label": "Button Label",
+			"info": "Override default label for the Card button."
+		}
+	],
+	"blocks": [
+		{ "type": "_menu-category" }
+	],
+	"presets": [
+		{ "name": "Mega Menu" }
+	]
+}
+{% endschema %}

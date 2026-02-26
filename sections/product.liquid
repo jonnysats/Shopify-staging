@@ -1,0 +1,356 @@
+<script src="{{ 'product.js' | asset_url }}" defer crossorigin="anonymous"></script>
+{{ 'product.css' | asset_url | stylesheet_tag }}
+{{ 'product-form.css' | asset_url | stylesheet_tag }}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+<div data-section-id="{{ section.id }}" data-section-type="product" data-exclude-extra-images="{{ product.metafields.theme.hide_non_variant_images.value }}" data-use-custom-selectors="true" data-enable-history-state="true" data-pre-order="{{ product.metafields.theme.preorder.value | default: false }}">
+	<div id="productContainer" class="container-xl mt-3 mt-lg-4 pt-lg-3">
+		<div class="row gx-lg-custom">
+			{%- comment -%} For Gallery Block this will be on top on desktop always, it will not reorder {%- endcomment -%}
+			{%- assign gallery_block = section.blocks | find: 'type', 'gallery' -%}
+			{%- if gallery_block != blank -%}
+				<div class="col-lg-6 d-none d-lg-block">
+					<div class="row flex-column align-items-center gallery-wrapper py-0" {{ gallery_block.shopify_attributes }}>
+						{%- render 'product-gallery' with product as product, alt_version: false, version: 'desktop' -%}
+					</div>
+				</div>
+			{%- endif -%}
+
+			<div class="col-12 col-lg-6">
+				{%- render 'product-form' with product as product,
+					current_variant: current_variant,
+					combined_listing_template: false,
+					alternate: false,
+					preorder: product.metafields.theme.preorder.value
+				-%}
+			</div>
+		</div>
+		<script type="application/json" data-product-json>{{ product | json }}</script>
+{% comment %}
+ {% if product.metafields.custom.video_url %}
+  <div class="row align-items-center mt-5">
+    <!-- Left column: dynamic description -->
+    <div class="col-md-6 text-center px-4">
+      {% if product.metafields.custom.video_description %}
+        <div class="product-video-description" style="font-size: 1.1rem; line-height: 1.6;">
+          <h3 style="font-weight: 600; margin-bottom: 1rem;">See It In Action</h3>
+          <p>{{ product.metafields.custom.video_description }}</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Right column: video -->
+    <div class="col-md-6 text-center px-4">
+      <video autoplay muted loop playsinline
+        style="width: 100%; max-width: 500px; height: auto; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+        <source src="{{ product.metafields.custom.video_url }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+{% endif %}
+{% endcomment %}
+		{%- comment -%} Render variant inventory quantities {%- endcomment -%}
+		{%- render 'variants-extra-data', with product as product -%}
+	</div><!-- .container -->
+</div>
+{% schema %}
+{
+	"name": "Product Pages",
+	"class": "section-product",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "header",
+			"content": "General Settings"
+		},
+		{
+			"type": "checkbox",
+			"id": "overage",
+			"label": "Enable Overage?",
+			"default": true,
+			"info": "Dropdown options are shown based on product overage options metafield values"
+		}
+	],
+	"blocks": [
+		{
+			"type": "preorder",
+			"name": "Pre-order Options",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Countdown"
+				},
+				{
+					"type": "checkbox",
+					"id": "progress_bar",
+					"label": "Enable Pre-order progress bar?",
+					"default": true,
+					"info": "Enable pre-order progress bar"
+				},
+				{
+					"type": "text",
+					"id": "countdown_label",
+					"label": "Progress bar label",
+					"default": "Pre-order price ends in..."
+				},
+				{
+					"type": "color",
+					"id": "progress_bg_color",
+					"label": "Progress bar bg color",
+					"default": "#FFF8E6"
+				},
+				{
+					"type": "color",
+					"id": "progress_border_color",
+					"label": "Progress bar border color",
+					"default": "#184A3E"
+				}
+			]
+		},
+		{
+			"type": "atc",
+			"name": "Add to Cart Button",
+			"limit": 1
+		},
+		{
+			"type": "sample-atc",
+			"name": "Add Sample to Cart Button",
+			"limit": 1
+		},
+		{
+			"type": "gallery",
+			"name": "Product Gallery",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Product gallery with thumbnails",
+					"info": "Required block, block position is fixed to the left on desktop"
+				}
+			]
+		},
+		{
+			"type": "options",
+			"name": "Product Options",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Product variant options/selectors",
+					"info": "Required block"
+				}
+			]
+		},
+		{
+			"type": "quantity",
+			"name": "Product Quantity",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Product page quantity input",
+					"info": "Required block"
+				}
+			]
+		},
+		{
+			"type": "product-tags",
+			"name": "Featured Tags",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Featured Product Tags (Metafields)",
+					"info": "Product tags are shown based on product featured tags metafield"
+				}	
+			]
+		},
+		{
+			"type": "title",
+			"name": "Product Title",
+			"limit": 1
+		},
+		{
+			"type": "price",
+			"name": "Product Price",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Extra Price Options",
+					"info": "Price per unit and unit per box will be displayed bellow product gallery on mobile, and next to price on desktop"
+				},
+				{
+					"type": "checkbox",
+					"id": "enable_price_unit",
+					"label": "Enable Price Per Unit",
+					"info": "This value is shown based on product price per unit metafield",
+					"default": true	
+				},
+				{
+					"type": "checkbox",
+					"id": "enable_tiles_box",
+					"label": "Enable Tiles Per Box",
+					"info": "This value is shown based on product tiles per box metafield",
+					"default": true	
+				}
+			]
+		},
+		{
+			"type": "category",
+			"name": "Category Banner"
+		},
+		{
+			"type": "style",
+			"name": "Style"
+		},
+		{
+			"type": "text",
+			"name": "Text",
+			"settings": [
+				{
+					"type": "richtext",
+					"id": "caption",
+					"label": "Caption"
+				}
+			]
+		},
+		{
+			"type": "sku",
+			"name": "SKU",
+			"settings": [
+				{
+					"type": "text",
+					"id": "sku",
+					"label": "SKU"
+				}
+			]
+		},
+		{
+		  "type": "@app"
+		},
+		{
+			"type": "accordion",
+			"name": "Accordion"
+		},
+		{
+			"type": "category-accordion",
+			"name": "Category Accordion"
+		},
+		{
+			"type": "rating",
+			"name": "Product Rating",
+			"settings": [
+				{
+					"type": "header",
+					"content": "Settings",
+					"info": "Star reviews will only appear if the product has a valid rating set up, using product rating metafield"
+				},
+				{
+					"type": "color",
+					"id": "star_color",
+					"label": "Icons Color",
+					"default": "#FD6908"
+				},
+				{
+					"type": "range",
+					"id": "star_size",
+					"min": 1.5,
+					"max": 2.5,
+					"step": 0.1,
+					"label": "Stars Size",
+					"default": 2,
+					"info": "Increase or decrease stars icons size for desktop view"
+				},
+				{
+					"type": "inline_richtext",
+					"id": "info",
+					"label": "Info",
+					"info": "This value can come dynamically from product reviews count label metafield"
+				},
+				{
+					"type": "select",
+					"id": "star_alignment",
+					"label": "Star Alignment",
+					"options": [
+						{
+							"value": "flex-start",
+							"label": "Left"
+						},
+						{
+							"value": "center",
+							"label": "Center"
+						},
+						{
+							"value": "flex-end",
+							"label": "Right"
+						}
+					],
+					"default": "flex-start"
+				}
+			]
+		},
+		{
+			"type": "total-price",
+			"name": "Total Price",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Total Price",
+					"info": "Total price that shows before add to cart buttons on mobile and on the right side on desktop"
+				}
+			]
+		},
+		{
+			"type": "ship",
+			"name": "Ships In",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Ships In",
+					"info": "This value can be shown based on product ships in metafield"
+				},
+				{
+					"type": "text",
+					"id": "ship_value",
+					"label": "Ships In Value"
+				}
+			]
+		},
+		{
+			"type": "lead-time",
+			"name": "Lead Time",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Lead Time",
+					"info": "This value can be shown based on product lead time metafield"
+				},
+				{
+					"type": "text",
+					"id": "lead_value",
+					"label": "Lead Time Value"
+				}
+			]
+		},
+		{
+			"type": "warranty",
+			"name": "Warranty",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "metaobject_list",
+					"id": "warranty_list",
+					"label": "Warranties",
+					"metaobject_type": "warranties",
+					"info": "Select the available warranties for this template"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

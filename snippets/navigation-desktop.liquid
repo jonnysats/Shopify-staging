@@ -1,0 +1,62 @@
+{%- comment -%}
+	Renders Main Megamenus for Desktop navigation
+	
+	Accepts:
+	- menu: {Shopify Object} Shopify Menu links Array
+
+	Usage:
+	{%-  render 'navigation-desktop', menu: section.settings.menu -%}
+	
+{%- endcomment -%}
+ {%- if menu.links.size > 0 -%}
+	<div class="col d-none d-lg-block order-lg-2 desktop-menu-wrapper">
+		<div class="desktop-menu ms-lg-2">
+			<ul class="list-unstyled d-flex justify-content-start align-items-center mb-0">
+				{%- assign has_child_index = 0 -%}
+				{%- for link in menu.links -%}
+					{%- assign has_child = link.links.size -%}
+					<li class="me-2 me-lg-3 me-xl-4">
+						{%- unless has_child > 0 -%}
+							<a class="nav-link fw-medium text-decoration-none" href="{{ link.url }}" title="{{ link.title | escape }}">
+								{{- link.title -}}
+							</a>
+						{%- elsif section.blocks[has_child_index] != blank -%}
+							<button class="nav-link fw-medium text-decoration-none text-uppercase" data-ref="#collapse{{ link.handle }}">
+								<span>{{- link.title -}}</span>
+								{%- render 'icons' with 'plus-icon', icon_classes: 'ms-1 ms-lg-2' -%}
+							</button>
+							<style>
+								.desktop-menu-wrapper:has(.nav-link[data-ref="#collapse{{ link.handle }}"]:hover) ~ #collapse{{ link.handle }} { visibility: visible; opacity: 1; }
+							</style>
+						{%- else -%}
+							<div class="dropdown dropdown-center">
+								<button class="nav-link fw-medium text-decoration-none text-uppercase" data-ref="#collapse{{ link.handle }}">
+									<span>{{- link.title -}}</span>
+									{%- render 'icons' with 'plus-icon', icon_classes: 'ms-2' -%}
+								</button>
+								<ul id="collapse{{ link.handle }}" class="dropdown-menu border-0 show" data-desktop-menu>
+									{%- for childlink in link.links -%}
+										<li class="py-2 px-3">
+											<a class="d-flex align-items-center justify-content-between" href="{{ childlink.url }}" title="{{ childlink.title | escape }}">
+												<span class="fw-medium">{{- childlink.title -}}</span>
+												{%- render 'icons' with 'arrow-right' -%}
+											</a>
+										</li>
+									{%- endfor -%}
+								</ul>
+								<style>
+									.nav-link[data-ref="#collapse{{ link.handle }}"]:hover ~ #collapse{{ link.handle }} { visibility: visible; opacity: 1; }
+								</style>
+							</div>
+						{%- endunless -%}
+					</li>
+					{%- liquid 
+						if has_child > 0
+							assign has_child_index = has_child_index | plus: 1
+						endif 
+					-%}
+				{%- endfor -%}
+			</ul>
+		</div>
+	</div>
+{%- endif -%}

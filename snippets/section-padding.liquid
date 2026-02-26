@@ -1,0 +1,31 @@
+{%- comment -%}
+	Add top and bottom paddings in a flexible and customizable way via theme schema settings and CSS
+
+	Accepts:
+	- padding_amount_top: {String} Amount to apply to CSS rule ex: No|Small|Default|Large|XLarge
+	- padding_amount_bottom: {String} Amount to apply to CSS rule ex: No|Small|Default|Large|XLarge
+	
+	* No					: 0;
+	* Small					: .5rem;
+	* Default				: 1rem;
+	* Large					: 3rem;
+	* XLarge				: 5rem;
+
+	NOTE: Check "inline-css.liquid" for CSS variables definition
+	
+	Usage:
+	{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom -%}
+
+{%- endcomment -%}
+
+{%- if padding_amount_top != blank and padding_amount_bottom != blank -%}
+	<style>
+		{%- assign selector = "#" | append: "shopify-section-" | append: section.id -%}
+		{{ selector }} {
+			{%- liquid
+				echo 'padding-top: var(--' | append: padding_amount_top | append: '-padding);'
+				echo 'padding-bottom: var(--'| append: padding_amount_bottom | append: '-padding);'
+			-%}
+		}
+	</style>
+{%- endif -%}

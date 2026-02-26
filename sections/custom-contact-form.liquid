@@ -1,0 +1,597 @@
+{%- if section.blocks.size > 0 -%}
+	{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom-%}
+	{{ 'contact-form.css' | asset_url | stylesheet_tag }}
+	<script src="{{ 'contact-form.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	<div class="container" style="--form-bg-color: {{ section.settings.bg_color }};" data-section-id="{{ section.id }}" data-section-type="contactForm">
+		<div class="bg-wrapper">
+		   <div class="content-wrapper mx-lg-auto">
+			<div class="contact-form-headline row justify-content-center">
+				<div class="col-12 text-center">
+					<div class="contact-form-heading-container copy-wrapper mb-4 mx-lg-auto pb-3 px-lg-5">
+						{%- if section.settings.header != blank -%}
+							<h2 class="contact-form-heading h1 pb-lg-1">{{ section.settings.header }}</h2>
+						{%- else -%}
+							<h2 class="contact-form-heading h1 pb-lg-1">{{ page.title }}</h2>
+						{%- endif -%}
+						{%- if section.settings.copy != blank -%}
+							<p class="contact-form-subheading mb-0">{{ section.settings.copy }}</p>
+						{%- endif -%}
+					</div>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-12">
+					{%- form 'contact', data-needs-validation: true, novalidate: true -%}
+						{%- unless form.posted_successfully? == true or form.errors != nil -%}
+							<div class="row row-cols-1">
+								{%- for block in section.blocks -%}
+									{%- liquid 
+										comment
+										# clean label input
+										endcomment
+
+										assign label = block.settings.heading | escape
+										assign label_id = block.settings.heading | handleize | replace: '-', '_'
+										assign label_name = label_id | prepend: 'contact[' | replace: '-', ' ' | append: ']'
+										assign phone_regex = blank
+
+										if block.settings.required == true or block.settings.precheck == true
+											assign label = block.settings.heading | append: '<sup>*</sup>'
+										endif
+										if block.settings.input_type == 'email'
+											assign label_name = 'contact[email]'
+										elsif block.settings.input_type == 'tel'
+											assign phone_regex = "^[0-9\(\)\+\s]{7,20}$"
+										endif
+									-%}
+									{%- case block.type -%}
+										{%- when 'text-inputs' -%}
+											{%- if block.settings.heading != blank -%}
+												{%- liquid
+													if block.settings.hidden_input == true
+														if block.settings.input_trigger_name != blank
+															assign trigger_id = block.settings.input_trigger_name | handleize | replace: '-', '_'
+															assign trigger_name = trigger_id | prepend: 'contact[' | replace: '-', ' ' | append: ']'
+														endif
+													endif
+													
+													assign display_col = "col"
+													case block.settings.display_type
+														when "full"
+															assign display_col = "col"
+														when "half"
+															assign display_col = "col-6"
+														when "half-mobile"
+															assign display_col = "col-6 col-lg-12"
+														when "half-desktop"
+															assign display_col = "col-12 col-lg-6"
+													endcase
+												-%}
+												<div class="{{ display_col }} mb-3">
+													<div class="form-floating">
+														<input type="{{ block.settings.input_type }}" id="{{ label_id }}" name="{{ label_name }}" class="form-control{% if block.settings.hidden_input == true and block.settings.input_trigger != blank %} d-none{% endif %}" value="" autocomplete="on" {% if block.settings.placeholder != blank %} placeholder="{{ block.settings.placeholder | escape }}"{% endif %} {% if block.settings.required == true %}{% if block.settings.hidden_input == true %} data-required{% else %} required{% endif %}{% endif %} {% if phone_regex != blank %} pattern="{{ phone_regex }}"{% endif %} {% if block.settings.hidden_input == true and block.settings.input_trigger != blank %} data-hidden-input="{{ block.settings.input_trigger }}" disabled{% endif %} {% if trigger_name != blank %} data-trigger-name="{{ trigger_name }}"{% endif %}>
+														<label for="{{ label_id }}" class="form-label">{{ label }}</label>
+													</div>
+												</div>
+											{%- endif -%}
+										{%- when 'select-inputs' -%}
+											{%- if block.settings.heading != blank and block.settings.option_list != blank -%}
+												{%- liquid 
+													comment
+													# Build the Option list for Select
+													endcomment
+													assign select_default = block.settings.select_default
+													assign option_split = block.settings.option_list | split: ';'
+													assign default_found_in_array = option_split | where: select_default | first
+													
+													assign display_col = "col"
+													case block.settings.display_type
+														when "full"
+															assign display_col = "col"
+														when "half"
+															assign display_col = "col-6"
+														when "half-mobile"
+															assign display_col = "col-6 col-lg-12"
+														when "half-desktop"
+															assign display_col = "col-12 col-lg-6"
+													endcase
+												-%}
+												<div class="{{ display_col }} mb-3">
+													<div class="form-floating">
+														<select id="{{ label_id }}" name="{{ label_name }}" class="form-select" aria-label="{{ label }}"{% if block.settings.required == true %} required{% endif %}>
+															{%- if default_found_in_array == blank and block.settings.select_default != blank -%}
+																<option value="{{ block.settings.select_default | strip | escape }}">{{ block.settings.select_default | escape }}</option>
+															{%- endif -%}
+															{%- for option in option_split -%}
+																{%- liquid
+																	assign formatted_option = option | strip | escape
+																	assign formatted_default_found_in_array = default_found_in_array | strip | escape
+																-%}
+																<option value="{{ formatted_option }}"{% if formatted_option == formatted_default_found_in_array %} selected{% endif %}>{{ formatted_option }}</option>
+															{%- endfor -%}
+														</select>
+														<label for="{{ label_id }}" class="form-label">{{ label }}</label>
+													</div>
+												</div>
+											{%- endif -%}
+										{%- when 'textarea' -%}
+											{%- if block.settings.heading != blank -%}
+												<div class="col-12 w-100 mb-3">
+													<div class="form-floating">
+														<textarea id="{{ label_id }}" name="{{ label_name }}" class="form-control"{% if block.settings.placeholder != blank %} placeholder="{{ block.settings.placeholder | escape }}"{% endif %}{% if block.settings.required == true %} required{% endif %}></textarea>
+														<label for="{{ label_id }}" class="form-label">{{ label }}</label>
+													</div>
+												</div>
+											{%- endif -%}
+											{%- when 'check-inputs' -%}
+												{%- if block.settings.heading != blank -%}
+													<div class="col mb-3">
+														<div class="form-label">{{ label }}</div>
+														{%- liquid 
+															comment
+															# Build the Option list for Select
+															endcomment
+															assign option_split = block.settings.option_list | split: ';'
+														-%}
+														{%- for option in option_split -%}
+															{%- liquid
+																assign label_id_option = option | handleize | replace: '-', '_'
+																assign label_name_option = option | prepend: 'contact[' | replace: '-', ' ' | append: ']'
+
+																comment
+																# Name must be the same for Radio buttons
+																endcomment
+																if block.settings.input_type == 'radio'
+																	assign label_name_handleize = block.settings.heading | handleize
+																	assign label_name_option = label_name_handleize | prepend: 'contact[' | replace: '-', ' ' | append: ']'
+																endif
+
+																comment
+																# If preselect first element we check the box.raio
+																endcomment
+																assign checked = ''
+																if forloop.first == true and block.settings.precheck == true
+																	assign checked = ' checked'
+																endif
+															-%}
+															<div class="form-check form-check-inline">
+																<input class="form-check-input" type="{{ block.settings.input_type }}" id="{{ label_id_option }}" name="{{ label_name_option }}"{{ checked }}{%- if block.settings.input_type == 'radio' -%} value="{{ option | strip | escape }}"{%- endif -%}>
+																<label class="form-check-label" for="{{ label_id_option }}">{{ option | escape }}</label>
+															</div>
+														{%- endfor -%}
+													</div>
+												{%- endif -%}
+											{%- when 'terms-and-conditions' -%}
+												{%- if block.settings.heading != blank -%}
+													{%- liquid
+														assign option = "terms and conditions"
+														assign label_id_option = option | handleize | replace: '-', '_'
+														assign label_name_option = option | prepend: 'contact[' | replace: '-', ' ' | append: ']'
+													-%}
+													<div class="col mb-2">
+														<div class="form-label visually-hidden">{{ block.settings.heading }}</div>
+														<div class="form-check form-check-inline">
+															<input class="form-check-input" type="checkbox" id="{{ label_id_option }}" name="{{ label_name_option }}" required>
+															<label class="form-check-label ps-2 pt-1" for="{{ label_id_option }}">{{ block.settings.heading }}</label>
+														</div>
+													</div>
+												{%- endif -%}
+									{%- endcase -%}
+								{%- endfor -%}
+								{%- if section.blocks.size > 0 -%}
+									<div class="col-12 w-100">
+										<button type="submit" class="btn btn-primary w-100 mt-2">
+											<span class="anim-wrapper">
+												<span class="initial">{{ section.settings.submit_btn_copy }}</span>
+												<span class="end">{{ section.settings.submit_btn_copy }}</span>
+											</span>
+										</button>
+									</div>
+								{%- endif -%}
+							</div>
+						{%- endunless -%}
+						{%- if form.posted_successfully? -%}
+						{%- if section.settings.success_header != blank -%}
+							<div class="row success-wrapper h-100 d-flex justify-content-center align-items-center hide" data-message-wrapper>
+								<div class="message-copy-wrapper text-center my-5 my-lg-0">
+									<div class="icon-wrapper mb-3 mx-auto">
+										{%- render 'icons' with 'check-circle-success' -%}
+									</div>
+									<h5>{{ section.settings.success_header }}</h5>
+									{%- if section.settings.success_copy != blank -%}
+										<p>{{ section.settings.success_copy }}</p>
+									{%- endif -%}
+								</div>
+							</div>
+						{%- endif -%}
+					{%- elsif form.posted_successfully == false or form.errors != nil -%}
+						{%- if section.settings.error_header != blank -%}
+							<div class="row error-wrapper h-100 d-flex justify-content-center align-items-center hide" data-message-wrapper>
+								<div class="message-copy-wrapper text-center my-5 my-lg-0">
+									<div class="icon-wrapper mb-3 mx-auto">
+										{%- render 'icons' with 'alert-circle-error' -%}
+									</div>
+									<h5>{{ section.settings.error_header }}</h5>
+									{%- if section.settings.error_copy != blank -%}
+										<p>{{ section.settings.error_copy }}</p>
+									{%- endif -%}
+									{%- if section.settings.error_btn_copy != blank -%}
+										<div class="btn-wrapper pt-2">
+											<a href="{{ page.url }}#contact_form" class="btn btn-primary" title="{{ section.settings.error_btn_copy | escape }}">
+												<span class="anim-wrapper">
+													<span class="initial">{{ section.settings.error_btn_copy }}</span>
+													<span class="end">{{ section.settings.error_btn_copy }}</span>
+												</span>
+											</a>
+										</div>
+									{%- endif -%}
+								</div>
+							</div>
+						{%- endif -%}
+					{%- endif -%}
+					{%- endform -%}
+				</div>
+			</div>
+			</div> 
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Custom Contact Form",
+	"tag": "section",
+	"class": "section-contact-form section-custom-contact-form",
+	"settings": [
+		{
+			"type": "color",
+			"id": "bg_color",
+			"label": "Background Color",
+			"default": "#F5F5F7"
+		},
+		{
+			"type": "text",
+			"id": "header",
+			"label": "Header"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "copy",
+			"label": "Copy"
+		},
+		{
+			"type": "header",
+			"content": "Form settings",
+			"info": "IMPORTANT: Make sure to add an email field - it is required by Shopify."
+		},
+		{
+			"type": "text",
+			"id": "submit_btn_copy",
+			"label": "Submit button copy",
+			"default": "Submit"
+		},
+		{
+			"type": "header",
+			"content": "Form Success Message"
+		},
+		{
+			"type": "text",
+			"id": "success_header",
+			"label": "Success Header"
+		},
+		{
+			"type": "text",
+			"id": "success_copy",
+			"label": "Success Copy"
+		},
+		{
+			"type": "header",
+			"content": "Form Error Message"
+		},
+		{
+			"type": "text",
+			"id": "error_header",
+			"label": "Error Header"
+		},
+		{
+			"type": "text",
+			"id": "error_copy",
+			"label": "Error Copy"
+		},
+		{
+			"type": "text",
+			"id": "error_btn_copy",
+			"label": "Error Button Copy",
+			"info": "Button is used to allow user to reload page and try to submit the contact form again"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"blocks": [
+		{
+			"type": "text-inputs",
+			"name": "Text inputs",
+			"settings": [
+				{
+					"type": "select",
+					"id": "display_type",
+					"label": "Input display type",
+					"options": [
+					  {
+						"value": "full",
+						"label": "Full width"
+					  },
+					  {
+						"value": "half",
+						"label": "Half width"
+					  },
+					  {
+						"value": "half-mobile",
+						"label": "Half width (mobile only)"
+					  },
+					  {
+						"value": "half-desktop",
+						"label": "Half width (desktop only)"
+					  }
+					],
+					"default": "half"
+				},
+				{
+					"type": "text",
+					"id": "heading",
+					"label": "Label",
+				},
+				{
+					"type": "text",
+					"id": "placeholder",
+					"label": "Placeholder",
+					"info": "Optional"
+				},
+				{
+					"type": "select",
+					"id": "input_type",
+					"label": "Input fields",
+					"default": "text",
+					"options": [
+						{
+							"label": "Text",
+							"value": "text"
+						},
+						{
+							"label": "Email",
+							"value": "email"
+						},
+						{
+							"label": "Phone",
+							"value": "tel"
+						}
+					]
+				},
+				{
+					"type": "checkbox",
+					"id": "required",
+					"label": "Required?",
+					"default": false
+				},
+				{
+					"type": "header",
+					"content": "Conditional Input Options"
+				},
+				{
+					"type": "checkbox",
+					"id": "hidden_input",
+					"label": "Designate as Conditional Input?",
+					"info": "If selected, this input will only show if designated option is selected (IE - Order ID input if topic is Order)"
+				},
+				{
+					"type": "text",
+					"id": "input_trigger",
+					"label": "Linked Option Trigger",
+					"info": "Enter the selected option that will trigger this input to show. Only use this if this input is conditionally shown"
+				},
+				{
+					"type": "text",
+					"id": "input_trigger_name",
+					"label": "Input Trigger Name",
+					"info": "Label of the select input that should trigger this input"
+				}
+			]
+		},
+		{
+			"type": "select-inputs",
+			"name": "Select input",
+			"settings": [
+				{
+					"type": "select",
+					"id": "display_type",
+					"label": "Input display type",
+					"options": [
+					  {
+						"value": "full",
+						"label": "Full width"
+					  },
+					  {
+						"value": "half",
+						"label": "Half width"
+					  },
+					  {
+						"value": "half-mobile",
+						"label": "Half width (mobile only)"
+					  },
+					  {
+						"value": "half-desktop",
+						"label": "Half width (desktop only)"
+					  }
+					],
+					"default": "half"
+				},
+				{
+					"type": "text",
+					"id": "heading",
+					"label": "Label",
+				},
+				{
+					"type": "text",
+					"id": "option_list",
+					"label": "Option list",
+					"info": "IMPORTANT: Separate each option by a semicolumn (;)",
+					"placeholder": "General inquiry; Order issue"
+				},
+				{
+					"type": "text",
+					"id": "select_default",
+					"label": "Select default",
+				},
+				{
+					"type": "checkbox",
+					"id": "required",
+					"label": "Required?",
+					"default": false
+				}
+			]
+		},
+		{
+			"type": "check-inputs",
+			"name": "Check inputs",
+			"settings": [
+				{
+					"type": "text",
+					"id": "heading",
+					"label": "Label",
+				},
+				{
+					"type": "select",
+					"id": "input_type",
+					"label": "Input type",
+					"default": "checkbox",
+					"info": "Checkboxes can have multiple selections while radio buttons allow only 1 selection",
+					"options": [
+						{
+							"label": "Checkbox",
+							"value": "checkbox"
+						},
+						{
+							"label": "Radio button",
+							"value": "radio"
+						}
+					]
+				},
+				{
+					"type": "text",
+					"id": "option_list",
+					"label": "Option list",
+					"info": "IMPORTANT: Separate each option by a semicolumn (;)",
+					"placeholder": "First message; Following up"
+				},
+				{
+					"type": "checkbox",
+					"id": "precheck",
+					"label": "Precheck first option?",
+					"default": false
+				}
+			]
+		},
+		{
+			"type": "terms-and-conditions",
+			"name": "Terms & Conditions",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "inline_richtext",
+					"id": "heading",
+					"label": "Label",
+					"info": "This field is 'required' by default"
+				},
+			]
+		},
+		{
+			"type": "textarea",
+			"name": "Text area",
+			"settings": [
+				{
+					"type": "text",
+					"id": "heading",
+					"label": "Label",
+				},
+				{
+					"type": "text",
+					"id": "placeholder",
+					"label": "Placeholder",
+					"info": "(optional but nice)"
+				},
+				{
+					"type": "checkbox",
+					"id": "required",
+					"label": "Required?",
+					"default": false
+				}
+			]
+		}
+	],
+	"enabled_on": {
+		"templates": ["page"]
+	},
+	"presets": [
+		{
+			"name": "Custom contact form"
+		}
+	]
+}
+{% endschema %}

@@ -1,0 +1,35 @@
+{%- comment -%}
+	Background image snippet (mobile/desktop)
+
+	Accepts:
+	- image: {Object} Image object
+	- image_mobile: {Object} Image object
+	- image_attributes: {String}
+	- aspect_ratio: {Boolean} will use aspect ratio on wrapper - Default: true
+	- aspect_ratio_mobile: {Boolean} will use aspect ratio on wrapper for mobile - Default: true
+
+	Usage:
+	{%- render 'responsive-bg-image', image: block.settings.slider_image, image_mobile: block.settings.slider_image_mobile -%}
+
+{%- endcomment -%}
+{%- liquid
+	comment
+		# Give default value to context
+	endcomment
+	assign context = 'background'
+
+	comment
+		# If on template page and there's no product image by default
+		use fallback image instead of placeholder
+	endcomment
+	if template.name contains 'product' and image == blank and settings.no_image == blank
+		assign context = 'normal'
+	endif
+	
+	if image_mobile != blank
+		render 'responsive-image', image: image, lazyloading_style: lazyloading_style, fetch_priority: fetch_priority, wrapper_class: 'responsive-bg-image d-none d-lg-block', context: context, product_list: product_list, index: index, aspect_ratio: aspect_ratio, image_attributes: image_attributes
+		render 'responsive-image', image: image_mobile, lazyloading_style: lazyloading_style, fetch_priority: fetch_priority, wrapper_class: 'responsive-bg-image d-lg-none', context: context,  product_list: product_list, index: index, aspect_ratio: aspect_ratio_mobile, image_attributes: image_attributes
+	else
+		render 'responsive-image', image: image, lazyloading_style: lazyloading_style, fetch_priority: fetch_priority, wrapper_class: 'responsive-bg-image', context: context, aspect_ratio: aspect_ratio, image_attributes: image_attributes
+	endif
+-%}

@@ -1,0 +1,373 @@
+[
+	{
+		"name": "theme_info",
+		"theme_name": "RENO SOURCE",
+		"theme_version": "1.0.0",
+		"theme_author": "Bluedge USA",
+		"theme_documentation_url": "https://shopify.github.io/core/",
+		"theme_support_email": "nico@bluedgeusa.com"
+	},
+	{
+		"name": "Theme Color",
+		"settings": [
+			{
+				"type": "color",
+				"id": "theme_light_color",
+				"label": "Theme Light Mode Color",
+				"default": "#1773B0"
+			},
+			{
+				"type": "color",
+				"id": "theme_dark_color",
+				"label": "Theme Dark Mode Color",
+				"default": "#5c636a"
+			}
+		]
+	},
+	{
+		"name": "Favicon",
+		"settings": [
+			{
+				"type": "image_picker",
+				"id": "favicon",
+				"label": "Favicon Image",
+				"info": "Will be scaled down to 32 x 32px, this will be default if none provided from the branding settings"
+			}
+		]
+	},
+	{
+		"name": "Quick Shop",
+		"settings": [
+			{
+				"type": "checkbox",
+				"id": "quickshop_enabled",
+				"label": "Activate Quick Shop Popup",
+				"default": false
+			}
+		]
+	},
+	{
+		"name": "Gift Card",
+		"settings": [
+			{
+				"type": "image_picker",
+				"id": "gift_card_company_logo",
+				"label": "Company logo to display in Gift Card Page"
+			}
+		]
+	},
+	{
+		"name": "Search",
+		"settings": [
+			{
+				"type": "checkbox",
+				"id": "extended_search",
+				"label": "Enable Extended Search",
+				"info": "Display more advanced search results.",
+				"default": true
+			},
+			{
+				"type": "header",
+				"content": "Articles"
+			},
+			{
+				"type": "checkbox",
+				"id": "show_search_articles",
+				"label": "Enable Articles",
+				"info": "Include Articles in search results.",
+				"default": true
+			},
+			{
+				"type": "header",
+				"content": "Pages"
+			},
+			{
+				"type": "checkbox",
+				"id": "show_search_pages",
+				"label": "Enable Pages",
+				"info": "Include Pages in search results.",
+				"default": true
+			},
+			{
+				"type": "header",
+				"content": "Search Suggestions"
+			},
+			{
+				"type": "checkbox",
+				"id": "show_search_suggestions",
+				"label": "Enable Search Suggestions",
+				"info": "Include Suggestions in search results."
+			}
+		]
+	},
+	{
+		"name": "Product Grid",
+		"settings": [
+			{
+				"type": "image_picker",
+				"id": "no_image",
+				"label": "Default Product Image",
+				"info": "Will be used if a product image is missing."
+			},
+			{
+				"type": "header",
+				"content": "Grid Settings"
+			},
+			{
+				"type": "range",
+				"id": "product_description_truncate_word_count",
+				"label": "Product description truncated words count",
+				"min": 1,
+				"max": 50,
+				"step": 1,
+				"info": "How many words ouf of the product description will show on the product grid items",
+				"default": 13
+			},
+			{
+				"type": "range",
+				"id": "search_limit_by",
+				"min": 1,
+				"max": 50,
+				"step": 1,
+				"default": 24,
+				"label": "Search Limit"
+			}
+		]
+	},
+	{
+		"name": "Drawer Cart",
+		"settings": [
+			{
+				"type": "header",
+				"content": "Upsell carousel"
+			},
+			{
+				"type": "checkbox",
+				"id": "drawer_cart_upsell_enable",
+				"label": "Enable Drawer Cart Upsell",
+				"default": true
+			},
+			{
+				"type": "text",
+				"id": "drawer_cart_upsell_title",
+				"label": "Drawer Cart Upsell Heading"
+			},
+			{
+				"type": "product_list",
+				"id": "drawer_cart_upsell_fallback_product_list",
+				"label": "Drawer Cart Upsell Fallback product list",
+				"info": "This list is used when no products in the current drawer cart have no up-sell products to show",
+				"limit": 20
+			},
+			{
+				"type": "header",
+				"content": "Settings"
+			},
+			{
+				"type": "text",
+				"id": "checkout_btn_copy",
+				"label": "Checkout Button Text",
+				"default": "Cart"
+			},
+			{
+				"type": "image_picker",
+				"id": "drawer_cart_empty_image",
+				"label": "Drawer cart empty image"
+			}
+		]
+	},
+	{
+		"name": "Blog",
+		"settings": [
+			{
+				"type": "select",
+				"id": "articles_per_page",
+				"label": "Articles Per Page",
+				"default": "8",
+				"options": [
+					{
+						"value": "2",
+						"label": "2"
+					},
+					{
+						"value": "4",
+						"label": "4"
+					},
+					{
+						"value": "6",
+						"label": "6"
+					},
+					{
+						"value": "8",
+						"label": "8"
+					},
+					{
+						"value": "10",
+						"label": "10"
+					},
+					{
+						"value": "12",
+						"label": "12"
+					},
+					{
+						"value": "14",
+						"label": "14"
+					},
+					{
+						"value": "16",
+						"label": "16"
+					},
+					{
+						"value": "18",
+						"label": "18"
+					},
+					{
+						"value": "20",
+						"label": "20"
+					},
+					{
+						"value": "22",
+						"label": "22"
+					},
+					{
+						"value": "24",
+						"label": "24"
+					}
+				]
+			},
+			{
+				"type": "select",
+				"id": "blog_truncate",
+				"label": "Words Displayed Before Read More Button",
+				"default": "50",
+				"options": [
+					{
+						"value": "25",
+						"label": "25"
+					},
+					{
+						"value": "50",
+						"label": "50"
+					},
+					{
+						"value": "75",
+						"label": "75"
+					},
+					{
+						"value": "100",
+						"label": "100"
+					},
+					{
+						"value": "125",
+						"label": "125"
+					},
+					{
+						"value": "150",
+						"label": "150"
+					},
+					{
+						"value": "200",
+						"label": "200"
+					},
+					{
+						"value": "300",
+						"label": "300"
+					},
+					{
+						"value": "400",
+						"label": "400"
+					},
+					{
+						"value": "500",
+						"label": "500"
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "Klaviyo Newsletter",
+		"settings": [
+			{
+				"type": "text",
+				"id": "public_api_key",
+				"label": "Klaviyo Public API Key"
+			}
+		]
+	},
+	{
+		"name": "Password Page",
+		"settings": [
+			{
+				"type": "header",
+				"content": "Settings",
+				"info": "Settings related to password page/landing page"
+			},
+			{
+				"type": "image_picker",
+				"id": "password_bg",
+				"label": "Background Image for landing page"
+			},
+			{
+				"type": "header",
+				"content": "Overlay"
+			},
+			{
+				"type": "checkbox",
+				"id": "pass_overlay",
+				"label": "Show Overlay?",
+				"default": false
+			},
+			{
+				"type": "color",
+				"id": "pass_overlay_color",
+				"label": "Overlay Color",
+				"default": "#000000"
+			},
+			{
+				"type": "range",
+				"id": "psas_overlay_opacity",
+				"min": 0,
+				"max": 100,
+				"step": 10,
+				"unit": "%",
+				"label": "Opacity",
+				"default": 0
+			}
+		]
+	},
+	{
+		"name": "Storefront API",
+		"settings": [
+			{
+				"type": "text",
+				"id": "access_token",
+				"label": "Public Access Token"
+			},
+			{
+				"type": "select",
+				"id": "api_version",
+				"label": "Shopify API Version",
+				"options": [
+					{
+						"value": "2025-01",
+						"label": "2025-01 Release Candidate"
+					},
+					{
+						"value": "2024-10",
+						"label": "2024-10 Latest"
+					},
+					{
+						"value": "2024-07",
+						"label": "2024-07"
+					},
+					{
+						"value": "2024-04",
+						"label": "2024-04"
+					}
+				],
+				"default": "2024-10"
+			}
+		]
+	}
+]

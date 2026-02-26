@@ -1,0 +1,167 @@
+{%- if section.blocks.size > 0 -%}
+	<script src="{{ 'shop-the-look-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	{{ 'shop-the-look-slider.css' | asset_url | stylesheet_tag }}
+	{%- liquid
+		render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom
+		assign flickity_arrows = false
+		assign flickity_dots = false
+		assign flickity_loop = true
+		assign flickity_adaptive_height = true
+		assign flickity_images_loaded = true
+	-%}
+	<div class="container-lg gx-4 overflow-hidden position-relative" data-section-id="{{ section.id }}" data-section-type="shopTheLookSlider" data-show-first-tooltip-default="{{ section.settings.show_first_dot_by_default }}">
+		{%- if section.settings.title != blank or section.settings.copy != blank -%}
+			<div class="row mb-4 pb-2 pb-lg-3">
+				<div class="col col-lg-6">
+					{%- if section.settings.title != blank or section.settings.copy != blank -%}
+						<div class="copy-wrapper">
+							{%- if section.settings.title != blank -%}
+								<h2 class="mb-lg-3">{{ section.settings.title }}</h2>
+							{%- endif -%}
+							{%- if section.settings.copy != blank -%}
+							<div class="col col-lg-9 pe-lg-3">
+								<p>{{ section.settings.copy }}</p>
+							</div>
+							{%- endif -%}
+						</div> 
+					{%- endif -%}
+				</div>
+				{%- if section.blocks.size > 1 -%}
+					{%- if section.settings.title != blank or section.settings.copy != blank -%}
+						<div class="col d-none d-lg-block">
+							{%- liquid
+								assign total_count = section.blocks.size
+								if total_count <= 9
+									assign total_count = total_count | prepend: '0'
+								endif
+							-%}
+							<div class="shop-the-look-nav-buttons d-none d-lg-flex justify-content-end">
+								<div class="nav-wrapper d-flex flex-column-reverse justify-content-end gap-3 text-end">
+									<div class="counter pt-3">
+										<span class="current" data-shop-the-look-slider-current>01</span>/<span class="total">{{ total_count }}</span>
+									</div>
+									{%- render 'slider-custom-nav-buttons', desktop_only: true -%}
+								</div>
+							</div>
+						</div>
+					{%- endif -%}
+				{%- endif -%}
+			</div>
+		{%- endif -%}
+		<div class="shop-the-look-slider">
+			<div class="row" data-generic-slider data-arrows="{{ flickity_arrows }}" data-dots="{{ flickity_dots }}" data-loop="{{ flickity_loop }}" data-adaptive-height="{{ flickity_adaptive_height }}" data-images-loaded="{{ flickity_images_loaded }}">
+				{% content_for "blocks" %}
+			</div>
+		</div>
+		{%- if section.blocks.size > 1 -%}
+			<div class="d-lg-none">
+				<div class="row mt-3 pt-2">
+					<div class="col">
+						{%- render 'slider-custom-nav-buttons', justify_style: "between" -%}
+					</div>
+				</div>
+			</div>
+		{%- endif -%}
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Shop The Look Slider",
+	"class": "section-shop-the-look-slider",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Content"
+		},
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Header"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "copy",
+			"label": "Copy"
+		},
+		{
+			"type": "header",
+			"content": "Dots"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_first_dot_by_default",
+			"label": "Show First Tooltip By Default?",
+			"default": true
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"blocks": [
+		{ "type": "_image-slide" },
+	],
+	"presets": [
+		{
+			"name": "Shop The Look Slider"
+		}
+	]
+}
+{% endschema %}

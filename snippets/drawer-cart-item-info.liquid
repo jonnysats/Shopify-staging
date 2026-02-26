@@ -1,0 +1,190 @@
+{%- comment -%}
+	Renders the drawer cart item information and form
+
+	Usage:
+	{%- render 'drawer-cart-item-info', item: item -%}
+	
+{%- endcomment -%}
+{%- capture price_per_unit -%}
+{%- comment -%} Price per unit on cart page {%- endcomment -%}
+{%- assign price_per_unit = item.variant.metafields.theme.price_per_unit.value -%}
+{%- if price_per_unit != blank -%}
+	{%- liquid
+		comment
+			# Get currency symbol
+		endcomment
+		assign currency_symbol = ''
+		assign price_per_unit_label = ''
+		for currency in shop.enabled_currencies
+			if currency.iso_code == shop.currency
+				assign currency_symbol = currency.symbol
+				break
+			endif
+		endfor
+
+		comment
+			# Price per unit label
+		endcomment
+		assign unit_label_format = item.product.metafields.theme.price_unit_label
+
+		if unit_label_format contains 'sq.'
+			assign unit_label_format = unit_label_format | remove_last: 'sq.' | append: '<sup>' | append: 2 | append: '</sup>'
+		endif
+
+		assign price_per_unit_label = currency_symbol | append: price_per_unit | append: '/' | append: unit_label_format
+	-%}
+	<p class="drawer-cart-item-price-per-unit mb-0">{{ 'cart.general.unit_price' | t }}{{ price_per_unit_label }}</p>
+{%- endif -%}
+{%- endcapture -%}
+{%- capture coverage_area -%}
+{%- comment -%} Coverage area & Price unit label for item {%- endcomment -%}
+{%- if item.properties['_area_coverage'] != blank and item.product.metafields.theme.price_unit_label != blank -%}
+	<p class="drawer-cart-item-coverage mb-0">
+		{%- liquid
+			comment
+			# Check if "coverage_area" number has decimal points
+			endcomment
+			assign no_decimals = false
+			assign coverage = item.properties['_area_coverage']
+			assign decimals = coverage | split: "." | last
+			if decimals == "00" 
+				assign no_decimals = true
+			endif
+		
+			comment
+			# Remove trailing 0 if number inputted in metafield (type: decimal) has no decimal points
+			endcomment
+			assign final_coverage_area = item.properties['_area_coverage']
+			if no_decimals == true
+				assign final_coverage_area = item.properties['_area_coverage'] | split: "." | first
+			endif
+		-%}
+		{%- liquid 
+			assign overage = false
+			for p in item.properties
+				if p.first == "_overage" and p.last != "none"
+					assign overage = p.last
+					break
+				endif
+			endfor
+		-%}
+		<span class="drawer-cart-item-coverage-area{% if overage != false %} me-1{% endif %}">{{ 'cart.general.coverage_area' | t }}{{- final_coverage_area }} {{ item.product.metafields.theme.price_unit_label | replace: 'sq.ft', 'ft<sup>2</sup>' -}}</span>
+		{%- if overage != blank -%}
+			<span class="drawer-cart-item-coverage-overage-percentage">({{ overage }}%)</span>
+		{%- endif -%}
+	</p>
+{%- endif -%}
+{%- endcapture -%}
+{%- capture box_price -%}
+{%- comment -%} Per box price {%- endcomment -%}
+{%- if item.variant.metafields.theme.price_per_unit != blank -%}
+	{%- liquid
+		assign on_sale = false
+		if item.variant.compare_at_price > item.variant.price 
+			assign on_sale = true
+		endif
+		
+		assign discounted = false
+		if item.original_price > item.final_price
+			assign discounted = true
+		endif
+	-%}
+	<p class="drawer-cart-item-per-box mb-0">
+		<span>
+			{%- if discounted == true or on_sale == true -%}
+				<b>{{- item.price | money -}}</b>
+			{%- else -%}
+				{{- item.price | money -}}
+			{%- endif -%}
+			{%- if discounted == true -%}
+				<s class="compare-at-price price ms-1">{{- item.original_price | money -}}</s>
+			{%- elsif on_sale -%}
+				<s class="compare-at-price price ms-1">{{- item.variant.compare_at_price | money -}}</s>
+			{%- endif -%}
+		</span>
+		<span>{{ 'cart.general.price_per_box' | t }}</span>
+	</p>
+{%- endif -%}
+{%- endcapture -%}
+{%- capture discount_list -%}
+{%- comment -%} Discount Messages {%- endcomment -%}
+{%- if item.line_level_discount_allocations.size > 0 -%}
+	<ul class="drawer-cart-item-discounts list-unstyled pt-0 pb-2 mb-0" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+		{%- for discount in item.line_level_discount_allocations -%}
+			<li class="drawer-cart-item-discount d-flex align-items-center">
+				{%- render 'icons' with 'discount' -%}
+				{%- liquid	 
+					assign discount_amount = discount.amount | times: 1.0
+					assign item_price = item.original_price | times: 1.0
+				
+					assign total_discount_percentage = discount_amount | divided_by: item_price | times: 100.0 | round
+				-%}
+				<p class="text-end mb-0 ms-2"><span class="me-1">-{{ discount.amount | money }}</span><span>({{ total_discount_percentage }}% {{ 'cart.drawer.off' | t }})</span></p>
+			</li>
+		{%- endfor -%}
+	</ul>
+{%- endif -%}
+{%- endcapture -%}
+<div class="product-info h-100 clearfix position-relative">
+	<div class="pricing-extra-data w-50 position-absolute end-0 text-lg-end">
+		{%- render 'product-price', item: item, context: 'item' -%}
+		<div class="d-none d-lg-block">
+			{{- price_per_unit -}}
+			{{- coverage_area -}}
+			{{- box_price -}}
+		</div>
+	</div>
+	<div class="ps-lg-1 d-flex flex-column h-100">
+		<div class="d-flex justify-content-between pb-2 me-lg-7 pe-lg-3">
+			<a class="col-7" href="{{ item.product.url }}" title="{{ item.product.title | escape }}"><p class="product-title mb-0">{{ item.product.title }}</p></a>
+		</div>
+		{{- discount_list -}}
+		<div class="d-flex justify-content-between gap-2 flex-column-reverse flex-lg-row">
+			{%- comment -%} Line item variant options (squares) {%- endcomment -%}
+			{%- unless item.product.has_only_default_variant -%}
+				<ul class="drawer-cart-item-options list-group d-flex flex-row flex-wrap gap-2">
+					{%- for option in item.options_with_values -%}
+					<li class="drawer-cart-item-option"><p class="mb-0">{{ option.value }}</p></li>
+					{%- endfor -%}
+				</ul>
+			{%- endunless -%}
+			<div class="d-lg-none">
+				{{- price_per_unit -}}
+				{{- coverage_area -}}
+				{{- box_price -}}	
+			</div>
+		</div>
+		{%- comment -%} Cart line properties {%- endcomment -%}
+		{%- assign property_size = item.properties | size -%}
+		{%- if property_size > 0 -%}
+			{%- for p in item.properties -%}
+				{%- assign first_character_in_key = p.first | slice: 0 -%}
+				{%- unless p.last == blank or first_character_in_key == '_' -%}
+					<p class="drawer-cart-line-property mt-2">
+						<span class="me-1">{{ p.first }}:</span> 
+						{%- if p.last contains '/uploads/' -%}
+							<a href="{{ p.last }}" title="Download">{{ p.last | split: '/' | last }}</a>
+						{%- else -%}
+							<span>{{ p.last }}</span><br>
+						{%- endif -%}
+					</p>
+				{%- endunless -%}
+			{%- endfor -%}
+		{%- endif -%}
+		<div class="d-flex justify-content-between align-items-center mt-2 mb-lg-1 mt-lg-{% if context == "cart" %}4{% else %}3{% endif %}">
+			{%- 
+				render 'quantity-buttons', 
+				item: item, 
+				variant: item.variant,
+				context: context
+			-%}
+			<a class="drawer-cart-item-remove animated-link d-flex gap-1 align-items-center justify-content-center" href="{{ item.url_to_remove }}" title="Remove Item" data-key="{{ item.key }}" data-remove-item>
+				<p class="mb-0">{{ 'cart.general.remove' | t }}</p>
+				{%- render 'icons' with 'trash' -%}
+			</a>
+		</div>
+		{%- if template == "cart" and item.product.metafields.theme.lead_time != blank -%}
+			<div class="p-2 mt-3" data-cart-delivery-estimate data-message="{{ 'cart.general.delivery_estimate' | t }}" data-lead-time="{{ item.product.metafields.theme.lead_time }}"></div>
+		{%- endif -%}
+	</div>
+</div>

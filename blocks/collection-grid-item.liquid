@@ -1,0 +1,67 @@
+{%- if block.settings.collection != blank -%}
+	<div class="col-8 col-md collection-grid-item ms-3 ms-md-0">
+		{%- liquid
+			if block.settings.tag_image != blank
+				assign image_url = block.settings.tag_image | image_url: width: 16
+				assign tag_image = 'url(' | append: image_url | append: ')'
+			endif
+		-%}
+		<a href="{{ block.settings.collection.url }}" title="{{ block.settings.collection.title | escape }}">
+			<div class="collection-grid-item-image image-wrapper position-relative pb-3 overflow-hidden{% if tag_image != blank %} tag-with-icon{% endif %}"{% if tag_image != blank %} style="--tag-image: {{ tag_image }};"{% endif %}>
+				{%- if block.settings.collection_image != blank -%}
+					{%- render 'responsive-bg-image', image: block.settings.collection_image  -%}
+				{%- else -%}
+					{%- render 'responsive-bg-image', image: block.settings.collection.featured_image -%}
+				{%- endif -%}
+				{%- render 'tag-label',
+					featured_tag: block.settings.collection.metafields.theme.featured_tag.value,
+					wrapper_classes: 'tags-featured-wrapper position-absolute top-0'
+				-%}
+			</div>
+		</a>
+		{%- if block.settings.collection_name != blank -%}
+			<p class="collection-grid-item-title mb-0">
+				<a href="{{ block.settings.collection.url }}" title="{{ block.settings.collection.title | escape }}">{{ block.settings.collection_name }}</a>
+			</p>
+		{%- else -%}
+			<p class="collection-grid-item-title mb-0">
+				<a href="{{ block.settings.collection.url }}" title="{{ block.settings.collection.title | escape }}">{{ block.settings.collection.title }}</a>
+			</p>
+		{%- endif -%}
+	</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection grid item",
+  "tag": null,
+  "settings": [
+	{
+		"type": "collection",
+		"id": "collection",
+		"label": "Collection"
+	},
+	{
+		"type": "text",
+		"id": "collection_name",
+		"label": "Collection Name"
+	},
+	{
+		"type": "image_picker",
+		"id": "collection_image",
+		"label": "Collection Image"
+	},
+	{
+		"type": "image_picker",
+		"id": "tag_image",
+		"label": "Featured Tag Image"
+	}
+  ],
+  "presets": [
+    {
+      "name": "Collection grid item",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}

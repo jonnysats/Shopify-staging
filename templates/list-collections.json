@@ -1,0 +1,78 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "collection-list-hero",
+      "settings": {
+        "height": "800px",
+        "height_mobile": "500px",
+        "show_overlay": false,
+        "overlay_option": "gradient",
+        "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "heading": "",
+        "subheading": "",
+        "copy": "",
+        "button_copy_1": "",
+        "button_url_1": "",
+        "button_copy_2": "",
+        "button_url_2": "",
+        "vertical_alignment_desktop": "end",
+        "horizontal_alignment_desktop": "start",
+        "text_alignment_desktop": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_mobile": "center",
+        "text_alignment_mobile": "center",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "main": {
+      "type": "list-collections",
+      "blocks": {
+        "collection_etPGTp": {
+          "type": "collection",
+          "settings": {
+            "collection": "linea",
+            "image": "shopify://shop_images/Arenosa_copy.jpg"
+          }
+        },
+        "collection_wThTMi": {
+          "type": "collection",
+          "settings": {
+            "collection": "cement-editions"
+          }
+        },
+        "collection_KYDVXD": {
+          "type": "collection",
+          "settings": {
+            "collection": "colorblock"
+          }
+        }
+      },
+      "block_order": [
+        "collection_etPGTp",
+        "collection_wThTMi",
+        "collection_KYDVXD"
+      ],
+      "settings": {
+        "bg_color": "#f5f5f7",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "main"
+  ]
+}

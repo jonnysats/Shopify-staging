@@ -1,0 +1,48 @@
+{%- if block.settings.topic != blank -%}
+	{%- liquid
+		assign topic = block.settings.topic.title.value
+		assign is_first_block = false
+		for theme_block in section.blocks
+			if theme_block.id == block.id and forloop.first == true
+				assign is_first_block = true
+			endif
+		endfor
+	-%}
+	<div class="accordion-item" {{ block.shopify_attributes }} id="{{ topic | handleize }}Wrapper">
+		<h2 class="accordion-header no-animation" id="{{ topic | handleize }}">
+			<button class="accordion-button topic-accordion text-uppercase px-0{% unless is_first_block %} collapsed{% endunless %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTopic{{ topic | handleize }}" aria-expanded="{% if is_first_block == true %}true{% else %}false{% endif %}" aria-controls="collapseTopic{{ topic | handleize }}">{{ topic }}</button>
+		</h2>
+		<div id="collapseTopic{{ topic | handleize }}" class="accordion-collapse collapse{% if is_first_block == true %} show{% endif %}" aria-labelledby="{{ topic | handleize }}" data-bs-parent="#topicsAccordion" data-faq-accordion>
+			<div class="accordion-body p-0">
+				<div class="accordion-wrapper accordion accordion-flush faqs-accordion" id="faqAccordion{{ topic | handleize }}">
+					{%- content_for "blocks" -%}
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+
+{% schema %}
+{
+	"name": "FAQ Topic Accordion",
+	"tag": null,
+	"settings": [
+		{
+			"type": "metaobject",
+			"id": "topic",
+			"label": "Topic",
+			"metaobject_type": "faq_topic"
+		}
+	],
+	"blocks": [
+		{
+			"type": "_faq-question"
+		}
+	],
+	"presets": [
+		{
+			"name": "FAQ Topic Accordion"
+		}
+	]
+}
+{% endschema %}

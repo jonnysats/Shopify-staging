@@ -1,0 +1,436 @@
+{%- if section.blocks.size > 0 -%}
+	{{ 'collections-block-slider.css' | asset_url | stylesheet_tag: preload: true }}
+	{%- if section.settings.slider_or_grid == 'slider' -%}
+		<script src="{{ 'featured-collections-list.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	{%- endif -%}
+	{%- liquid
+		render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom
+		assign flickity_arrows = false
+		assign flickity_dots = false
+		assign flickity_loop = true 
+		assign flickity_group_cells = false
+		assign flickity_adaptive_height = false
+	-%}
+	<div class="bg-wrapper{% if section.settings.enable_background == true %} py-3 py-md-5{% endif %}"{% if section.settings.enable_background == true %} style="--bg-color: {{ section.settings.bg_color }};"{% endif %}{% if section.settings.slider_or_grid == 'slider' %} data-section-id="{{ section.id }}" data-section-type="featuredCollectionsList"{% endif %}>
+		<div class="container">
+			<div class="row pb-2 pb-lg-3 mb-3 mb-lg-3 justify-content-{{ section.settings.alignment }}">
+				<div class="col col-lg-6">
+					{%- if section.settings.heading != blank or section.settings.copy != blank -%}
+						<div class="copy-wrapper pe-3 pe-lg-0 text-{{ section.settings.alignment }}">
+							{%- if section.settings.heading != blank -%}
+								<h2 class="heading mb-lg-3" style="color: {{ section.settings.heading_color }}; --heading-size: {{ section.settings.heading_size }};">{{ section.settings.heading }}</h2>
+							{%- endif -%}
+							{%- if section.settings.copy != blank -%}
+								<div class="col{% if section.settings.alignment == "start" %} col-lg-9 pe-lg-3{% endif %}">
+									<p class="mb-0" style="color: {{ section.settings.copy_color }}">{{ section.settings.copy }}</p>
+								</div>
+							{%- endif -%}
+						</div> 
+					{%- endif -%}
+				</div>
+			</div>
+		</div>
+		{%- capture collection_items -%}
+			{%- for block in section.blocks -%}
+				{%- if block.settings.image != blank or block.settings.video != blank -%}
+					{%- liquid
+						comment
+							Prep the code for the overlay
+						endcomment
+						if section.settings.overlay_option == 'gradient'
+							assign overlay_color = block.settings.overlay_gradient
+						else
+							assign overlay_color = block.settings.overlay_color
+						endif
+						assign overlay_opacity = block.settings.overlay_opacity
+					-%}
+					<div class="col-{% if section.settings.slider_or_grid == 'slider' %}8{% else %}12{% endif %} col-lg-4 collection-grid-item{% unless section.settings.slider_or_grid == 'grid' %} ms-3 ms-sm-0{% endunless %}">
+						{%- if block.settings.link != blank -%}
+							<a href="{{ block.settings.link }}" title="{{ block.settings.title | escape }}">
+						{%- else -%}
+							<div class="block-wrapper">
+						{%- endif -%}
+							<div class="collection-grid-item-image image-wrapper position-relative overflow-hidden aspect-ratio"{% if block.settings.image_or_video == 'video' %} style="--aspect-ratio: 1/1;"{% endif %}>
+								{%- if block.settings.image_or_video == 'image' and block.settings.image != blank -%}
+									{%- render 'responsive-bg-image', image: block.settings.image -%}
+								{%- endif -%}
+								{%- if block.settings.image_or_video == 'video' and block.settings.video != blank -%}
+									<div class="video-wrapper position-absolute h-100 w-100 top-0">
+										{{ block.settings.video | video_tag: autoplay: true, loop: true, muted: true }}
+									</div>
+								{%- endif -%}
+								{%- if block.settings.show_overlay == true -%}
+									<div class="overlay" style="--overlay-color: {{ overlay_color }}; --overlay-opacity: {{ overlay_opacity | divided_by: 100.0 }};"></div>
+								{%- endif -%}
+								<div class="copy-wrapper position-absolute d-flex flex-column justify-content-between p-3 h-100 w-100 top-0">
+									<div class="top-copy">
+										{%- if block.settings.title != blank -%}
+											<h3 class="collection-grid-item-title mb-0" style="color: {{ block.settings.title_color }}">{{ block.settings.title }}</h3>
+										{%- endif -%}
+									</div>
+									{%- if block.settings.copy != blank or block.settings.shop_copy != blank or block.settings.starting_price_copy != blank or block.settings.price != blank -%}
+										<div class="bottom-copy d-flex justify-content-between">
+											{%- if block.settings.copy != blank or block.settings.shop_copy != blank -%}
+												<div class="left-copy">
+													{%- if block.settings.copy != blank -%}
+														<p class="mb-0 fw-bold" style="color: {{ block.settings.copy_color }}">{{ block.settings.copy }}</p>
+													{%- endif -%}
+													{%- if block.settings.shop_copy != blank -%}
+														<p class="text-uppercase mb-0" style="color: {{ block.settings.shop_copy_color }}">{{ block.settings.shop_copy }}</p>
+													{%- endif -%}
+												</div>
+											{%- endif -%}
+											{%- if block.settings.starting_price_copy != blank or block.settings.price != blank -%}
+												<div class="right-copy">
+													{%- if block.settings.starting_price_copy != blank -%}
+														<p class="mb-0" style="color: {{ block.settings.starting_price_color }}">{{ block.settings.starting_price_copy }}</p>
+													{%- endif -%}
+													{%- if block.settings.price != blank -%}
+														<p class="h4 mb-0 text-end" style="color: {{ block.settings.price_color }}">{{ block.settings.price }}</p>
+													{%- endif -%}
+												</div>
+											{%- endif -%}
+										</div>
+									{%- endif -%}
+								</div>
+							</div>
+						{%- if block.settings.link != blank -%}
+							</a>
+						{%- else -%}
+							</div>
+						{%- endif -%}
+					</div>
+				{%- endif -%}
+			{%- endfor -%}
+		{%- endcapture -%}
+		<div class="container{% if section.settings.slider_or_grid == 'slider' %} featured-collections-list-container{% if section.blocks.size < 4 %} mb-5{% endif %}{% endif %} collection-grid">
+			<div class="{% if section.settings.slider_or_grid == 'slider' %}special-margin{% else %}wrapper mb-4{% endif %}">
+				<div class="{% if section.settings.slider_or_grid == 'grid' %}row gy-3 gx-0 g-md-4 g-lg-custom {% else %}slider w-100{% endif %} h-100{% if section.blocks.size < 4 %} disable-slider-lg d-lg-flex{% endif %}"{% if section.settings.slider_or_grid == 'slider' %} data-generic-slider data-free-scroll="false" data-arrows="{{ flickity_arrows }}" data-dots="{{ flickity_dots }}" data-loop="{{ flickity_loop }}" data-adaptive-height="{{ flickity_adaptive_height }}" data-group-cells="{{ flickity_group_cells }}"{% endif %}>
+					{{ collection_items }}
+				</div>
+			</div>
+		</div>
+		{%- if section.settings.slider_or_grid == 'slider' -%}
+			<div class="container d-block mt-4{% if section.blocks.size < 2 %} d-none{% endif %}{% if section.blocks.size < 4 %} d-lg-none{% endif %}">
+				<div class="row">
+					<div class="col">
+						{%- render 'slider-custom-nav-buttons', justify_style: "between" -%}
+					</div>
+				</div>
+			</div>
+		{%- endif -%}
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Collections Block/Slider",
+	"tag": "section",
+	"class": "section-featured-collections section-collection-block-slider",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Content",
+		},
+		{
+			"type": "checkbox",
+			"id": "enable_background",
+			"label": "Enable Background?",
+			"default": false
+		},
+		{
+			"type": "color",
+			"id": "bg_color",
+			"label": "Background Color"
+		},
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Header"
+		},
+		{
+			"type": "select",
+			"id": "heading_size",
+			"label": "Heading Size",
+			"options": [
+				{
+					"value": "2rem",
+					"label": "Small"
+				},
+				{
+					"value": "3rem",
+					"label": "Medium"
+				},
+				{
+					"value": "4rem",
+					"label": "Large"
+				}
+			],
+			"default": "4rem"
+		},
+		{
+			"type": "color",
+			"id": "heading_color",
+			"label": "Header Color",
+			"default": "#09091A"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "copy",
+			"label": "Copy"
+		},
+		{
+			"type": "color",
+			"id": "copy_color",
+			"label": "Copy Color",
+			"default": "#6D6E71"
+		},
+		{
+			"type": "select",
+			"id": "alignment",
+			"label": "Header Alignment",
+			"options": [
+				{
+					"value": "start",
+					"label": "Left"
+				},
+				{
+					"value": "center",
+					"label": "Center"
+				},
+				{
+					"value": "end",
+					"label": "Right"
+				}
+			],
+			"default": "start"
+		},
+		{
+			"type": "select",
+			"id": "slider_or_grid",
+			"label": "Display Slider or Grid?",
+			"info": "Show the blocks as a slider or a grid",
+			"options": [
+				{
+					"value": "slider",
+					"label": "Slider"
+				},
+				{
+					"value": "grid",
+					"label": "Grid"
+				}
+			],
+			"default": "slider"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"blocks": [
+		{
+			"type": "collection",
+			"name": "Collection / Category",
+			"settings": [
+				{
+					"type": "header",
+					"content": "Overlay"
+				},
+				{
+					"type": "checkbox",
+					"id": "show_overlay",
+					"label": "Show Overlay?"
+				},
+				{
+					"type": "select",
+					"id": "overlay_option",
+					"label": "Overlay Options",
+					"options": [
+						{
+							"value": "gradient",
+							"label": "Gradient"
+						},
+						{
+							"value": "color",
+							"label": "Single Color"
+						}
+					],
+					"default": "gradient"
+				},
+				{
+					"type": "color_background",
+					"id": "overlay_gradient",
+					"label": "Overlay Gradient",
+					"default": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)"
+				},
+				{
+				"type": "color",
+				"id": "overlay_color",
+				"label": "Overlay Color",
+				"default": "#000000"
+				},
+				{
+					"type": "range",
+					"id": "overlay_opacity",
+					"min": 0,
+					"max": 100,
+					"step": 10,
+					"unit": "%",
+					"label": "Opacity",
+					"default": 20
+				},
+				{
+					"type": "select",
+					"id": "image_or_video",
+					"label": "Use Image or Video",
+					"options": [
+						{
+							"value": "image",
+							"label": "Image"
+						},
+						{
+							"value": "video",
+							"label": "Video"
+						}
+					],
+					"default": "image"
+				},
+				{
+					"type": "image_picker",
+					"id": "image",
+					"label": "Image",
+					"visible_if": "{{ block.settings.image_or_video == 'image' }}"
+				},
+				{
+					"type": "video",
+					"id": "video",
+					"label": "Video",
+					"visible_if": "{{ block.settings.image_or_video == 'video' }}"
+				},
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Title"
+				},
+				{
+					"type": "color",
+					"id": "title_color",
+					"label": "Title Color",
+					"default": "#fff"
+				},
+				{
+					"type": "text",
+					"id": "copy",
+					"label": "Copy"
+				},
+				{
+					"type": "color",
+					"id": "copy_color",
+					"label": "Copy Color",
+					"default": "#fff"
+				},
+				{
+					"type": "text",
+					"id": "shop_copy",
+					"label": "Shop Copy",
+					"default": "Shop New Items"
+				},
+				{
+					"type": "color",
+					"id": "shop_copy_color",
+					"label": "Shop Copy Color",
+					"default": "#fff"
+				},
+				{
+					"type": "text",
+					"id": "starting_price_copy",
+					"label": "Starting Price Copy",
+					"default": "Starting Price"
+				},
+				{
+					"type": "color",
+					"id": "starting_price_color",
+					"label": "Starting Price Color",
+					"default": "#fff"
+				},
+				{
+					"type": "text",
+					"id": "price",
+					"label": "Price Copy"
+				},
+				{
+					"type": "color",
+					"id": "price_color",
+					"label": "Price Color",
+					"default": "#fff"
+				},
+				{
+					"type": "url",
+					"id": "link",
+					"label": "Link"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Collections Block/Slider"
+		}
+	]
+}
+{% endschema %}

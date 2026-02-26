@@ -1,0 +1,537 @@
+{%- comment -%}
+	Renders a product form with variant selector and add to cart options
+	
+	Accepts:
+	- product: {Object} Product Object
+	- current_variant: {Object} Select or First Available variant of product
+	- combined_listing_template {Boolean}
+	- price_per_unit {String} Product price per unit (metafield)
+	- tiles_per_box {String} Product tiles per box (metafield)
+	- alternate {Boolean} Flag to check if Product from is for alternate products
+	- preorder {Boolean} Flag to check if a product CTA should be preorder
+	
+	Usage:
+	{%- render 'product-form' with product as product, current_variant: current_variant -%}
+
+{%- endcomment -%}
+{%- liquid
+	comment
+	  # Subscription plan (ready to use)
+	endcomment
+	assign current_selling_plan_allocation = current_variant.selected_selling_plan_allocation
+	
+	if current_selling_plan_allocation == nil and current_variant.requires_selling_plan
+		assign current_selling_plan_allocation = current_variant.selling_plan_allocations | first
+	endif
+
+	comment
+		# Get currency symbol
+	endcomment
+	assign currency_symbol = ''
+	assign price_per_unit_label = ''
+	for currency in shop.enabled_currencies
+		if currency.iso_code == shop.currency
+			assign currency_symbol = currency.symbol
+			break
+		endif
+	endfor
+
+	comment
+		# Price per unit label
+	endcomment
+	assign unit_label_format = product.metafields.theme.price_unit_label
+
+	if unit_label_format contains 'sq.'
+		assign unit_label_format = unit_label_format | remove_last: 'sq.' | append: '<sup>' | append: 2 | append: '</sup>'
+	endif
+
+	assign price_per_unit_label = currency_symbol | append: price_per_unit | append: '/' | append: unit_label_format
+
+	assign product_form_classes = ''
+	if alternate == true
+		assign product_form_classes = 'shopify-product-form pb-lg-0'
+	else
+		assign product_form_classes = 'shopify-product-form'
+	endif
+
+
+	comment
+	  # List all possible Product options that allows swatches
+	endcomment
+	assign list_of_swatch_options = 'colour|color|stone|colors|colours|stones'
+	assign list_of_swatch_options = list_of_swatch_options | split: '|'
+-%}
+{%- comment -%} WARRANTY DATA {%- endcomment -%}
+{%- capture warranty -%}
+	{%- liquid
+		comment
+		# Find boxes if sqft template to hide individual block on desktop
+		endcomment
+		assign warranty_text = blank
+		assign warranty_block = section.blocks | find: 'type', 'warranty'
+
+		comment
+		# Validate there's a warranty list from metadata
+		endcomment
+		if warranty_block.settings.warranty_list != blank
+			comment
+			# Loop for each metadata entry, to look for matching collections
+			endcomment
+			for warranty in warranty_block.settings.warranty_list
+				comment
+				# Get the list of collections where this warranty should display
+				endcomment
+				for category in warranty.categories.value
+					comment
+					# Find matching collection for this product
+					endcomment
+					assign found = product.collections | find: 'id', category.id
+					
+					comment
+					# If collection match not found, loop for the next category
+					endcomment
+					if found == blank
+						continue
+					else
+						comment
+						# Grab current warranty text if match found
+						endcomment
+						assign warranty_text = warranty.warranty_text | metafield_tag
+						break
+					endif
+				endfor
+			endfor
+		endif
+	-%}
+	{% if warranty_text != blank %}
+		{{- warranty_text -}}
+	{%- endif -%}
+{%- endcapture -%}
+{%- form 'product', product, data-productid: product.id, id: 'shopify-section-product-form', class: product_form_classes, data-unit-label-format: unit_label_format -%}
+	{%- for block in section.blocks -%}
+		{%- case block.type -%}
+			{%- when '@app' -%}
+				{%- render block -%}
+			{%- comment -%} PDP Gallery, part of blocks flow only on mobile {%- endcomment -%}
+			{%- when 'gallery' -%}
+				<div class="row gallery-wrapper pt-4 pb-2 d-lg-none" {{ block.shopify_attributes }}>
+					{%- render 'product-gallery' with product as product, alt_version: alternate, version: 'mobile' -%}
+				</div>
+			{%- comment -%} PDP Variant options {%- endcomment -%}
+			{%- when 'options' -%}
+				<div class="{% if alternate == false %}d-lg-flex flex-lg-wrap{% else %}d-flex flex-wrap justify-content-between justify-content-lg-start py-lg-2{% endif %}" {{ block.shopify_attributes }}>
+					{%- unless product.has_only_default_variant -%}
+						{%- comment -%}
+							If the Option name contains `size` we display Buttons
+						{%- endcomment -%}
+						{%- for option in product.options_with_values -%}
+							{%- liquid
+								assign swatch_count = option.values | map: 'swatch' | compact | size
+								assign swatch = false
+								if swatch_count > 0
+									assign swatch = true
+								endif
+								assign option_index = forloop.index0
+								assign option_name = option.name | downcase 
+			
+								comment
+									# Check for color option and display variant images in swatches
+								endcomment
+								assign is_swatch = list_of_swatch_options | find: option_name
+								if is_swatch != blank
+									assign swatch = true
+								endif
+			
+								assign is_custom_select = false
+								unless option_name contains 'finish' or option_name != 'size'
+									assign is_custom_select = true
+								endunless
+			
+								assign combined_listing_option = false
+								if combined_listing_template == true and forloop.first == true
+									assign combined_listing_option = true
+								endif
+							-%}
+							{%- if is_custom_select == true or swatch == true -%}
+								<div class="w-100">
+									{%- comment -%}
+										<!-- CUSTOM SELECTOR -->
+									{%- endcomment -%}
+									<p class="label form-label position-relative{% unless swatch == true %} mb-2{% else %} mb-1{% endunless %}"><span class="color-option text-uppercase">{{ option.name }}</span>{% if swatch == true %}: <span class="color-name text-black text-capitalize" id="SingleOptionSelector-{{ option_index }}" data-option-display-name="{{ option.selected_value | escape }}">{{ option.selected_value }}</span>{% endif %}</p>
+									<ul class="selector-wrapper{% if swatch == true %} swatches-wrapper d-flex flex-wrap{% endif %} text-start position-relative" data-custom-selector="{{ option_index }}">
+										{%- for value in option.values -%}
+											{%- liquid
+												if value.swatch.image
+													assign image_url = value.swatch.image | image_url: width: 50
+													assign swatch_value = 'url(' | append: image_url | append: ')'
+												elsif value.swatch.color
+													assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+												else
+													assign image_url = value.variant.featured_image | image_url: width: 50
+													
+													comment
+														# If variant from option is unavailable
+														grab first variant image that matches initial criteria
+													endcomment
+													if value.variant == blank
+														for variant in product.variants
+															for option in variant.options
+																if option.name == value
+																	assign image_url = variant.featured_image | image_url: width: 50
+																	break	
+																endif
+															endfor
+														endfor
+													endif
+													
+													assign swatch_value = 'url(' | append: image_url | append: ')'
+												endif
+											-%}
+											<li>
+												<a href="#" class="option{% if swatch == true %} swatch{% endif %}{% if option.selected_value == value %} selected{% endif %}"{% if swatch == true %} data-color-swatch="{{ value | handleize }}"{% endif %} data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-option-index="{{ option.position }}" data-value="{{ value | escape }}" data-selected="{% if option.selected_value == value %}true{% else %}false{% endif %}"{% if combined_listing_option == true %} data-product-url="{% if value.product_url != blank %}{{ value.product_url }}{% else %}{{ value.variant.product.url }}{% endif %}?variant={{ value.variant.id }}"{% endif %}{% if swatch == true %} style="--swatch-background: {{ swatch_value }};"{% endif %} data-single-option-selector>
+													{%- if swatch == true -%}
+														<span class="visually-hidden">{{ value | escape }}</span>
+													{%- else -%}
+														<span class="option-block">{{ value | escape }}</span>
+													{%- endif -%}
+												</a>
+											</li>
+										{%- endfor -%}
+									</ul>
+								</div>
+							{%- else -%}
+								<div class="custom-select-wrapper inline-wrapper">
+									{%- comment -%} 
+										<!-- SELECT -->
+									{%- endcomment -%}
+									<div class="pb-1 mb-3 pb-lg-0">
+										<p class="label form-label position-relative"><span class="color-option text-uppercase">{{ option.name }}</span></p>
+										<div class="dropdown w-100">
+											<button class="form-select d-flex justify-content-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+												<span>{{ option.selected_value }}</span>
+											</button>
+											<ul class="dropdown-menu w-100 selector-wrapper js" data-custom-selector="{{ option_index }}">
+												{%- for value in option.values -%}
+													<li class="menu-item"><a href="#" class="dropdown-item{% if option.selected_value == value %} selected{% endif %}" data-id="SingleOptionSelector-{{ option_index }}" data-index="option{{ option.position }}" data-option-index="{{ option.position }}" data-value="{{ value | escape }}" data-selected="{% if option.selected_value == value %}true{% else %}false{% endif %}" data-single-option-selector>{{ value }}</a></li>
+												{%- endfor -%}
+											</ul>
+										</div>
+									</div>
+								</div>
+							{%- endif -%}
+						{%- endfor -%}
+					{%- endunless -%}
+				</div>
+			{%- comment -%} PDP Quantity input and overage selector {%- endcomment -%}
+			{%- when 'quantity' -%}
+				<div class="{% if alternate == false %}d-lg-flex flex-lg-wrap{% else %}d-flex col-lg-10 pe-lg-3 gap-3 flex-wrap justify-content-between justify-content-lg-start{% endif %}" {{ block.shopify_attributes }}>
+					{%- comment -%}
+						# Classic Quantity
+					{%- endcomment -%}
+					<div class="quantity-wrapper inline-wrapper{% if alternate == false %} py-lg-2{% else %} pb-lg-2{% endif %}">
+						<label class="form-label text-uppercase{% if alternate == true %} visually-hidden{% endif %}" for="Quantity">{{ 'products.product.quantity' | t }}</label>
+						<div class="d-flex position-relative{% if alternate == true %} mb-3{% else %} mb-2{% endif %} mb-lg-1">
+							<input class="form-control" type="number" id="Quantity" name="quantity" placeholder="{{ 'products.product.quantity_placeholder' | t }}" value="{{ current_variant.quantity_rule.min | default: 1 }}" step="{{ current_variant.quantity_rule.increment | default: item.variant.quantity_rule.min }}" min="{{ current_variant.quantity_rule.min | default: 1 }}"{% if current_variant.quantity_rule.max != blank %} max="{{ current_variant.quantity_rule.max | default: 15 }}"{%- endif -%}>
+							{%- if alternate == true and product.metafields.theme.price_unit_label != blank -%}
+								<div class="icon-box position-absolute top-50 end-0 translate-middle-y py-0 me-3 text-black">{{- product.metafields.theme.price_unit_label | replace: 'sq.ft', 'ft<sup>2</sup>' -}}</div>
+							{%- endif -%}
+						</div>
+					</div>
+					{%- comment -%}
+						# OVERAGE OPTIONS
+					{%- endcomment -%}
+					{%- if alternate == true -%}
+						{%- liquid
+							assign overage_options = blank
+
+							comment
+								Loop for each product collection
+							endcomment
+							for collection in product.collections
+								comment
+									Find the main collection with overage options
+								endcomment
+								if collection.metafields.theme.overage_options != blank
+									comment
+										Get overage options to build the selector
+									endcomment
+									assign overage_options = collection.metafields.theme.overage_options
+									break
+								endif
+							endfor
+						-%}
+						{%- if section.settings.overage == true and overage_options != blank -%}
+							<div class="line-item-property__field inline-wrapper overage-wrapper">
+								<label class="form-label text-uppercase mb-1{% if alternate == true %} visually-hidden{% endif %}" for="include-overage">{{ 'products.product.overage_label' | t }}</label>
+								<div class="d-flex position-relative{% if alternate == false %} mt-1 mb-3{% else %} mb-2{% endif %} mb-lg-1">
+									<div class="dropdown w-100">
+										<button class="form-select d-flex justify-content-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+											{{ 'products.product.overage_placeholder' | t }}
+										</button>
+										<ul class="dropdown-menu selector-wrapper js w-100">
+											{%- for option in overage_options.value -%}
+												{%- liquid
+													assign option_lower = option | downcase
+													assign option_label = option
+
+													if option == '0'
+														assign option_label = 'products.product.no_overage' | t
+													else
+														unless option_lower contains '%'
+															assign option_label = option_lower | append: '%'
+														endunless
+													endif
+												-%}
+												<li class="menu-item"><a href="#" class="dropdown-item" data-selected="false" data-value="{{- option | downcase | escape | strip | replace: '%', '' -}}" data-overage-option>{{ option_label }}</a></li>
+											{%- endfor -%}
+										</ul>
+									</div>
+									<div class="icon-box position-absolute top-50 end-0 translate-middle-y py-0 me-3 text-black">%</div>
+								</div>
+							</div>
+						{%- endif -%}
+					{%- endif -%}
+				</div>
+			{%- when 'title' -%}
+				{%- comment -%} Visible product title {%- endcomment -%}
+          {%- comment -%} Roney added no-animation for title to show {%- endcomment -%}
+				<h1 class="h1 no-animation mt-2{% if alternate == false %} mb-lg-3{% else %} mb-lg-1{% endif %}" {{ block.shopify_attributes }}>{{ product.title }}</h1>
+
+			{%- when 'product-tags' -%}
+				{%- comment -%} Featured Tags Wrapper {%- endcomment -%}
+				{%- liquid
+					if product.metafields.theme.featured_tags != blank
+						assign tags_classes = 'py-2'
+
+						if alternate == true
+							assign tags_classes = 'pt-3 pb-2 pb-lg-3 pt-lg-2'
+						endif
+
+						render 'tag-label', tags: product.metafields.theme.featured_tags.value, wrapper_classes: tags_classes
+					endif
+				-%}
+			{%- when 'price' -%}
+				{%- comment -%} Display Price {%- endcomment -%}
+				<div class="price-wrapper d-lg-flex align-items-center py-1{% if alternate == true %} flex-lg-column align-items-lg-start{% else %} py-lg-2 my-lg-1{% endif %}" {{ block.shopify_attributes }}>
+					<div class="d-flex">
+						{%- render 'product-price' with current_variant as product, context: 'product-page', alternate: alternate -%}
+						{%- if alternate == true -%}
+							<span class="text-black">{{ 'products.product.price_per_box' | t }}</span>
+						{%- endif -%}
+					</div>
+					{%- if block.settings.enable_price_unit == true or block.settings.enable_tiles_box == true -%}
+						<div class="d-flex pt-2 mt-1{% if alternate == false %} mt-lg-0 pt-lg-0{% else %} mt-lg-0 pt-lg-3{% endif %}">
+							{%- if block.settings.enable_price_unit == true -%}
+								<div class="d-lg-flex{% if block.settings.enable_tiles_box == true %} border-end border-light-subtle pe-2 me-2{% endif %}">
+									<span class="extra-field text-black{% if price_per_unit == blank %} d-none{% endif %}" data-price-per-unit>{{ price_per_unit_label }}</span>
+								</div>
+							{%- endif -%}
+							{%- if block.settings.enable_tiles_box == true -%}
+								<div class="d-lg-flex">
+									<span class="extra-field text-black{% if tiles_per_box == blank %} d-none{% endif %}" data-tiles-per-box>{{ tiles_per_box }}</span>
+								</div>
+							{%- endif -%}
+						</div>
+					{%- endif -%}
+				</div>
+			{%- comment -%} Metafield: Style {%- endcomment -%}
+			{%- when 'style' -%}
+				<p {{ block.shopify_attributes }}>Style: {{ product.metafields.theme.style | metafield_text }}</p>
+			{%- when 'category' -%}
+				{%- render 'product-category-banner' with product as product -%}
+			{%- when 'text' -%}
+				<p class="text-wrapper{% if alternate == true %} mt-3 mb-2 my-lg-3{% else %} my-3{% endif %}" {{ block.shopify_attributes }}>{{- block.settings.caption | replace: 'href', 'class="text-black" href' -}}</p>
+			{%- when 'sku' -%}
+				<p {{ block.shopify_attributes }}>{{- block.settings.sku -}} <span data-variant-sku>{{ current_variant.sku }}</span></p>
+			{%- when 'rating' -%}
+				<div {{ block.shopify_attributes }}>
+					{%- render 'product-ratings', product: product, block: block -%}
+				</div>
+			{%- comment -%} MetaObject: Product Extra Content Accordion  {%- endcomment -%}
+			{%- when 'accordion' -%}
+				{%- render 'product-extra-info' with product as product -%}
+			{%- comment -%} MetaObject: Product Category metafields Accordion  {%- endcomment -%}
+			{%- when 'category-accordion' -%}
+				{%- render 'product-category-accordion' with product as product -%}
+			{%- comment -%} Lead time Block {%- endcomment -%}
+			{%- when 'lead-time' -%}
+					{%- if block.settings.lead_value != blank -%}
+						<div class="block-wrapper lead{% if preorder == true %} d-none{% endif %}" {{ block.shopify_attributes }}>
+							<p class="{% if alternate == false %}mb-0 mt-1{% else %}mb-2 mt-1{% endif %}">{{ 'products.product.lead_time' | t }}: <span class="text-black">{{ block.settings.lead_value }}</span></p>
+						</div>
+					{%- endif -%}
+				{%- comment -%} Ships in Block {%- endcomment -%}
+				{%- when 'ship' -%}
+					{%- liquid
+						comment
+							Find boxes if sqft template to hide individual block on desktop
+						endcomment
+						assign preview_block = section.blocks | find: 'type', 'boxes'
+					-%}
+					{%- if block.settings.ship_value != blank -%}
+						<div class="block-wrapper ship{% if preview_block != blank and alternate == true %} d-lg-none{% endif %}" {{ block.shopify_attributes }}>
+							<p class="mb-0 mt-1">{{ 'products.product.ships_in' | t }}: <span class="text-black">{{ block.settings.ship_value }}</span></p>
+						</div>
+					{%- endif -%}
+				{%- comment -%} Warranty copy Block {%- endcomment -%}
+				{%- when 'warranty' -%}
+					{%- liquid
+						comment
+							Find boxes if sqft template to hide individual block on desktop
+						endcomment
+						assign preview_block = section.blocks | find: 'type', 'boxes'
+					-%}
+					{%- if warranty != blank -%}
+						<div class="block-wrapper warranty{% if preview_block != blank and alternate == true %} d-lg-none{% endif %}" {{ block.shopify_attributes }}>
+							{{ warranty | replace: 'href', 'class="text-black" href' | replace: '<p>', '<p class="text-black mb-1 mt-1">' }}
+						</div>
+					{%- endif -%}
+				{%- comment -%} Total Price {%- endcomment -%}
+				{%- when 'total-price' -%}
+					<div class="total-price d-flex align-items-center{% if alternate == false %} pt-3 pb-1{% else %} pt-4 pb-2 py-lg-3{% endif %} block-wrapper" {{ block.shopify_attributes }}>
+						<span class="text-uppercase">{{ 'products.product.total_price' | t }}</span>
+						<p class="h2 no-animation ms-2 mb-0" data-total-price>{{ current_variant.price | money }}</p>
+					</div>
+				{%- comment -%} PREVIEW BOXES/BOXES COVERAGE PREVIEWS {%- endcomment -%}
+				{%- when 'boxes' -%}
+					{%- liquid
+						assign ships_block = blank
+
+						comment
+							Display these block fixed here on desktop alternative pdp only
+						endcomment
+						if alternate == true
+							assign ships_block = section.blocks | find: 'type', 'ship'
+						endif
+					-%}
+					<div class="box-results{% if alternate == true %} col-lg-10 pe-lg-3{% endif %} d-flex gap-3 gap-lg-custom mt-2 mb-3" {{ block.shopify_attributes }}>
+						<div class="box-wrapper number-box text-black">
+							<div class="d-flex align-items-center">
+								{%- render 'icons' with 'pdp-box' -%}
+								<span>{{ 'products.product.box_label' | t }}</span>
+							</div>
+							<p class="mb-0" data-box-number>1 Box</p>
+						</div>
+						<div class="box-wrapper coverage-box text-black">
+							<div class="d-flex align-items-center">
+								{%- render 'icons' with 'pdp-size' -%}
+								<span>{{ 'products.product.square_coverage_area' | t }}</span>
+							</div>
+							<p class="mb-0" data-area-number>1.00 ft<sup>2</sup></p>
+						</div>
+						{%- if ships_block.settings.ship_value != blank or warranty != blank -%}
+							<div class="box-wrapper extra-box d-none d-lg-block">
+								{%- if ships_block.settings.ship_value != blank -%}
+									<p class="{% if warranty != blank %}mb-1 {% else %}mb-0 {% endif %}mt-0 block-item-text">{{ 'products.product.ships_in' | t }}: <span class="text-black">{{ ships_block.settings.ship_value }}</span></p>
+								{%- endif -%}
+								{%- if warranty != blank -%}
+									{{ warranty | replace: 'href', 'class="text-black" href' | replace: '<p>', '<p class="text-black block-item-text mb-0">' }}
+								{%- endif -%}
+							</div>
+						{%- endif -%}
+					</div>
+				{%- comment -%} PRODUCT DESCRIPTION FOR QUICK MODAL {%- endcomment -%}
+				{%- when 'description' -%}
+					{%- if product.description != blank -%}
+						<div class="product-description pb-3 pb-lg-4">
+							{{- product.description | strip_html | truncatewords: 30, '...' -}}
+						</div>
+					{%- endif -%}
+				{%- when 'preorder' -%}
+					{%- comment -%} Countdown timers {%- endcomment -%}
+					{%- render 'countdown-timer' with product as product, block: block, countdown_label: block.settings.countdown_label, enable_progress_bar: block.settings.progress_bar, progress_bg_color: block.settings.progress_bg_color, progress_border_color: block.settings.progress_border_color -%}
+				{%- when 'atc' -%}
+					<div class="row atc-wrapper pb-2 pt-3{% if alternate == false %} gx-lg-2 gx-xl-custom{% else %} gx-lg-0{% endif %}">
+						<div class="col-12{% if alternate == false %} col-xl{% else %} col-lg-10 pe-lg-3{% endif %} btn-wrapper{% if alternate == true %} d-flex flex-column align-items-center justify-content-center{% endif %}">
+							{%- comment -%} SHOW LEAD TIME BEFORE CTA ON PRE-ORDER {%- endcomment -%}
+							{%- if preorder == true -%}
+								{%- assign lead_block = section.blocks | find: 'type', 'lead-time' -%}
+								{%- if lead_block.settings.lead_value != blank -%}
+									<div class="block-wrapper copy-wrapper lead" {{ lead_block.shopify_attributes }}>
+										<p class="preorder-lead text-center mb-2">{{ 'products.product.lead_time' | t }}: <span class="text-black">{{ lead_block.settings.lead_value }}</span></p>
+									</div>
+								{%- endif -%}
+							{%- endif -%}
+							{%- comment -%} ATC buttons {%- endcomment -%}
+							<button class="btn btn-primary position-relative w-100" type="submit" name="add" data-add-to-cart{% unless current_variant.available %} disabled="disabled"{% endunless %} data-product-id="{{ product.id }}">
+								<span class="anim-wrapper">
+									{%- comment -%}
+										Check if CTA text should be pre-order, add to cart or sold out
+									{%- endcomment -%}
+									{%- capture cta_text -%}
+										{%- assign preorder_label = current_variant.metafields.theme.preorder_label.value -%}
+										{%- if current_variant.available -%}
+											{%- if preorder == true and current_variant.inventory_quantity <= 0 -%}
+												{%- if preorder_label != blank -%}
+													{{- preorder_label -}}	
+												{%- else -%}
+													{{ 'products.product.preorder' | t }}
+												{%- endif -%}
+											{%- else -%}
+												{{ 'products.product.add_to_cart' | t }}
+											{%- endif -%}
+										{%- else -%}
+											{%- if preorder == true and current_variant.inventory_quantity <= 0 -%}
+												{%- if preorder_label != blank -%}
+													{{- preorder_label -}}	
+												{%- else -%}
+													{{ 'products.product.preorder' | t }}
+												{%- endif -%}
+											{%- else -%}
+												{{ 'products.product.sold_out' | t }}
+											{%- endif -%}
+										{%- endif -%}
+									{%- endcapture -%}
+									<span class="initial" data-add-to-cart-text>{{ cta_text }}</span>
+									<span class="end" data-add-to-cart-text>{{ cta_text }}</span>
+									<span class="end loading-end">
+										<span class="me-1">{{ 'products.product.add_to_cart_loading' | t }}</span><ul><li>&#9632;</li><li>&#9632;</li><li>&#9632;</li></ul>
+									</span>
+								</span>
+							</button>
+						</div>
+					</div>
+				{%- when 'sample-atc' -%}
+					{%- comment -%} Sample Button {%- endcomment -%}
+					{%- liquid
+						assign sample = blank
+						assign changes_per_variant = false
+
+						comment
+						# Validate origin of sample attached (by default it is product-level)
+						endcomment
+						unless product.metafields.theme.use_variant_samples.value == true
+							assign sample = product.metafields.theme.sample.value
+						else
+							assign sample = current_variant.metafields.theme.sample.value
+							assign changes_per_variant = true	
+						endunless
+					-%}
+					{%- if sample != blank -%}
+						{%- liquid
+							assign product_sample_variant = sample.selected_or_first_available_variant
+							assign product_sample_price = sample.price | money
+						-%}
+						<div class="row atc-wrapper py-2{% if alternate == false %} gx-lg-2 gx-xl-custom{% else %} gx-lg-0{% endif %}">
+							<div class="col-12{% if alternate == false %} col-xl{% else %} col-lg-10 pe-lg-3{% endif %} btn-wrapper{% if alternate == true %} d-flex flex-column align-items-center justify-content-center{% endif %}">
+								<button class="btn btn-outline-primary px-2{% if alternate == false %} w-100{% else %} mx-auto border-0 mb-lg-2{% endif %}" data-sample-btn data-product-sample-id="{{ product_sample_variant.id }}"{% if changes_per_variant == true %} data-change-per-variant="true" data-sample-label="{{ 'products.product.add_sample_to_cart' | t }}"{% endif %}>
+									<span class="anim-wrapper">
+										<span class="initial" data-add-to-cart-text>{%- if product_sample_variant.available -%}{{ 'products.product.add_sample_to_cart' | t: price: product_sample_price }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}</span>
+										<span class="end" data-add-to-cart-text>{%- if product_sample_variant.available -%}{{ 'products.product.add_sample_to_cart' | t: price: product_sample_price }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}</span>
+										<span class="end loading-end">
+											<span class="me-1">{{ 'products.product.add_to_cart_loading' | t }}</span><ul><li>&#9632;</li><li>&#9632;</li><li>&#9632;</li></ul>
+										</span>
+									</span>
+								</button>
+							</div>
+						</div>
+					{%- endif -%}
+		{%- endcase -%}
+	{%- endfor -%}
+	{%- comment -%} Gift Card Recipient Form {%- endcomment -%}
+	{%- if product.gift_card? -%}
+		{%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
+	{%- endif -%}
+	<input type="hidden" name="id" value="{{ current_variant.id }}">
+	<input name="selling_plan" class="selected-selling-plan-id" data-selected-selling-plan type="hidden" value="{{ current_selling_plan_allocation }}">
+{%- endform -%}

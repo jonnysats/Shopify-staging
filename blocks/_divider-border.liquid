@@ -1,0 +1,60 @@
+{%- liquid
+	assign display_classes = blank
+	case block.settings.display_options
+		when "both"
+			assign display_classes = "d-block"
+		when "mobile_only"
+			assign display_classes = "d-block d-lg-none"
+		when "desktop_only"
+			assign display_classes = "d-none d-lg-block"
+	endcase	
+-%}
+<hr {{ block.shopify_attributes }} class="block-divider-border {{ display_classes }} w-100 opacity-100{% if block.settings.remove_spacing == true %} m-0 p-0{% endif %}" style="--border-color: {{ block.settings.color }}" />
+{% schema %}
+{
+	"name": "Divider border",
+	"tag": null,
+	"settings": [
+		{
+			"type": "header",
+			"content": "Border"
+		},
+		{
+			"type": "color",
+			"id": "color",
+			"label": "Border color"
+		},
+		{
+			"type": "checkbox",
+			"id": "remove_spacing",
+			"label": "Remove border spacing",
+			"default": false
+		},
+		{
+			"type": "select",
+			"id": "display_options",
+			"label": "Display options",
+			"options": [
+			  {
+				"value": "both",
+				"label": "Desktop & Mobile"
+			  },
+			  {
+				"value": "mobile_only",
+				"label": "Mobile only"
+			  },
+			  {
+				"value": "desktop_only",
+				"label": "Desktop only"
+			  }
+			],
+			"default": "both"
+		}
+	],
+	"presets": [
+		{
+			"name": "Divider border"
+		}
+	]
+}
+{% endschema %}

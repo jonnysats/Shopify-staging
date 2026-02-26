@@ -1,0 +1,20 @@
+{%- comment -%}
+	Renders empty quickshop modal waiting for JavaScript to act upon it when called
+	
+	Usage:
+	{%- render 'quickshop-modal' -%}
+	
+{%- endcomment -%}
+{%- if settings.quickshop_enabled == true -%}
+<!-- QuickShop Modal -->
+<div class="modal fade" id="quickShopModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span class="visually-hidden">Close</span></button>
+			</div>
+			<div class="modal-body template-product px-0 pt-0 px-lg-3">{{ 'products.quickshop.loading' | t }}</div>
+		</div>
+	</div>
+</div>
+{%- endif -%}

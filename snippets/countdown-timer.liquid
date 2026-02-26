@@ -1,0 +1,89 @@
+{%- comment -%}
+	Renders product variants countdown needed code to provide countdowns on ATC buttons
+	
+	Accepts:
+	- product: {Object} Product Object
+	- enable_progress_bar: {Boolean} Enable/Disable progress bar
+	- progress_bg_color: {String} Progress bar bg color
+	- progress_border_color: {String} Progress bar Border color
+	- block: {Object} Block object
+	
+	Usage:
+	{%- render 'countdown-timer' with product as product, countdown_label: section.settings.countdown_label, enable_progress_bar: section.settings.progress_bar, progress_bg_color: section.settings.progress_bg_color, progress_border_color: section.settings.progress_border_color -%}
+
+{%- endcomment -%}
+{%- liquid
+	comment
+	# Check if there's any countdown found in variants
+	endcomment
+	assign countdowns_count = 0
+	for variant in product.variants
+		if variant.metafields.theme.countdown.value != blank and variant.metafields.theme.countdown_end != blank
+			assign countdowns_count = countdowns_count | plus: 1
+		endif
+	endfor
+-%}
+{%- if countdowns_count > 0 -%}
+	<div class="row">
+		<div class="col-12 col-lg pe-lg-3">
+			<div class="countdown-wrapper d-flex flex-column flex-lg-row align-items-lg-center gap-3 mb-4 mt-3" data-section-id="{{ section.id }}" data-section-type="countdownTimer" {{ block.shopify_attributes }}>
+				{{ "countdown.css" | asset_url | stylesheet_tag }}
+				<script>
+					{%- comment -%} Enable countdowns {%- endcomment -%}
+					globalThis.bluedgeusa.product.countdown_timers = true;
+					{%- comment -%} List of countdowns {%- endcomment -%}
+					globalThis.bluedgeusa.product.variant_countdown_list = [
+					{%- for variant in product.variants -%}
+						{%- if variant.metafields.theme.countdown.value != blank and variant.metafields.theme.countdown_end != blank -%}
+						{
+							variantId: {{ variant.id | json }},
+							startDate: "{{ variant.metafields.theme.countdown | date: '%b %d, %Y' | default: '' }}",
+							startTime: "{{ variant.metafields.theme.countdown | date: '%H:%M' | default: '' }}",
+							endDate: "{{ variant.metafields.theme.countdown_end | date: '%b %d, %Y' | default: '' }}",
+							endTime: "{{ variant.metafields.theme.countdown_end | date: '%H:%M' | default: '' }}",
+							days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Wednesday", "Friday", "Saturday"],
+							selected: {%- if product.selected_or_first_available_variant.id == variant.id -%}true{% else %}false{% endif %}
+						}{%- unless forloop.last -%},{%- endunless -%}
+						{%- endif -%}
+					{%- endfor -%}
+					];
+				</script>
+				<script src='{{ 'countdown.js' | asset_url }}' defer></script>
+				{%- if countdown_label != blank and enable_progress_bar == true -%}
+					<div class="progress-bar mb-3 mb-lg-0" style="--progress-bg-color: {{ progress_bg_color }}; --progress-border-color: {{ progress_border_color }};" data-progress-bar>
+						<h3 class="text-center text-primary mb-0 no-animation">{{ countdown_label }}</h3>
+					</div>
+				{%- endif -%}
+				<ul class="d-flex justify-content-center align-items-center list-unstyled mb-0" id='countdownAnchor'>
+					<li class="d-flex">
+						<span class="time-item d-flex flex-column align-items-center text-center">
+							<p class="h2 mb-1 position-relative no-animation" data-timer-days>00</p><i class="h2 no-animation">Days</i>
+						</span>
+						<span class="separator no-animation">:</span>
+					</li>
+					<li class="d-flex">
+						<span class="time-item d-flex flex-column align-items-center text-center">
+							<p class="h2 mb-1 position-relative no-animation" data-timer-hours>00</p><i class="h2 no-animation">Hours</i>
+						</span>
+						<span class="separator no-animation">:</span>
+					</li>
+					<li class="d-flex">
+						<span class="time-item d-flex flex-column align-items-center text-center">
+							<p class="h2 mb-1 position-relative no-animation" data-timer-minutes>00</p><i class="h2 no-animation">Minutes</i>
+						</span>
+						<span class="separator no-animation">:</span>
+					</li>
+					<li class="d-flex">
+						<span class="time-item d-flex flex-column align-items-center text-center">
+							<p class="h2 mb-1 position-relative no-animation" data-timer-seconds>00</p><i class="h2 no-animation">Seconds</i>
+						</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+{%- else -%}
+	<script>
+		globalThis.bluedgeusa.product.countdown_timers = false;
+	</script>
+{%- endif -%}

@@ -1,0 +1,374 @@
+{%- comment -%}
+	Renders facets (filtering and sorting)
+	Needs MDB 5 PRO for price multi range
+
+	Accepts:
+	- results: {Object} Collection or Search object
+	- enable_filtering: {Boolean} Show filtering when true
+	- enable_sorting: {Boolean} Show sorting when true
+	- device: {String} mobile | desktop
+
+	Usage:
+	{%- render 'facets', results: collection, enable_filtering: true, enable_sorting: true -%}
+
+	IMPORTANT: ID in the document are only used for Desktop code - Mobile will be targeting with data-attributes only
+	
+{%- endcomment -%}
+{%- if results.filters != empty -%}	
+	{%- comment -%} Get the filter Data in JSON for faster JS manipulation {%- endcomment -%}
+	<script type="application/json" id="facetsData">[
+		{%- for filter in results.filters -%}
+			{%- assign last_filter = forloop.last -%}
+			{%- for value in filter.values -%}
+				{"name":"{{ filter.label | handleize }}_{{ value.label | handle }}","count":{{ value.count }},"operator":"{{ filter.operator }}"}{%- unless last_filter and forloop.last -%},{%- endunless -%}	
+			{%- endfor -%}
+			{%- case filter.type -%}
+				{%- when 'price_range' -%}
+				{%- liquid 
+					assign gte_value = filter.min_value.value | divided_by: 100 | strip_html | escape
+					assign lte_value = filter.max_value.value | divided_by: 100 | strip_html | escape	
+				-%}
+				{"name": "{{ filter.min_value.param_name | handleize }}", "value": {{ gte_value }}},
+				{"name": "{{ filter.max_value.param_name | handleize }}", "value": {{ lte_value }}}{%- unless last_filter and forloop.last -%},{%- endunless -%}	
+			{%- endcase -%}
+		{%- endfor -%}
+	]</script>
+	{%- liquid
+		assign sort_by = results.sort_by | default: results.default_sort_by
+		assign total_active_values = 0
+	-%}
+	{%- comment -%} For search results {%- endcomment -%}
+	{%- if results.terms -%}
+		<input type="hidden" name="q" value="{{ results.terms | escape }}">
+		<input name="options[prefix]" type="hidden" value="last">
+	{%- endif -%}
+	{%- if results.current_vendor or results.current_type -%}
+		<input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+	{%- endif -%}
+
+	{%- comment -%} Filter Tags {%- endcomment -%}
+	{%- capture facets_tags -%}
+		<div class="container-lg pt-0 pb-lg-2{% if device == 'mobile' %} px-0{% endif %}">
+			<div class="row">
+				<div class="col-12 col-lg facets-tags-wrapper d-flex justify-content-start align-items-center align-items-lg-start flex-wrap mb-3 mb-lg-2">
+					<div class="d-flex align-items-center flex-wrap pe-3 mb-lg-4" data-facet-tags>
+						{%- for filter in results.filters -%}
+							{%- if filter.type == 'price_range' -%}
+								{%- if filter.min_value != nil and filter.min_value.value != blank and filter.min_value.value > 0 or filter.max_value.value != filter.range_max -%}
+									<a href="{{ filter.url_to_remove }}" role="button" class="d-flex align-items-center justify-content-between badge bg-light-subtle text-decoration-none p-2" data-facet-price data-facet-remove>
+										{{ filter.min_value.value | money_without_trailing_zeros }} 
+										{%- if filter.max_value != nil and filter.max_value.value != blank and filter.max_value.value > 0 -%}
+											- {{ filter.max_value.value | money_without_trailing_zeros }}
+										{%- endif -%}
+										<div class="btn-close btn-close-custom ms-2 p-0">
+											<span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+										</div>
+									</a>
+								{%- endif -%}
+							{%- else-%}
+								{%- for value in filter.active_values -%}
+									<a href="{{ value.url_to_remove }}" role="button" class="d-flex align-items-center justify-content-between badge bg-light-subtle text-decoration-none p-2" title="{{ value.label | escape }}" data-facet-remove>{{ value.label | escape }}
+										<div class="btn-close btn-close-custom ms-2 p-0">
+											<span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+										</div>
+									</a>
+								{%- endfor -%}
+							{%- endif -%}
+						{%- endfor -%}
+					</div>
+					{%- comment -%} CLEAR ALL {%- endcomment -%}
+					<a class="text-decoration-none text-secondary fw-medium py-1 py-lg-2" href="{{ collection.url }}" title="{{ 'products.facets.clear_all' | t }}" class="mb-2">
+						<span>{{ 'products.facets.clear_all' | t }}</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	{%- endcapture -%}
+
+	{%- comment -%} Mobile {%- endcomment -%}
+	{%- if device == 'mobile' and enable_filtering == true or enable_sorting == true -%}
+		{%- if enable_filtering == true -%}
+			<div class="modal fade" id="filtersModal" tabindex="-1" aria-labelledby="filtersModalLabel">
+				<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable mx-3">
+					<div class="modal-content">
+						<div class="modal-header border-light py-2 sticky-top bg-white">
+							<h4 class="modal-title text-capitalize fw-medium my-1" id="filtersModalLabel">{{ 'products.facets.filter_button' | t }}</h4>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body p-0">
+							<div class="accordion mb-3" id="accordionPanelForMobileFilters">
+								{%- for filter in results.filters -%}
+									{%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+									{%- case filter.type -%}
+										{%- comment -%} Regular Filters {%- endcomment -%}
+										{%- when 'boolean' or 'list' -%}
+											<div class="accordion-item border-light{% if forloop.first == true %} border-top-0{% endif %}">
+												<h5 class="accordion-header no-animation">
+													<button class="accordion-button fw-medium px-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ filter.label | camelcase }}" aria-expanded="false" aria-controls="collapse{{ filter.label | camelcase }}">
+														{{- filter.label -}}
+													</button>
+												</h5>
+												<div id="collapse{{ filter.label | camelcase }}" class="accordion-collapse collapse">
+													<div class="accordion-body pt-0 px-0 pb-2">
+														<ul class="list-group">
+															{%- for value in filter.values -%}
+																<li class="list-group-item border-0{% if forloop.first %} pt-0 pb-1{% else %} py-1{% endif %} px-3">
+																	<div class="d-flex justify-content-between align-items-center{% if filter.label contains 'color' or filter.label contains 'Color' %} pe-1{% endif %}">
+																		{%- comment -%} We rely on data-facet-input in JS {%- endcomment -%}
+																		<input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" class="form-check-input mt-0 me-2" data-facet-input="{{ filter.label | handleize }}_{{ value.label | handle }}" id="filter{{ filter.label | escape | camelcase }}_mob_{{ value.label | handle }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
+																		<label class="form-check-label d-flex align-items-center justify-content-between w-100" for="filter{{ filter.label | escape | camelcase }}_mob_{{ value.label | handle }}">
+																			<p class="mb-0 text-black">{{ value.label | escape }}</p>
+																			{%- comment -%} If filter is of type swatch use swatch image instead of items count {%- endcomment -%}
+																			{%- unless filter.label contains 'color' or filter.label contains 'Color' -%}
+																				<span>{{ value.count }}</span>
+																			{%- else -%}
+																				<div class="swatch{% if value.swatch.color != blank %} swatch-color{% else %} swatch-image{% endif %}" style="{% if value.swatch.color != blank %}--swatch-color: {{ value.swatch.color }};{% endif %}{% if value.swatch.image != blank %}--swatch-image: url({{ value.swatch.color | image_url: width: 16 }});{% endif %}"></div>
+																			{%- endunless -%}
+																		</label>
+																	</div>
+																</li>
+															{%- endfor -%}
+														</ul>
+													</div>
+												</div>
+											</div>
+										{%- comment -%} Price Ranges {%- endcomment -%}
+										{%- when 'price_range' -%}
+											{%- liquid
+												comment
+													Get filter Min and Max values from filters (Remove HTML and account for decimals)
+												endcomment
+												assign gte_value = filter.min_value.value | divided_by: 100.0 | strip_html | escape
+												assign lte_value = filter.max_value.value | divided_by: 100.0 | strip_html | escape
+												
+												comment
+													Get the the highest and lowest product price within the collection or search results
+													for max value get price value and money format
+													Remove the HMTL and account for decimals
+													?info used for datasets and reset button
+												endcomment
+												assign max_price_value = filter.range_max | divided_by: 100.0 | strip_html | escape
+												assign min_price_value = filter.range_min | divided_by: 100.0 | strip_html | escape | default: 0
+
+												comment
+													Check if there's a min and a max value from filters
+													if not use the highest or lowest (zero) product prices
+												endcomment
+												unless filter.min_value.value
+													assign gte_value = 0
+												endunless
+
+												unless filter.max_value.value
+													assign lte_value = max_price_value
+												endunless
+
+												comment
+													Round min and max values from filters (removes decimal points)
+												endcomment
+												assign gte_round = gte_value | round: 0 | times: 1.0 | append: ""
+												assign lte_round = lte_value | round: 0 | times: 1.0 | append: ""
+
+												comment
+													Check if rounded Min and Max values are the same as regular Min/Max values
+													In case they are the same, we keep filter value round, if they aren't the same we keep decimal filter value
+												endcomment
+												if gte_round == gte_value
+													assign gte_value = gte_round | round: 0
+												endif
+
+												if lte_round == lte_value
+													assign lte_value = lte_round | round: 0
+												endif
+											-%}
+											<div class="accordion-item border-light{% if forloop.first == true %} border-top-0{% endif %}" data-price-filter-wrapper data-filter-price-min="{{ min_price_value | round }}" data-filter-price-max="{{ max_price_value | round }}">
+												<h5 class="accordion-header no-animation">
+													<button class="accordion-button px-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ filter.label | camelcase }}" aria-expanded="false" aria-controls="collapse{{ filter.label | camelcase }}">
+														{{- filter.label -}}
+													</button>
+												</h5>
+												<div id="collapse{{ filter.label | camelcase }}" class="accordion-collapse collapse">
+													<div class="accordion-body pt-0 px-0 pb-2">
+														<ul class="list-group">
+															<li class="list-group-item border-0 pt-0 pb-1 px-3">
+																<div class="row">
+																	<div class="col-6 d-flex align-items-center ps-3 py-1">
+																		<label class="form-label col-form-label py-0 pe-2" for="filter{{ filter.label | escape | camelcase }}_mob_gte">{{ 'products.facets.from' | t }}</label>
+																		<input class="form-control text-center px-3 py-2 mx-0" type="text" name="{{ filter.min_value.param_name }}" value="{{ gte_value | round }}" data-facet-input="{{ filter.min_value.param_name | handleize }}" placeholder="{{ 'products.facets.from' | t }}" id="filter{{ filter.label | escape | camelcase }}_mob_gte">
+																	</div>
+																	<div class="col-6 d-flex align-items-center pe-3 py-1">
+																		<label class="form-label col-form-label py-0 pe-2" for="filter{{ filter.label | escape | camelcase }}_mob_lte">{{ 'products.facets.to' | t }}</label>
+																		<input class="form-control text-center px-3 py-2 mx-0" type="text" name="{{ filter.max_value.param_name }}" value="{{ lte_value | round }}" data-facet-input="{{ filter.max_value.param_name | handleize }}" placeholder="{{ 'products.facets.to' | t }}" id="filter{{ filter.label | escape | camelcase }}_mob_lte">
+																	</div>
+																</div>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+									{%- endcase -%}
+								{%- endfor -%}
+							</div>
+						</div>
+						<div class="modal-footer bg-white w-100 border-0 sticky-bottom justify-content-center">
+							<div class="btns-wrapper w-100">
+								<div class="row gx-2">
+									<div class="col-6">
+										<a class="btn btn-outline-primary w-100" href="{{ collection.url }}" title="{{ 'products.facets.clear_all' | t }}" class="mb-2">
+											<span>{{ 'products.facets.clear_all' | t }}</span>
+										</a>
+									</div>
+									<div class="col-6">
+										<button class="btn btn-primary w-100" type="button" data-bs-dismiss="modal" aria-label="Close" data-filter-btn><span>{{ 'products.facets.apply' | t }}</span></button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{%- endif -%}
+		{%- if enable_sorting == true -%}
+			<div class="offcanvas offcanvas-bottom px-0" tabindex="-1" id="offcanvasSortBottom" aria-labelledby="offcanvasSortBottomLabel">
+				<div class="offcanvas-header border-bottom border-light py-2">
+					<h4 class="offcanvas-title text-capitalize fw-medium my-1" id="offcanvasSortBottomLabel">{{ 'products.facets.sort_by_label' | t }}</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+				</div>
+				<div class="offcanvas-body pb-4 mb-1 pt-0 px-0">
+					{%- render 'collection-sort' -%}
+				</div>
+			</div>
+		{%- endif -%}
+	{%- endif -%}
+	{%- comment -%} Desktop {%- endcomment -%}
+	{%- if device == 'desktop' and enable_filtering == true or enable_sorting == true -%}
+		<div class="container facets mb-lg-4 mt-lg-5 pt-lg-3">
+			<div class="row">
+				<div class="col-12">
+					<div class="filter-wrapper border-top border-bottom border-light py-lg-2">
+						<div class="row justify-content-between">
+							{%- if enable_filtering == true -%}
+								{%- for filter in results.filters -%}
+									{%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+									{%- case filter.type -%}
+										{%- when 'boolean' or 'list' -%}
+										<div class="col-lg-auto" data-filter-operator="{{ filter.operator }}">
+											<div class="dropdown">
+												<button class="btn fw-normal text-black dropdown-toggle px-0 me-lg-3" type="button" id="dropdown{{ filter.label | camelcase }}" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">{{ filter.label }}{%- render 'icons' with 'chevron-down', icon_classes: 'ms-2' -%}</button>
+												<ul class="dropdown-menu p-lg-2 border-0" aria-labelledby="dropdown{{ filter.label | camelcase }}">
+													{%- for value in filter.values -%}
+														<li class="input-group justify-content-between flex-nowrap align-items-center px-lg-1 pt-lg-1{% unless forloop.last == true %} mb-lg-2{% else %} mb-lg-1{% endunless %}">
+															{%- comment -%} We rely on data-facet-input in JS {%- endcomment -%}
+															<input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" class="form-check-input mt-0 order-lg-2" data-facet-input="{{ filter.label | handleize }}_{{ value.label | handle }}" id="filter{{ filter.label | escape | camelcase }}_{{ value.label | handle }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
+															<label class="form-check-label text-black d-lg-flex align-items-center order-lg-1" for="filter{{ filter.label | escape | camelcase }}_{{ value.label | handle }}">
+																{%- if filter.label contains 'color' or filter.label contains 'Color' -%}
+																	<div class="swatch me-lg-2{% if value.swatch.color != blank %} swatch-color{% else %} swatch-image{% endif %}" style="{% if value.swatch.color != blank %}--swatch-color: {{ value.swatch.color }};{% endif %}{% if value.swatch.image != blank %}--swatch-image: url({{ value.swatch.color | image_url: width: 16 }});{% endif %}"></div>
+																{%- endif -%}
+																{{- value.label | escape -}}
+															</label>
+														</li>
+													{%- endfor -%}
+												</ul>
+											</div>
+										</div>
+										{%- comment -%} Price Ranges {%- endcomment -%}
+										{%- when 'price_range' -%}
+										{%- liquid
+											comment
+												Get filter Min and Max values from filters (Remove HTML and account for decimals)
+											endcomment
+											assign gte_value = filter.min_value.value | divided_by: 100.0 | strip_html | escape
+											assign lte_value = filter.max_value.value | divided_by: 100.0 | strip_html | escape
+											
+											comment
+												Get the the highest and lowest product price within the collection or search results
+												for max value get price value and money format
+												Remove the HMTL and account for decimals
+												?info used for datasets and reset button
+											endcomment
+											assign max_price_value = filter.range_max | divided_by: 100.0 | strip_html | escape
+											assign max_price_money = filter.range_max | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros | strip_html | escape
+											assign min_price_value = filter.range_min | divided_by: 100.0 | strip_html | escape | default: 0
+
+											comment
+												Check if there's a min and a max value from filters
+												if not use the highest or lowest (zero) product prices
+											endcomment
+											unless filter.min_value.value
+												assign gte_value = 0
+											endunless
+
+											unless filter.max_value.value
+												assign lte_value = max_price_value
+											endunless
+
+											comment
+												Round min and max values from filters (removes decimal points)
+											endcomment
+											assign gte_round = gte_value | round: 0 | times: 1.0 | append: ""
+											assign lte_round = lte_value | round: 0 | times: 1.0 | append: ""
+
+											comment
+												Check if rounded Min and Max values are the same as regular Min/Max values
+												In case they are the same, we keep filter value round, if they aren't the same we keep decimal filter value
+											endcomment
+											if gte_round == gte_value
+												assign gte_value = gte_round | round: 0
+											endif
+
+											if lte_round == lte_value
+												assign lte_value = lte_round | round: 0
+											endif
+										-%}
+										<div class="col-lg-auto" data-price-filter-wrapper data-filter-price-min="{{ min_price_value | round }}" data-filter-price-max="{{ max_price_value | round }}">
+											<div class="dropdown">
+												<button class="btn fw-normal text-black dropdown-toggle px-0 me-lg-3" type="button" id="dropdown{{ filter.label | camelcase }}" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">{{ filter.label }}{%- render 'icons' with 'chevron-down', icon_classes: 'ms-2' -%}</button>
+												<ul class="dropdown-menu price-menu p-lg-3 border-0" aria-labelledby="dropdown{{ filter.label | camelcase }}">
+													<li class="px-0 py-1 d-flex justify-content-between dropdown-header" data-filter-header="{{ filter.label | handle }}">
+														<span class="text-black pe-3">{{ "products.facets.max_price" | t: price: max_price_money }}</span>
+														<a href="{{ filter.url_to_remove }}" title="{{ 'products.facets.reset' | t }}">{{ 'products.facets.reset' | t }}</a>
+													</li>
+													<li><hr class="dropdown-divider"></li>
+													<li class="row pt-lg-2">
+														<div class="col-6 d-flex align-items-center px-3 py-1">
+															<label class="form-label col-form-label pe-3 py-0" for="filter{{ filter.label | escape | camelcase }}_gte">{{ 'products.facets.from' | t }}</label>
+															<input class="form-control text-center mx-0 p-2" type="text" name="{{ filter.min_value.param_name }}" value="{{ gte_value | round }}" data-facet-input="{{ filter.min_value.param_name | handleize }}" placeholder="{{ 'products.facets.from' | t }}" id="filter{{ filter.label | escape | camelcase }}_gte">
+														</div>
+														<div class="col-6 d-flex align-items-center px-3 py-1">
+															<label class="form-label col-form-label pe-3 py-0" for="filter{{ filter.label | escape | camelcase }}_lte">{{ 'products.facets.to' | t }}</label>
+															<input class="form-control text-center mx-0 p-2" type="text" name="{{ filter.max_value.param_name }}" value="{{ lte_value | round }}" data-facet-input="{{ filter.max_value.param_name | handleize }}" placeholder="{{ 'products.facets.to' | t }}" id="filter{{ filter.label | escape | camelcase }}_lte">
+														</div>
+													</li>
+												</ul>
+											</div>
+										</div>
+									{%- endcase -%}
+								{%- endfor -%}
+							{%- endif -%}
+							{%- comment -%} Sorting {%- endcomment -%}
+							{%- if enable_sorting == true -%}
+								<div class="col-lg-auto order-1 ms-lg-auto">
+									<div class="dropdown sort-dropdown">
+										{%- liquid
+											assign sort_by = collection.sort_by | default: collection.default_sort_by
+											assign sort_by_name = collection.sort_options | where: 'value', sort_by | first
+										-%}
+										<div class="d-flex align-items-center">
+											<span class="me-1">{{ 'products.facets.sort_by_label' | t }}:</span>
+											<button class="btn dropdown-toggle fw-normal text-black px-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"><span>{{- sort_by_name.name -}}</span>{%- render 'icons' with 'chevron-down', icon_classes: 'ms-2 ms-lg-1' -%}</button>
+											<div class="dropdown-menu border-0 p-0">
+												{%- render 'collection-sort' -%}
+											</div>
+										</div>
+									</div>
+								</div>
+							{%- endif -%}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{%- endif -%}
+
+	{%- comment -%} FACETS TAGS {%- endcomment -%}
+	{{- facets_tags -}}
+{%- endif -%}

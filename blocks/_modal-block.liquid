@@ -1,0 +1,189 @@
+{%- if block.settings.heading != blank -%}
+	<div class="col-12 col-lg-4" {{ block.shopify_attributes }}>
+		<div class="position-wrapper bg-light-subtle p-3">
+			<h3 class="h2 mb-3">{{ block.settings.heading }}</h3>
+			{%- if block.settings.job_time != blank or block.settings.location != blank -%}
+				<div class="d-flex align-items-center pt-1 pb-4 pt-lg-0">
+					{%- if block.settings.job_time != blank -%}
+						<div class="point-wrapper d-flex align-items-center pe-4">
+							<div class="circle-icon"><span class="visually-hidden">Position availability circle icon</span></div>
+							<span class="ms-2 text-black text-capitalize">{{ block.settings.job_time }}</span>
+						</div>
+					{%- endif -%}
+					{%- if block.settings.location != blank -%}
+						<div class="point-wrapper d-flex align-items-center">
+							{%- render 'icons' with 'location' -%}
+							<span class="ms-1 text-black">{{ block.settings.location }}</span>
+						</div>
+					{%- endif -%}
+				</div>
+			{%- endif -%}
+			{%- if block.settings.preview_copy != blank -%}
+				<div class="copy-wrapper pb-2">
+					<p>{{ block.settings.preview_copy }}<button type="button" class="show-more-btn link-underline-secondary text-secondary border-0 bg-transparent d-inline px-1" data-bs-toggle="modal" data-bs-target="#positionBlockModal-{{ block.id }}">{{ 'layout.careers.more' | t }}</button></p>
+				</div>
+			{%- endif -%}
+			{%- if block.settings.btn_label != blank -%}
+				<button type="button" class="btn btn-ternary w-100" data-bs-toggle="modal" data-bs-target="#positionBlockModal-{{ block.id }}">
+					<span class="anim-wrapper">
+						<span class="initial">{{ block.settings.btn_label }}</span>
+						<span class="end">{{ block.settings.btn_label }}</span>
+					</span>
+				</button>
+			{%- endif -%}
+		</div>
+	</div>
+	{%- comment -%} Position Modal {%- endcomment -%}
+	 <div class="modal modal-xl fade" id="positionBlockModal-{{ block.id }}" tabindex="-1" aria-labelledby="positionBlockModalLabel-{{ block.id }}">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header border-bottom-0 pe-4 pe-lg-3 me-lg-1">
+					<h2 class="modal-title visually-hidden" id="positionBlockModalLabel-{{ block.id }}">Position Modal Title</h2>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body px-4 pt-0 pb-4 px-lg-6 pt-lg-1 pb-lg-6 overflow-hidden">
+					<div class="description-wrapper">
+						<h2 class="mb-3">{{ block.settings.heading }}</h2>
+						{%- if block.settings.job_time != blank or block.settings.location != blank -%}
+							<div class="d-flex align-items-center flex-wrap gap-custom pt-1 mb-1 pb-2 mb-lg-2">
+								{%- if block.settings.job_time != blank -%}
+									<div class="point-wrapper d-flex align-items-center">
+										<div class="circle-icon"><span class="visually-hidden">Position availability circle icon</span></div>
+										<span class="ms-2 text-black text-capitalize">{{ block.settings.job_time }}</span>
+									</div>
+								{%- endif -%}
+								{%- if block.settings.location != blank -%}
+									<div class="point-wrapper d-flex align-items-center">
+										{%- render 'icons' with 'location' -%}
+										<span class="ms-1 text-black">{{ block.settings.location }}</span>
+									</div>
+								{%- endif -%}
+								{%- if block.settings.price_range != blank -%}
+									<div class="point-wrapper d-flex align-items-center">
+										{%- render 'icons' with 'dollar-sign' -%}
+										<span class="ms-2 text-black">{{ block.settings.price_range }}</span>
+									</div>
+								{%- endif -%}
+							</div>
+						{%- endif -%}
+						{%- if block.settings.copy != blank -%}
+							<div class="copy-wrapper pb-3 mb-1">
+								<p>{{ block.settings.copy | strip }}</p>
+							</div>
+						{%- elsif  block.settings.preview_copy != blank -%}
+							<div class="copy-wrapper pb-3 mb-1">
+								<p>{{ block.settings.preview_copy }}</p>
+							</div>
+						{%- endif -%}
+					</div>
+					<div class="form-wrapper">
+						<div class="row justify-content-center">
+							<div class="col-12">
+								{%- assign form_id = 'positionForm' | append: block.id -%}
+								{%- form 'contact', id: form_id, data-needs-validation: 'event', data-btn-copy: section.settings.submit_btn_copy, data-thank-you: section.settings.success_copy, novalidate: true -%}	
+									<input type="hidden" name="$source" value="Position for {{ block.settings.heading }}">
+									<div class="row row-cols-1 gx-2 gx-lg-3">
+										{%- comment -%} HEADING {%- endcomment -%}
+										{%- if section.settings.form_heading != blank -%}
+											<div class="col-12 pb-3">
+												<div class="header-wrapper position-relative mb-4">
+													<h2 class="mb-0">{{ section.settings.form_heading }}</h2>
+												</div>
+											</div>
+										{%- endif -%}
+										{%- comment -%} BLOCKS {%- endcomment -%}
+										{%- content_for "blocks" -%}
+										{%- comment -%} ERROR MESSAGE {%- endcomment -%}
+										<div class="col-12 pt-3 error-msg text-danger">{{ section.settings.error_copy | default: "Sorry, there's has been an error." }}</div>
+										{%- comment -%} SUBMIT BTN {%- endcomment -%}
+										<div class="col-12 w-100">
+											<button type="submit" class="btn btn-primary w-100 my-3 mb-lg-0">
+												<span class="anim-wrapper">
+													<span class="initial">{{ section.settings.submit_btn_copy }}</span>
+													<span class="end">{{ section.settings.submit_btn_copy }}</span>
+												</span>
+											</button>
+										</div>
+									</div>
+								{%- endform -%}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Position Block",
+	"tag": null,
+	"settings": [
+        {
+			"type": "text",
+			"id": "heading",
+			"label": "Position"
+		},
+		{
+			"type": "select",
+			"id": "job_time",
+			"label": "Position Availability",
+			"options": [
+				{
+					"value": "full time",
+					"label": "Full Time"
+				},
+				{
+					"value": "part time",
+					"label": "Part Time"
+				}
+			],
+			"default": "full time"
+		},
+		{
+			"type": "text",
+			"id": "location",
+			"label": "Location"
+		},
+        {
+			"type": "text",
+			"id": "price_range",
+			"label": "Salary Range"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "preview_copy",
+			"label": "Modal Preview Copy"
+		},
+		{
+			"type": "richtext",
+			"id": "copy",
+			"label": "Modal Copy"
+		},
+		{
+			"type": "text",
+			"id": "btn_label",
+			"label": "Modal Button Label"
+		}
+	],
+	"blocks": [
+		{
+			"type": "_contact-text-input"
+		},
+		{
+			"type": "_contact-textarea"
+		},
+		{
+			"type": "_contact-check-input"
+		},
+		{
+			"type": "_contact-select-input"
+		}
+	],
+	"presets": [
+		{
+			"name": "Position Block"
+		}
+	]
+}
+{% endschema %}

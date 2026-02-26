@@ -1,0 +1,41 @@
+{%- comment -%}
+	Renders products and design elements inside of the drawer cart
+
+	Usage:
+	{%- render 'drawer-cart-items' -%}
+	
+{%- endcomment -%}
+{%- if cart.item_count > 0 -%}
+	{%- for item in cart.items -%}
+		<div class="drawer-cart-item{% if template == "cart" %} py-4 p-lg-4 position-relative{% else %} py-3 py-lg-4{% endif %}{% unless forloop.last %}{% if template != "cart" %} border-bottom border-light{% endif %}{% endunless %}" data-drawer-key="{{ item.key }}">
+			<div{% unless context == "cart" %} class="container-fluid gx-4 gx-sm-5 gx-lg-6"{% endunless %}>
+				<div class="row gx-3">
+					<div class="{% if template == "cart" %}col-3 col-lg-2 {% else %}col-3 {% endif %}drawer-cart-item-image">
+						<a href="{{ item.product.url }}" title="{{ item.product.title | escape }}">
+							{%- liquid
+								assign loading = 'lazy'
+								if template == "cart" and forloop.index0 <= 1
+									assign loading = 'eager'
+								endif	
+							-%}
+							{%- render 'responsive-image',
+								image: item.image,
+								wrapper_class: 'img-wrapper'
+								image_class: 'img-fluid',
+								lazyloading_style: loading
+							-%}
+						</a>
+					</div>
+					<div class="col-9{% if template == "cart" %} col-lg{% endif %} drawer-cart-item-info">
+						{%- render 'drawer-cart-item-info', item: item, context: context -%}
+					</div>
+				</div>
+			</div>
+		</div>
+		{%- unless forloop.last -%}
+			{%- if template == "cart" -%}
+				<hr class="cart-divider my-0 mx-0 mx-lg-4">
+			{%- endif -%}
+		{%- endunless -%}
+	{%- endfor -%}
+{%- endif -%}

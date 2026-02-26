@@ -1,0 +1,33 @@
+{%- comment -%}
+	Renders article grid item
+
+	Accepts:
+	- article {Object}
+	- col: {Number}
+	- col_lg: {Number}
+	- block: {Object} Optional
+
+	
+	Usage:
+	{%- render 'article-grid-item', article: article, col: 8, col_lg: 3, block: block -%}
+{%- endcomment -%}
+<div class="article col{% if col != blank %}-{{ col }}{% endif %}{% if col_lg != blank %} col-lg-{{ col_lg }}{% endif %}"{% if block != empty %} {{ block.shopify_attributes }}{% endif %}>
+	<article class="article-wrapper mb-3">
+		<a class="text-decoration-none article-link collection-grid" href="{{ article.url }}" title="{{ article.title | escape }}">
+			<!-- Article Image -->
+			<div class="image-wrapper position-relative overflow-hidden">
+				{%- render 'responsive-bg-image', image: article.image -%}
+				{%- if article.tags != blank -%}
+					<div class="tags-wrapper position-absolute w-100 h-100 top-0">
+						{%- assign first_tag = article.tags | first -%}
+						<div class="tag text-capitalize">{{ first_tag }}</div>
+					</div>
+				{%- endif -%}
+			</div>
+			<!-- Article Info -->
+			<div class="description pt-4 pb-2">
+				{%- render 'article-description', article: article -%}
+			</div>
+		</a>
+	</article>
+</div>

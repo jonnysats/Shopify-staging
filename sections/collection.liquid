@@ -1,0 +1,238 @@
+{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom -%}
+<div id="shopifyFacets" data-section-id="{{ section.id }}"{% if section.settings.enable_filtering == true or section.settings.enable_sorting == true %} data-section-type="shopifyFacets"{% endif %}>
+	{{ 'collection.css' | asset_url | stylesheet_tag: preload: true }}
+	{%- if section.settings.enable_filtering == true or section.settings.enable_sorting == true -%}
+		<script src="{{ 'facets.js' | asset_url }}" defer crossorigin="anonymous"></script>
+		{{ 'facets.css' | asset_url | stylesheet_tag: preload: true }}
+	{%- endif -%}	
+	<!-- SHOPIFY FILTERS -->
+	<!-- Mobile -->
+	{%- if section.settings.enable_filtering == true or section.settings.enable_sorting == true -%}
+		<form class="container filter-form d-lg-none" data-filter-form>
+			<div class="col d-flex mobile-btn-wrapper position-relative">
+				{%- if section.settings.enable_filtering == true -%}
+					<button class="btn text-black fw-normal w-100 border-0 py-4 px-0{% if section.settings.enable_sorting == true %} border-end border-light{% endif %}" type="button" data-bs-toggle="modal" data-bs-target="#filtersModal">
+						{%- render 'icons' with 'filter', icon_classes: 'me-2' -%}
+						{{- 'products.facets.filter_button' | t -}}
+					</button>
+				{%- endif -%}
+				{%- if section.settings.enable_sorting == true -%}
+					<button class="btn text-black fw-normal w-100 border-0 py-4 pe-0{% if section.settings.enable_filtering == true %} ps-3{% else %} ps-0{% endif %}" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSortBottom" aria-controls="offcanvasSortBottom">
+						{%- render 'icons' with 'sort', icon_classes: 'me-2'  -%}
+						{{- 'products.facets.sort_button' | t -}}
+					</button>
+				{%- endif -%}
+			</div>
+			{%- 
+				render 'facets', 
+				results: collection, 
+				enable_filtering: section.settings.enable_filtering, 
+				enable_sorting: section.settings.enable_sorting,
+				device: 'mobile'
+			-%}
+		</form>
+		<!-- Desktop -->
+		<form class="filter-form d-none d-lg-block" data-filter-form>
+			{%- 
+				render 'facets', 
+				results: collection, 
+				enable_filtering: section.settings.enable_filtering, 
+				enable_sorting: section.settings.enable_sorting,
+				device: 'desktop'
+			-%}
+		</form>
+	{%- endif -%}
+	{%- paginate collection.products by section.settings.products_per_page -%}
+		<div class="container{% if paginate.pages == 1 %} pb-5 pb-lg-6{% endif %}" id="productGridContainer">
+			<div class="row row-cols-2 row-cols-lg-4 gx-3 gy-4 gx-lg-4 product-grid pb-4" data-main-grid>
+				{%- if collection.products.size > 0 -%}
+					{%- for product in collection.products -%}
+						{%- liquid 
+							comment
+								First tag (New)
+							endcomment
+							assign first_tag = nil
+							if product.metafields.theme.new == true
+								assign first_tag = 'New'
+							endif
+						-%}
+						{%- if section.settings.show_variants == false or product.has_only_default_variant == true  -%}
+							{%- liquid 
+								comment
+									Second tag (% OFF)
+								endcomment
+								assign second_tag = nil
+
+								if section.settings.show_percent_off == true
+									capture discount_percentage
+										render "product-price-discount-percentage", product: product
+									endcapture
+										
+									assign discount_percentage = discount_percentage | strip
+										
+									if discount_percentage != nil and discount_percentage != blank and discount_percentage != ""
+										assign second_tag = discount_percentage | append: '% Off'
+									endif
+								endif
+							-%}
+							{%- render 'product-grid', 
+								product: product, 
+								show_swatches: true,
+								col_sm: 2, 
+								col_lg: 3,
+								first_tag: first_tag,
+								second_tag: second_tag
+							-%}
+						{%- else -%}
+							{%- comment -%} Loop for each variant item {%- endcomment -%}
+							{%- for variant in product.variants -%}
+								{%- liquid 
+									comment
+										Second tag (% OFF)
+									endcomment
+									assign second_tag = nil
+
+									if section.settings.show_percent_off == true
+										capture discount_percentage
+											render "product-price-discount-percentage", product: variant, is_variant: true
+										endcapture
+										
+										assign discount_percentage = discount_percentage | strip
+										
+										if discount_percentage != nil and discount_percentage != blank and discount_percentage != ""
+											assign second_tag = discount_percentage | append: '% Off'
+										endif
+									endif
+								-%}
+								{%- render 'product-grid', 
+									product: variant, 
+									show_swatches: false,
+									col_sm: 2, 
+									col_lg: 3,
+									is_variant: true,
+									first_tag: first_tag,
+									second_tag: second_tag
+								-%}
+							{%- endfor -%}
+						{%- endif -%}
+					{%- endfor -%}
+				{%- else -%}
+					<div class="col-12 text-center mx-auto">
+						<p>{{ 'collections.general.no_matches' | t }}</p>
+					</div>
+				{%- endif -%}
+			</div>
+			{%- liquid 
+				if paginate.pages > 1
+					render 'pagination', paginate: paginate
+				endif 
+			-%}
+		</div>
+	{%- endpaginate -%}
+</div>
+
+{% schema %}
+{
+  "name": "Collection",
+  "class": "section-collection overflow-hidden", 
+  "tag": "section",
+  "settings": [
+	{
+	  "type": "header",
+	  "content": "Product Grid"
+	},
+	{
+		"type": "checkbox",
+		"id": "show_variants",
+		"label": "Show product variants",
+		"info": "Showcase product variants as separate visual items"
+	},
+	{
+	  "type": "range",
+	  "id": "products_per_page",
+	  "min": 4,
+	  "max": 50,
+	  "step": 2,
+	  "default": 16,
+	  "label": "Products Per Page",
+	  "info": "Only applies to the product count, not their variants displaying in the product grid."
+	},
+	{
+	  "type": "header",
+	  "content": "Filtering and Sorting"
+	},
+	{
+	  "type": "checkbox",
+	  "id": "enable_filtering",
+	  "default": false,
+	  "label": "Enable Filtering"
+	},
+	{
+	  "type": "checkbox",
+	  "id": "enable_sorting",
+	  "label": "Enable Sorting",
+	  "default": false
+	},
+	{
+		"type": "header",
+		"content": "Section Settings"
+	},
+	{
+		"type": "select",
+		"id": "padding_amount_top",
+		"label": "Top Section Padding",
+		"options": [
+			{
+				"value": "no",
+				"label": "None"
+			},
+			{
+				"value": "small",
+				"label": "Small"
+			},
+			{
+				"value": "default",
+				"label": "Medium (Default)"
+			},
+			{
+				"value": "large",
+				"label": "Large"
+			},
+			{
+				"value": "xlarge",
+				"label": "Extra Large"
+			}
+		],
+		"default": "default"
+	},
+	{
+		"type": "select",
+		"id": "padding_amount_bottom",
+		"label": "Bottom Section Padding",
+		"options": [
+			{
+				"value": "no",
+				"label": "None"
+			},
+			{
+				"value": "small",
+				"label": "Small"
+			},
+			{
+				"value": "default",
+				"label": "Medium (Default)"
+			},
+			{
+				"value": "large",
+				"label": "Large"
+			},
+			{
+				"value": "xlarge",
+				"label": "Extra Large"
+			}
+		],
+		"default": "default"
+	}
+  ]
+}
+{% endschema %}

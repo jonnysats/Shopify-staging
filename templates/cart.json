@@ -1,0 +1,39 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "cart",
+      "blocks": {
+        "content_MGKpQ9": {
+          "type": "content",
+          "settings": {
+            "tc_legal": "I have read and agreed to the <a href=\"/pages/terms-and-conditions\" title=\"Terms and Conditions\">Terms & Conditions.</a>"
+          }
+        }
+      },
+      "block_order": [
+        "content_MGKpQ9"
+      ],
+      "settings": {
+        "notes_enabled": true,
+        "free_shipping_bar_enable": false,
+        "free_shipping_spent_message": "",
+        "free_shipping_spent_support_message": "",
+        "free_shipping_success_message": "",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

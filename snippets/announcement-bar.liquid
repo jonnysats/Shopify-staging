@@ -1,0 +1,42 @@
+{%- comment -%}
+	Renders an article's tags, title, publisher, publisher date, description, and  a read more link
+
+	Accepts:
+	- copy: {String} Shopify Banner Copy
+	- copy_mobile: {String} Shopify Banner Copy Mobile
+	- background_color: {String} Shopify Banner BG color
+	- copy_color: {String} Shopify Banner Copy color
+	
+	Usage:
+	{%- render 'announcement-bar', copy: section.settings.copy, copy_mobile: section.settings.copy_mobile, background_color: section.settings.background_color, copy_color: section.settings.copy_color -%}
+
+{%- endcomment -%}
+{%- if copy != blank -%}
+	{%- if background_color != blank and copy_color != blank -%}
+		<style>
+			#shopify-section-{{ section.id }}.section-announcement .announcement-bar:before { background-color: {{ background_color }}; }
+			#shopify-section-{{ section.id }}.section-announcement .announcement-bar p, #shopify-section-{{ section.id }}.section-announcement .announcement-bar a { color: {{ copy_color }}; }
+			#shopify-section-{{ section.id }}.section-announcement .x-close > path { stroke: {{ copy_color }}; }
+		</style>
+	{%- endif -%}
+	<div class="announcement-bar container-xl px-xl-0 position-relative" data-announcement-bar>
+		<div class="row gx-0">
+			<div class="col-12 banner-copy-wrapper text-start text-lg-center">
+				<div class="copy py-2 me-4{% if copy_mobile != blank %} d-none d-lg-block{% endif %}">
+					<p>{{ copy }}</p>
+				</div>
+				{%- if copy_mobile != blank -%}
+					<div class="copy py-2 me-4 d-lg-none my-1"><p>{{ copy_mobile }}</p></div>
+				{%- endif -%}
+				<div class="close-wrapper position-relative h-100 ms-auto">
+					<button id="closeBanner" class="position-absolute top-50 end-0 border-0 translate-middle-y bg-transparent d-flex justify-content-center align-items-center p-0" aria-label="close banner" class="close">
+						{%- render 'icons' with 'x-close' -%}
+						<span class="visually-hidden">Close announcement</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{%- else -%}
+	<style>:root { --announcement-banner-height: 0px; }</style>
+{%- endif -%}

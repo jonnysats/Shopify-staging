@@ -1,0 +1,138 @@
+{%- liquid
+	assign menu = section.settings.menu
+	assign extra_links_empty = true
+	for block in section.blocks
+		if block.settings.copy != blank 
+			assign extra_links_empty = false
+			break
+		endif
+	endfor
+-%}
+<div class="container pt-3 pb-0 my-2 py-lg-4 border border-white">
+	<div class="row justify-content-between justify-content-lg-center">
+		<div class="col-auto">
+			<div class="logo px-1 mx-2 my-3 mt-lg-4 pt-lg-2 pb-lg-1">{%- render 'reno-logo-icon-svg' -%}</div>
+		</div>
+		<div class="col-auto d-lg-none">
+			<div class="mx-2">
+				{%- render 'social-media' -%}
+			</div>
+		</div>
+	</div>
+	{%- if linklists[menu].links.size > 0 -%}
+		<div class="row justify-content-lg-center">
+			<div class="col-12 col-lg-10 px-lg-0">
+				<ul class="footer-menu d-lg-flex align-items-lg-center justify-content-lg-between flex-lg-wrap list-unstyled mx-1 px-2 pt-4 mx-lg-0 px-lg-0 mb-lg-0 pb-lg-4">
+					{%- for link in linklists[menu].links -%}
+						<li class="position-relative{% unless forloop.last %} pb-4{% else %} pb-3{% endunless %} pb-lg-0">
+							<a href="{{ link.url }}" class="link-light link-underline-opacity-0 animated-link" title="{{ link.title | escape }}">{{ link.title }}</a>
+						</li>
+						{%- unless forloop.last -%}
+							{%- if forloop.index0 == 6 -%}
+								<li class="w-100 py-2"><span class="visually-hidden">Separator</span></li>
+							{%- else -%}
+								<li class="d-none d-lg-block">
+									<div class="separator"></div>
+								</li>
+							{%- endif -%}
+						{%- endunless -%}
+					{%- endfor -%}
+				</ul>
+			</div>
+		</div>
+	{%- endif -%}
+	{%- if extra_links_empty == false -%}
+		<div class="row justify-content-lg-center">
+			<div class="col-12 col-lg-10 border-top border-white px-lg-0">
+				<ul class="d-lg-flex align-items-lg-start justify-content-lg-between list-unstyled mb-0 pt-4 mx-1 px-2 mx-lg-0 px-lg-0 pb-lg-4">
+					{%- for block in section.blocks -%}
+						{%- if block.settings.copy != blank -%}
+							<li class="{% unless forloop.last %}pb-3{% else %}pb-4{% endunless %} pb-lg-0" {{ block.shopify_attributes }}>
+								<p class="mb-0">
+									{%- if block.settings.title != blank -%}
+										<span class="opacity-50 me-1">{{ block.settings.title }}:</span>
+									{%- endif -%}
+									{%- if block.settings.url != blank -%}
+										<a href="{{ block.settings.url }}" class="link-light link-underline-opacity-0 animated-link" title="{{ block.settings.label | default: block.settings.copy | escape }}">{{ block.settings.copy }}</a>
+									{%- else -%}
+										<span>{{ block.settings.copy }}</span>
+									{%- endif -%}
+								</p>
+							</li>
+						{%- endif -%}
+					{%- endfor -%}
+				</ul>
+			</div>
+		</div>
+	{%- endif -%}
+	{%- if section.settings.copyright != blank -%}
+		<div class="row justify-content-lg-center">
+			<div class="col-12 col-lg-10 border-top border-white">
+				<div class="d-none d-lg-block pt-lg-2 mt-lg-2">
+					{%- render 'social-media' -%}
+				</div>
+				<div class="copy-wrapper py-4 mx-1 px-2 pt-lg-2 my-lg-1">
+					<p class="footer-copyright no-animation text-start text-lg-center opacity-50 mb-0">
+						&copy; {{ "now" | date: "%Y" }} {{ section.settings.copyright }}
+					</p>
+				</div>
+			</div>
+		</div>
+	{%- endif -%}
+</div>
+{% schema %}
+{
+	"name": "Footer",
+	"class": "section-footer text-white px-3 py-4 py-lg-5 bg-primary",
+	"tag": "footer",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Navigation"
+		},
+		{
+			"type": "link_list",
+			"id": "menu",
+			"label": "Menu"
+		},
+		{
+			"type": "header",
+			"content": "Social Media",
+			"info": "Social media icons will appear based on the options selected [Here](/admin/settings/general/branding)."
+		},
+		{
+			"type": "header",
+			"content": "Copy"
+		},
+		{
+			"type": "text",
+			"id": "copyright",
+			"label": "Copyright"
+		}
+	],
+	"blocks": [
+		{
+			"type": "links",
+			"name": "Contact Links",
+			"settings": [
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Label"
+				},
+				{
+					"type": "text",
+					"id": "copy",
+					"label": "Copy"
+				},
+				{
+					"type": "url",
+					"id": "url",
+					"label": "URL",
+					"info": "Optional: If there's a link URL, the copy will be a clickable link instead"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

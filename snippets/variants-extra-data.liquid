@@ -1,0 +1,39 @@
+{%- comment -%}
+	Liquid snippet to include variants inventory to validate pre-order CTA status
+
+	Accepts:
+	- product {Object} use 'with, as' keywords
+	
+	Usage:
+	{%- render 'variants-extra-data', with product as product -%}
+{%- endcomment -%}
+<script>
+{%- comment -%} Variant Extra Information {%- endcomment -%}
+window.bluedgeusa.product.variants_extra_data = [
+	{%- for variant in product.variants -%}
+		{
+			variantId: {{ variant.id | json }},
+			unit_per_box: "{{ variant.metafields.theme.unit_per_box.value }}",
+			price_per_unit: {%- if variant.metafields.theme.price_per_unit != blank -%}"{{ variant.metafields.theme.price_per_unit.value }}"{%- else -%}null{%- endif -%},
+			tiles_per_box: {%- if variant.metafields.theme.tiles_per_box != blank -%}"{{ variant.metafields.theme.tiles_per_box.value }}"{%- else -%}null{%- endif -%},
+			coverage_area: {%- if variant.metafields.theme.coverage_area != blank -%}"{{ variant.metafields.theme.coverage_area.value }}"{%- else -%}null{%- endif -%},
+			selected: {% if product.selected_or_first_available_variant.id == variant.id %}true{% else %}false{% endif %},
+			{% if product.metafields.theme.use_variant_samples.value == true %}
+			sample: {% if variant.metafields.theme.sample.value != blank %}{
+				id: {{ variant.metafields.theme.sample.value.selected_or_first_available_variant.id | json }},
+				price: "{{ variant.metafields.theme.sample.value.price | money }}"
+			}{% else %}null{% endif %},
+			{% endif %}
+			preorder_label: {%- if variant.metafields.theme.preorder_label.value != blank -%}"{{ variant.metafields.theme.preorder_label.value }}"{%- else -%}null{%- endif -%}
+		}{%- unless forloop.last -%},{%- endunless -%}
+	{%- endfor -%}
+];
+window.bluedgeusa.product.variants_stock = [
+	{%- for variant in product.variants -%}
+		{
+			id: {{ variant.id | json }},
+			inventory_quantity: {%- if variant.inventory_quantity != blank -%}{{ variant.inventory_quantity | json }}{%- else -%}null{%- endif -%}
+		}{%- unless forloop.last -%},{%- endunless -%}
+	{%- endfor -%}
+]
+</script>

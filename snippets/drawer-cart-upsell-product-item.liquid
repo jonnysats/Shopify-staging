@@ -1,0 +1,42 @@
+{%- comment -%}
+	Drawer cart upsell carousel item
+
+	Accepts:
+		- product: {Object} Product to render
+		- classes: {Object} Custom CSS classes to pass
+	
+	Usage:
+		{%- render 'drawer-cart-upsell-product-item', product: product, classes: "pe-3 col-3" -%}
+
+{%- endcomment -%}
+{%- liquid
+	assign cart_items_ids = cart.items | map: "product_id"
+	assign is_product_already_in_cart = false
+	if cart_items_ids contains product.id
+		assign is_product_already_in_cart = true
+	endif
+-%}
+{%- if product.available == true and is_product_already_in_cart == false -%}
+	<div class="drawer-cart-upsell-product-item{% if classes %} {{ classes }}{% endif %}">
+		<div class="row gx-2 gx-lg-3">
+			<div class="col-6">
+				<a href="{{ product.url }}" title="{{ product.title | escape }}">
+					{%- render 'responsive-image',
+						image: product.featured_image,
+						wrapper_class: 'img-wrapper'
+						image_class: 'img-fluid'
+					-%}
+				</a>
+			</div>
+			<div class="col-6 drawer-cart-upsell-product-item-info text-start d-flex flex-column">
+				<a class="drawer-cart-upsell-product-item-title d-inline-block w-100" href="{{ product.url }}" title="{{ product.title | escape }}">{{ product.title }}</a>
+				<div class="mb-1">{%- render 'product-price', context: "upsell", product: product -%}</div>
+				<a class="drawer-cart-upsell-product-item-more-details d-block mb-2 pb-1 text-uppercase" href="{{ product.url }}" title="{{ product.title | escape }}">{{ 'cart.drawer.more_details' | t }}</a>
+				<button class="btn drawer-cart-upsell-product-item-cta" {%- render 'quickshop-properties', product: product -%}>
+					{%- render 'icons' with 'plus' -%}
+					<span class="visually-hidden">{{ 'products.product.plus' | t }}</span>
+				</button>
+			</div>
+		</div>
+	</div>
+{%- endif -%}

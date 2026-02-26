@@ -1,0 +1,188 @@
+{%- comment -%}
+	Renders drawer cart
+
+	Usage:
+	- {%- render 'drawer-cart' -%}
+	
+	!IMPORTANT: Hide on "cart" page
+				? We do this to avoid confusing the "CartPage.class.js" code with the elements in drawer cart (They share CSS IDs)
+	
+{%- endcomment -%}
+{%- if template != "cart" -%}
+	{%- capture discounts_container -%}
+		{%- comment -%} Discount at cart level {%- endcomment -%}
+		{%- render 'cart-discounts' -%}
+	{%- endcapture -%}
+	<div class="offcanvas offcanvas-end drawer-cart" tabindex="-1" id="drawerCart" aria-labelledby="drawerCartLabel"{% if section %} data-section-id="{{ section.id }}"{% endif %}>
+		<div class="h-100 d-flex flex-column align-items-end" data-inner-drawer>
+			<div class="header-wrapper container-fluid gx-4 gx-sm-5 gx-lg-6 py-3 py-lg-4 mt-1">
+				<div class="row gx-3">
+					<h4 class="col drawer-cart-label mb-0 no-animation" id="drawerCartLabel">{{ 'cart.drawer.title' | t }} (<span class="count" data-cart-count="{{ cart.items.size }}">{{ cart.items.size | default: 0 }}</span>)</h4>
+					<button type="button" class="col-auto drawer-cart-close btn-close text-reset pb-1 pt-1 mt-1 pe-2" data-bs-dismiss="offcanvas" aria-label="Close"><span class="visually-hidden">Close</span></button>
+				</div>
+			</div>
+			<div class="drawer-cart-overflow-container overflow-auto w-100 h-100 d-flex flex-column align-items-end{% if cart.item_count == 0 %} drawer-cart-empty{% endif %}" data-drawer-cart-overflow-container>
+				<div class="drawer-cart-overflow-lg-container items-wrapper position-relative" data-drawer-cart-items data-dynamic-qty>
+					<script type="application/json" data-cart-json>{{ cart | json }}</script>
+					{%- if cart.item_count > 0 -%}
+						{%- render 'drawer-cart-items' -%}
+					{%- else -%}
+						<!-- Empty cart -->
+						<div class="drawer-cart-empty-content h-100 w-100 d-flex flex-column justify-content-center align-items-center">
+							<div class="d-flex flex-column justify-content-center align-items-center">
+								{%- if settings.drawer_cart_empty_image != blank -%}
+									{%- render 'responsive-image', image: settings.drawer_cart_empty_image, wrapper_class: "drawer-cart-empty-image mb-2 pb-1" -%}
+								{%- endif -%}
+								<p class="drawer-cart-empty-message mb-0">{{ 'cart.general.empty' | t }}</p>
+							</div>
+						</div>
+					{%- endif -%}
+					{%- comment -%} Loader {%- endcomment -%}
+					<div class="loading-wrapper w-100 h-100 bg-white" data-drawer-loading>
+						<div>{{ 'cart.drawer.loading' | t }}</div>
+						<span class="image-preloader"></span>
+					</div>
+				</div>
+				{%- liquid
+					comment
+					# DRAWER CART LOGIC
+					endcomment
+					
+					comment
+					# Build an array of upsell products from metafields in cart line items
+					# ?REFERENCE: https://ellodave.dev/blog/article/advanced-liquid-arrays/
+					endcomment
+					assign upsell_metafield_products = null | sort
+				
+					for item in cart.items
+						comment
+						# Grab current set of product ids in upsell array to filter out duplicates
+						endcomment
+						assign ids = upsell_metafield_products | map: "id" | join: ","
+						
+						if item.product.metafields.theme.upsell_product_list.value != blank
+							for product in item.product.metafields.theme.upsell_product_list.value
+								assign product_id = product.id | append: ''
+								unless ids contains product_id
+									comment
+									# We use a temporal (temp) variable to grab the product and apply the "sort" filter to be able to concatenate it on next line
+									# ?NOTE: Refer to reference above for further context
+									endcomment
+									assign temp = product | sort
+									assign upsell_metafield_products = upsell_metafield_products | concat: temp
+								endunless
+							endfor
+						endif
+					endfor
+					
+					comment
+					# Grab length of drawer cart upsell fallback product list
+					# ?NOTE: "settings.drawer_cart_upsell_fallback_product_list.size" returns blank
+					endcomment
+					assign fallback_product_list_count = 0
+					for product in settings.drawer_cart_upsell_fallback_product_list
+						assign fallback_product_list_count = forloop.length
+						break
+					endfor
+					
+					comment
+					# Build a final array of upsell items filtering out any items that might already be in cart or are unavailable
+					endcomment
+					assign upsell_products = null | sort
+					assign cart_items_ids = cart.items | map: "product_id"
+					if upsell_metafield_products.size > 0
+						for product in upsell_metafield_products
+							if product.available == true
+								unless cart_items_ids contains product.id
+									assign temp = product | sort
+									assign upsell_products = upsell_products | concat: temp
+								endunless
+							endif
+						endfor
+					elsif fallback_product_list_count > 0
+						comment
+						# If there aren't any upsell products from cart line metafields, use fallback list
+						endcomment
+						for product in settings.drawer_cart_upsell_fallback_product_list
+							if product.available == true
+								unless cart_items_ids contains product.id
+									assign temp = product | sort
+									assign upsell_products = upsell_products | concat: temp
+								endunless
+							endif
+						endfor
+					endif
+					
+					comment
+					# Grab final upsell products length
+					endcomment
+					assign product_count = upsell_products.size	
+				-%}
+				<div class="footer-wrapper text-center mt-auto pt-3 pt-lg-4 border-top border-light">
+					
+					{%- comment -%} Drawer upsell - START {%- endcomment -%}
+					{%- render 'drawer-cart-upsell', upsell_products: upsell_products, product_count: product_count, title: settings.drawer_cart_upsell_title -%}
+					
+					{%- comment -%} App Blocks {%- endcomment -%}
+					<div class="drawer-cart-app-blocks w-100 border-top border-light container-fluid gx-4 gx-sm-5 gx-lg-6 pt-3 pb-0 pt-lg-4">
+						<cca data-cca-dynamic-block></cca>
+						{%- liquid
+							for block in section.blocks
+								case block.type
+									when '@app'
+										render block
+								endcase
+							endfor
+						-%}
+					</div>
+				</div>
+				{%- if cart.item_count > 0 -%}
+					<div class="drawer-cart-subtotal d-none d-lg-block border-top border-light container-fluid gx-4 gx-sm-5 gx-lg-6 py-3 py-lg-4">
+						{{- discounts_container -}}
+						<div class="row gx-3 justify-content-between mb-1">
+							<div class="col-auto total-title">{{ 'cart.drawer.subtotal' | t }}</div>
+							<div class="col-auto total-price"><span data-drawer-cart-total="{{ cart.total_price }}">{{ cart.total_price | money }}</span></div>
+						</div>
+						<div class="row gx-3">
+							<p class="text-start total-subtitle mb-0">{{ 'cart.drawer.subtotal_subtitle' | t }}</p>
+						</div>
+					</div>
+					<div class="drawer-cart-cta w-100 d-none d-lg-block">
+						<a href="/cart" title="{{ settings.checkout_btn_copy | escape }}" class="btn btn-primary mt-auto w-100 py-3 py-lg-4" data-checkout>
+							<span class="anim-wrapper py-1">
+								<span class="initial">{{ settings.checkout_btn_copy }}</span>
+								<span class="end">{{ settings.checkout_btn_copy }}</span>
+								<span class="end loading-end">
+									<span class="me-1">{{ 'cart.drawer.loading' | t }}</span><ul><li>&#9632;</li><li>&#9632;</li><li>&#9632;</li></ul>
+								</span>
+							</span>
+						</a>
+					</div>
+				{%- endif -%}
+			</div>
+			{%- if cart.item_count > 0 -%}
+				<div class="drawer-cart-subtotal container-fluid d-block d-lg-none gx-4 gx-sm-5 gx-lg-6 py-3 py-lg-4 border-top border-light">
+					{{- discounts_container -}}
+					<div class="row gx-3 justify-content-between mb-1">
+						<div class="col-auto total-title">{{ 'cart.drawer.subtotal' | t }}</div>
+						<div class="col-auto total-price"><span data-drawer-cart-total="{{ cart.total_price }}">{{ cart.total_price | money }}</span></div>
+					</div>
+					<div class="row gx-3">
+						<p class="text-start total-subtitle mb-0">{{ 'cart.drawer.subtotal_subtitle' | t }}</p>
+					</div>
+				</div>
+				<div class="drawer-cart-cta w-100 d-block d-lg-none">
+					<a href="/cart" title="{{ settings.checkout_btn_copy | escape }}" class="btn btn-primary mt-auto w-100 py-3 py-lg-4" data-checkout>
+						<span class="anim-wrapper py-1">
+							<span class="initial">{{ settings.checkout_btn_copy }}</span>
+							<span class="end">
+								<span class="py-1 me-2">Loading</span>
+								<ul><li>&#9632;</li><li>&#9632;</li><li>&#9632;</li></ul>
+							</span>
+						</span>
+					</a>
+				</div>
+			{%- endif -%}
+		</div>
+	</div>
+{%- endif -%}

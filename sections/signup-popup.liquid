@@ -1,0 +1,127 @@
+{%- if section.settings.heading != blank -%}
+	<script src="{{ 'signup-popup.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	<div class="wrapper" data-section-id="{{ section.id }}" data-section-type="SignupPopup" data-modal-timer="{{ section.settings.modal_timer }}">
+		<div class="modal modal-lg fade" id="signupSectionModal-{{ section.id }}" tabindex="-1" aria-labelledby="signupSectionModalLabel-{{ section.id }}" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header border-bottom-0 position-absolute end-0">
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body p-0">
+						<div class="container-fluid ps-lg-0 pe-lg-4"{% if section.settings.bg != blank %} style="background-color: {{ section.settings.bg }};"{% endif %}>
+							<div class="row">
+								{%- if section.settings.img != blank -%}
+									<div class="col-6 position-relative d-none d-lg-block">
+										{%- render 'responsive-bg-image', image: section.settings.img -%}
+									</div>
+								{%- endif -%}
+								<div class="col-12 col-lg-{% if section.settings.img != blank %}6{% else %}12{% endif %} p-4 py-lg-5 px-lg-3">
+									<h2 class="text-center mb-3 no-animation">{{ section.settings.heading }}</h2>
+									{%- if section.settings.copy != blank -%}
+										<div class="copy text-center no-animation pb-4">{{ section.settings.copy }}</div>
+									{%- endif -%}
+									{%- assign form_id = 'passwordForm' | append: section.id -%}
+									{%- form 'contact', id: form_id, data-needs-validation: 'event', data-btn-copy: section.settings.submit_label, data-thank-you: section.settings.thank_you_msg, novalidate: true -%}
+										<input type="hidden" name="$source" value="Signup for updates">
+										<div class="row row-reverse">
+											{%- comment -%} BLOCKS {%- endcomment -%}
+											{%- content_for "blocks" -%}
+											{%- comment -%} ERROR MESSAGE {%- endcomment -%}
+											<div class="col-12 pt-3 error-msg text-danger">{{ section.settings.error_msg | default: "Sorry, there's has been an error." }}</div>
+											{%- comment -%} SUBMIT BTN {%- endcomment -%}
+											{%- if section.settings.submit_label != blank -%}
+												<div class="col-12 w-100">
+													<button type="submit" class="btn btn-primary w-100 my-3 mb-lg-0">
+														<span class="anim-wrapper">
+															<span class="initial">{{ section.settings.submit_label }}</span>
+																<span class="end">{{ section.settings.submit_label }}</span>
+															</span>
+													</button>
+												</div>
+											{%- endif -%}
+										</div>
+									{%- endform -%}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Signup Popup",
+	"tag": "section",
+	"class": "section-popup",
+	"settings": [
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Heading"
+		},
+		{
+			"type": "richtext",
+			"id": "copy",
+			"label": "Copy"
+		},
+		{
+			"type": "image_picker",
+			"id": "img",
+			"label": "Side Image"
+		},
+		{
+			"type": "color",
+			"id": "bg",
+			"label": "Background color"
+		},
+		{
+			"type": "header",
+			"content": "Form settings"
+		},
+		{
+			"type": "text",
+			"id": "submit_label",
+			"label": "Submit label",
+			"default": "Submit"
+		},
+		{
+			"type": "text",
+			"id": "error_msg",
+			"label": "Error Message"
+		},
+		{
+			"type": "text",
+			"id": "thank_you_msg",
+			"label": "Thank you Message",
+			"default": "Thank you for your feedback!"
+		},
+		{
+			"type": "header",
+			"content": "Modal settings"
+		},
+		{
+			"type": "range",
+			"id": "modal_timer",
+			"min": 0,
+			"max": 40,
+			"step": 1,
+			"unit": "s",
+			"label": "Modal Timer",
+			"default": 10,
+			"info": "Decice how much time in seconds need to pass until sign-up popup shows"
+		}
+	],
+	"blocks": [
+		{
+			"type": "_contact-text-input"
+		}
+	],
+	"presets": [
+		{
+			"name": "Signup Popup"
+		}
+	]
+}
+{% endschema %}

@@ -1,0 +1,99 @@
+{%- comment -%}
+	Featured products - used on blog template + article template
+
+	Accepts:
+	- product_list {Array}
+	- header {String}
+	- btn_copy {String}
+	- btn_link {String}
+	- more_info {Boolean}
+
+	Usage:
+	{%- render 'featured-products' 
+		product_list: section.settings.product_list,
+		header: section.settings.header
+		slider: true,
+		col: 'col-12',
+		col_lg: 'col-lg-3'
+	-%}
+{%- endcomment -%}
+{{ 'featured-products-list.css' | asset_url | stylesheet_tag }}
+{%- liquid
+	assign flickity_arrows = false
+	assign flickity_dots = false
+	assign flickity_loop = true
+	assign flickity_group_cells = false
+	assign flickity_adaptive_height = false
+-%}
+{%- if header != blank -%}
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<h3 class="header h2 mb-3 mb-lg-4 pb-1">{{ header }}</h3>
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+<div class="{% if slider == true %}featured-collection-slider-container container-fluid{% else %}container h-100 border-lg-start{% endif %}" data-section-id="{{ section.id }}" data-section-type="featuredProducts">
+	<div class="featured-products{% if slider == true %} special-margin{% endif %}">
+		<div class="d-flex flex-wrap product-list-wrapper">
+			<div class="col-12">
+				<div class="row product-grid{% if slider == true %} gx-0 w-100 h-100{% endif %}" data-generic-slider data-arrows="{{ flickity_arrows }}" data-dots="{{ flickity_dots }}" data-loop="{{ flickity_loop }}" data-adaptive-height="{{ flickity_adaptive_height }}" data-group-cells="{{ flickity_group_cells }}">
+					{%- for product in product_list -%}
+						{%- assign classes = 'pe-3 pe-md-4 pe-lg-custom col-8 col-lg-12' -%}
+						{%- render 'product-grid', product: product, classes: classes, col_sm: 8, col_lg: 12, show_description: false, show_swatches: true -%}
+					{%- endfor -%}
+				</div>
+			</div>
+			{%- if best_sellers_image != blank and btn_copy != blank and btn_link != blank and best_sellers_header != blank -%}
+				<div class="col-12 d-none d-lg-block">
+					<div class="content-wrapper my-3">
+						<h4 class="header h2 mb-3 pb-1">{{ best_sellers_header }}</h4>
+						<div class="img-wrapper mb-4">
+							{%- render 'responsive-image', image: best_sellers_image, image_class: 'img-fluid' -%}
+						</div>
+						<div class="btn-wrapper">
+							<a class="btn btn-outline-primary w-100" href="{{ btn_link }}" title="{{ btn_copy | escape }}">
+								<span class="anim-wrapper">
+									<span class="initial">{{ btn_copy }}</span>
+									<span class="end">{{ btn_copy }}</span>
+								</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			{%- endif -%}
+		</div>
+	</div>
+</div>
+{%- if slider == true -%}
+	<div class="container d-lg-none my-4">
+		<div class="row">
+			<div class="col">
+				{%- render 'slider-custom-nav-buttons', justify_style: "between" -%}
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+{%- if best_sellers_image != blank and btn_copy != blank and btn_link != blank and best_sellers_header != blank -%}
+	<div class="container d-lg-none">
+		<div class="row">
+			<div class="col-12">
+				<div class="content-wrapper my-3">
+					<h4 class="header h2 mb-3 pb-1">{{ best_sellers_header }}</h4>
+					<div class="img-wrapper mb-4">
+						{%- render 'responsive-image', image: best_sellers_image, image_class: 'img-fluid' -%}
+					</div>
+					<div class="btn-wrapper">
+						<a class="btn btn-outline-primary w-100" href="{{ btn_link }}" title="{{ btn_copy | escape }}">
+							<span class="anim-wrapper">
+								<span class="initial">{{ btn_copy }}</span>
+								<span class="end">{{ btn_copy }}</span>
+							</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}

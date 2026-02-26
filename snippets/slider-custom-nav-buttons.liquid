@@ -1,0 +1,88 @@
+{%- comment -%}
+	Reusable component of custom navigation arrows for Flickity
+	
+	?NOTE: See "GenericSlider.class.js" static method "setupSliderCustomNavButtons" for JavaScript implementation
+	?NOTE: See "ShopTheLookSlider.class.js" for an example of usage
+
+	Accepts:
+		- border: {Boolean} Determinate if the arrows have a border or not
+		- padding_type: {String} How much padding each arrow has ("small" | "none" | "default")
+		- justify_style: {String} Alignment of content on the X axis, Defaults to "center" ( "start" | "center" | "end" | "between")
+		- align_style: {String} Alignment of content on the Y axis. Defaults to "center" ("start" | "center" | "end" | "between")
+		- gap_size: {Number} Amount of spacing between arrows (flex gap, follow bootstrap docs)
+		- mobile_only: {Boolean} Show arrows only on mobile (<lg)
+		- desktop_only: {Boolean} Show arrows only on desktop (>lg)
+		- custom_content_before: {HTML} Custom element placed before "prev" arrow (use {% capture %})
+		- custom_content_between: {HTML} Custom element placed between arrows (use {% capture %})
+		- custom_content_after: {HTML} Custom element placed after "next" arrow (use {% capture %})
+		- disable_buttons: {Boolean} Disable buttons under certain conditions
+		
+	Usage:
+	
+		{%- render 'slider-custom-nav-buttons' -%}
+	 
+	Optional Usage:
+		
+		{%- render 'slider-custom-nav-buttons', border: false, padding_type: "small", justify_style: "end", align_style: "center", gap_size: 3, mobile_only: true, desktop_only: false -%}
+
+{%- endcomment -%}
+{%- liquid
+	
+	comment
+	# Verbiage of data attribute used in JavaScript logic 
+	# !IMPORTANT: If you change this, you need to update any class that might be using this feature
+	endcomment
+	assign data_attribute 			= "data-slider-custom-nav-buttons"
+	
+	assign border 					= border | default: true
+	
+	assign padding_type				= padding_type | default: "default"
+	assign padding_classes 			= blank
+	
+	case padding_type
+	  when "small"
+		assign padding_classes 		= "px-3 py-2"
+	  when "none"
+		assign padding_classes 		= "p-0"
+	  else
+	  	assign padding_classes 		= "px-4 py-3"
+	endcase
+	
+	assign justify_style 			= justify_style | default: "center"
+	assign align_style 				= align_style | default: "center"
+	
+	assign gap_size = gap_size | default: 2
+	
+	assign mobile_only = mobile_only | default: false
+	assign desktop_only = desktop_only | default: false
+	assign display_options = "d-flex"
+
+	if mobile_only == true 
+		assign display_options = "d-flex d-lg-none"	
+	elsif desktop_only == true  
+		assign display_options = "d-none d-lg-flex"		
+	endif
+-%}
+<div class="slider-custom-nav-buttons {{ display_options }} gap-{{ gap_size }} align-items-{{ align_style }} justify-content-{{ justify_style }}{% if justify_style_lg != blank %} justify-content-lg-{{ justify_style_lg }}{% endif %}" {{ data_attribute }}>
+	{%- if custom_content_before != blank -%}
+		{{ custom_content_before }}
+	{%- endif -%}
+	<button class="nav-button nav-button-previous bg-transparent text-center{% if padding_classes != blank %} {{ padding_classes }}{% if padding_type != "none" %} has-padding{% endif %}{% endif %}{% if border == true %} border{% else %} border-0{% endif %}" type="button" aria-label="{{ 'layout.sections.previous' | t }}" {{ data_attribute }}-direction="prev"{% if disable_buttons == true %} disabled{% endif %}>
+		<span class="nav-button-icon">
+			{%- render 'icons' with 'arrow-left-chevron' -%}
+		</span>
+		<span class="visually-hidden">{{ 'layout.sections.previous' | t }}</span>
+	</button>
+	{%- if custom_content_between != blank -%}
+		{{ custom_content_between }}
+	{%- endif -%}
+	<button class="nav-button nav-button-next bg-transparent text-center{% if padding_classes != blank %} {{ padding_classes }}{% if padding_type != "none" %} has-padding{% endif %}{% endif %}{% if border == true %} border{% else %} border-0{% endif %}" type="button" aria-label="{{ 'layout.sections.next' | t }}" {{ data_attribute }}-direction="next"{% if disable_buttons == true %} disabled{% endif %}>
+		<span class="nav-button-icon">
+			{%- render 'icons' with 'arrow-right-chevron' -%}
+		</span>
+		<span class="visually-hidden">{{ 'layout.sections.next' | t }}</span>
+	</button>
+	{%- if custom_content_after != blank -%}
+		{{ custom_content_after }}
+	{%- endif -%}
+</div>

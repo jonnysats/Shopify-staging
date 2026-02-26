@@ -1,0 +1,180 @@
+{%- liquid
+	if section.index == 1
+		assign is_first_section = true
+	else
+		assign is_first_section = false
+	endif
+
+	if section.settings.featured_article != blank
+		assign featured_article = section.settings.featured_article
+	endif
+
+	if blog.metafields.theme.featured_article.value != blank
+		assign featured_article_url = blog.metafields.theme.featured_article.value
+	endif
+	
+	render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom
+-%}
+	{{ 'blog-header.css' | asset_url | stylesheet_tag: preload: is_first_section }}
+	<div class="blog border-bottom mb-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="copy-wrapper my-4 mt-lg-3 pt-2 pb-3">
+						<h1 class="h2">{%- if section.settings.header != blank -%}{{ section.settings.header }}{%- else -%}{{ blog.title }}{%- endif -%}</h1>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	{%- if current_page == 1 -%}
+		{%- if featured_article != blank or featured_article_url != blank -%}
+			<div class="container">
+				<div class="row row-cols-1 row-cols-lg-2 g-0">
+					{%- liquid
+						assign article_handle = featured_article.handle
+						if featured_article_url != blank
+							assign article_handle = featured_article_url | split: '/' | last | split: '?' | first | prepend: '/' | prepend: blog.handle
+						endif
+						assign featured_post = articles[article_handle]
+					-%}
+					<div class="col">
+						{%- render 'responsive-bg-image', image: featured_post.image, lazyloading_style: 'eager' -%}
+					</div>
+					<div class="col">
+						<div class="featured-article h-100 d-flex flex-column p-3 p-lg-5"{% if section.settings.bg_color != blank %} style="--bg-color: {{ section.settings.bg_color }}"{% endif %}>
+							{%- if section.settings.featured_badge_copy != blank -%}
+								<div class="badge mb-2">{{ section.settings.featured_badge_copy }}</div>
+							{%- endif -%}
+							<div class="copy-wrapper pt-1 pb-lg-2">
+								<h2 class="mb-3 pb-1">{{ featured_post.title }}</h2>
+								<div class="description">
+									{{ featured_post.excerpt_or_content | truncatewords: 75, '...' }}
+								</div>
+							</div>
+							<div class="btn-wrapper pt-lg-5 pb-5 pb-lg-0">
+								<a href="{{ featured_post.url }}" class="btn btn-ternary w-100" title="{{ featured_post.title | escape }}">
+									<span class="anim-wrapper">
+										<span class="initial">{{ section.settings.link_copy }}</span>
+										<span class="end">{{ section.settings.link_copy }}</span>
+									</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{%- endif -%}
+	{%- endif -%}
+
+{% schema %}
+{
+	"name": "Blog Header",
+	"tag": "section",
+	"class": "section-blog",
+	"settings": [
+		{
+			"type": "text",
+			"id": "header",
+			"label": "Header"
+		},
+		{
+			"type": "header",
+			"content": "Featured image"
+		},
+		{
+			"type": "header",
+			"content": "Featured Article",
+			"info": "If a blog does not have an article assigned to its featured article metafield (follow this [link](/admin/content/blogs) to add), you can choose the article that is shown by default below"
+		},
+		{
+			"type": "color",
+			"id": "bg_color",
+			"label": "Background Color",
+			"default": "#184A3E"
+		},
+		{
+			"type": "article",
+			"id": "featured_article",
+			"label": "Featured Article"
+		},
+		{
+			"type": "text",
+			"id": "featured_badge_copy",
+			"label": "Featured Article Badge Copy"
+		},
+		{
+			"type": "text",
+			"id": "link_copy",
+			"label": "Article Link Copy",
+			"default": "Read More"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"presets": [
+		{
+			"name": "Image with content"
+		}
+	]
+}
+{% endschema %}

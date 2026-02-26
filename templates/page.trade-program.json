@@ -1,0 +1,513 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "html_video_section_Yx7gTT": {
+      "type": "html-video-section",
+      "blocks": {
+        "shopify_video_GVKTDP": {
+          "type": "shopify_video",
+          "settings": {
+            // "video": "shopify://files/videos/0212 (1)(1).mp4"
+          }
+        }
+      },
+      "block_order": [
+        "shopify_video_GVKTDP"
+      ],
+      "name": "Video Banner",
+      "settings": {
+        "enable_fullscreen_height": false,
+        "autoplay": true,
+        "loop": false,
+        "alignment": "center",
+        "show_password": false,
+        "password_modal_trigger": "",
+        "trigger_color": "#fff",
+        "password_heading": "Enter Password",
+        "password_placeholder": "Store Password",
+        "password_btn_copy": "Enter",
+        "hero_heading": "",
+        "heading_color": "#fff",
+        "hero_sub_heading": "",
+        "subheading_color": "#fff",
+        "hero_caption": "",
+        "caption_color": "#fff",
+        "hero_btn_text": "",
+        "hero_btn_link": "shopify://collections",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "main": {
+      "type": "hero",
+      "disabled": true,
+      "settings": {
+        "height": "500px",
+        "height_mobile": "500px",
+        "show_overlay": false,
+        "overlay_option": "gradient",
+        "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "image": "shopify://shop_images/Factory_Work._35.jpg",
+        "heading": "",
+        "heading_color": "#ffffff",
+        "subheading": "",
+        "subheading_color": "#ffffff",
+        "copy": "",
+        "copy_color": "#ffffff",
+        "button_copy_1": "",
+        "button_url_1": "",
+        "button_copy_2": "",
+        "button_url_2": "",
+        "vertical_alignment_desktop": "end",
+        "horizontal_alignment_desktop": "start",
+        "text_alignment_desktop": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_mobile": "center",
+        "text_alignment_mobile": "center",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "hero_a4cPTR": {
+      "type": "hero",
+      "disabled": true,
+      "name": "Hero",
+      "settings": {
+        "height": "800px",
+        "height_mobile": "500px",
+        "show_overlay": false,
+        "overlay_option": "gradient",
+        "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "heading": "",
+        "heading_color": "#fff",
+        "subheading": "",
+        "subheading_color": "#fff",
+        "copy": "",
+        "copy_color": "#fff",
+        "button_copy_1": "",
+        "button_url_1": "",
+        "button_copy_2": "",
+        "button_url_2": "",
+        "vertical_alignment_desktop": "end",
+        "horizontal_alignment_desktop": "start",
+        "text_alignment_desktop": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_mobile": "center",
+        "text_alignment_mobile": "center",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "hero_Ubw4pm": {
+      "type": "hero",
+      "disabled": true,
+      "name": "Hero",
+      "settings": {
+        "height": "800px",
+        "height_mobile": "500px",
+        "show_overlay": false,
+        "overlay_option": "gradient",
+        "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "heading": "",
+        "heading_color": "#fff",
+        "subheading": "",
+        "subheading_color": "#fff",
+        "copy": "",
+        "copy_color": "#fff",
+        "button_copy_1": "",
+        "button_url_1": "",
+        "button_copy_2": "",
+        "button_url_2": "",
+        "vertical_alignment_desktop": "end",
+        "horizontal_alignment_desktop": "start",
+        "text_alignment_desktop": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_mobile": "center",
+        "text_alignment_mobile": "center",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "intro-section": {
+      "type": "intro-section",
+      "settings": {
+        "horizontal_alignment_desktop": "center",
+        "alignment_desktop": "center",
+        "horizontal_alignment_mobile": "center",
+        "alignment_mobile": "center",
+        "heading": "partnerships can go a long way",
+        "is_h1": false,
+        "copy": "<p><strong>Our trade program is built for designers, architects, and contractors who care about materials, efficiency, and value. We make it easier to source design-forward finishes with preferred pricing, streamlined support, and a curated assortment that helps your clients get more design from their budget.</strong></p>",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "image_copy_blocks": {
+      "type": "image-copy-blocks",
+      "blocks": {
+        "image_copy_block_3fBxbj": {
+          "type": "_image-copy-block",
+          "name": "Image / Copy Block",
+          "settings": {
+            "image": "shopify://shop_images/samples.jpg",
+            "heading": "Free Samples",
+            "copy": "<p><strong>Trade partners receive priority access to samples so you can evaluate color, texture, and finish—and present options to clients with confidence.</strong></p>",
+            "tag": "",
+            "product_dot_list": "",
+            "show_first_dot_by_default": true,
+            "vertical_alignment_desktop": "center",
+            "text_alignment_desktop": "center",
+            "horizontal_alignment_desktop": "start",
+            "text_alignment_mobile": "left",
+            "horizontal_alignment_mobile": "start"
+          },
+          "blocks": {}
+        },
+        "image_copy_block_n6n9rp": {
+          "type": "_image-copy-block",
+          "name": "Image / Copy Block",
+          "settings": {
+            "image": "shopify://shop_images/trade.jpg",
+            "heading": "Trade Pricing",
+            "copy": "<p><strong>Enjoy preferred pricing across our curated assortment.<br/>Our trade pricing is straightforward and consistent, making it easier to build proposals, manage budgets, and deliver great design without complicated pricing structures.</strong></p>",
+            "tag": "",
+            "product_dot_list": "",
+            "show_first_dot_by_default": true,
+            "vertical_alignment_desktop": "center",
+            "text_alignment_desktop": "center",
+            "horizontal_alignment_desktop": "start",
+            "text_alignment_mobile": "left",
+            "horizontal_alignment_mobile": "start"
+          },
+          "blocks": {}
+        },
+        "image_copy_block_qhNgBm": {
+          "type": "_image-copy-block",
+          "name": "Image / Copy Block",
+          "settings": {
+            "image": "shopify://shop_images/dedicated.jpg",
+            "heading": "Dedicated Reps",
+            "copy": "<p><strong>Work with a real person who understands your project. Schedule time with a dedicated rep for help with product selection, quantities, alternates, and ordering—so projects move forward smoothly and without surprises.</strong></p>",
+            "tag": "",
+            "product_dot_list": "",
+            "show_first_dot_by_default": true,
+            "vertical_alignment_desktop": "center",
+            "text_alignment_desktop": "center",
+            "horizontal_alignment_desktop": "start",
+            "text_alignment_mobile": "left",
+            "horizontal_alignment_mobile": "start"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "image_copy_block_3fBxbj",
+        "image_copy_block_n6n9rp",
+        "image_copy_block_qhNgBm"
+      ],
+      "settings": {
+        "grid_option": "grid-3-by-row",
+        "img_left_right_desktop": "natural",
+        "img_top_bottom_mobile": "natural",
+        "show_heading_at_top": false,
+        "show_copy_at_top": false,
+        "product_dot_lists": [],
+        "second_product_dot_lists": [],
+        "show_first_dot_by_default": true,
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "custom_contact_form": {
+      "type": "custom-contact-form",
+      "blocks": {
+        "text_inputs_ReMztT": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Entire Name:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_y4DYfG": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Company Name:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_DiiMMw": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Email Address:",
+            "placeholder": "",
+            "input_type": "email",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_KDHN3M": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Phone:",
+            "placeholder": "",
+            "input_type": "tel",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_FDY8xe": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Website:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_irFJMr": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Social Media Handle:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_nWKGhq": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "State:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_NpxrJc": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "City:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "select_inputs_kM4dAH": {
+          "type": "select-inputs",
+          "settings": {
+            "display_type": "full",
+            "heading": "Primary Business:",
+            "option_list": "Designer; Architect; Contractor",
+            "select_default": "Select One",
+            "required": true
+          }
+        },
+        "textarea_3XDzkw": {
+          "type": "textarea",
+          "settings": {
+            "heading": "Message:",
+            "placeholder": "",
+            "required": true
+          }
+        }
+      },
+      "block_order": [
+        "text_inputs_ReMztT",
+        "text_inputs_y4DYfG",
+        "text_inputs_DiiMMw",
+        "text_inputs_KDHN3M",
+        "text_inputs_FDY8xe",
+        "text_inputs_irFJMr",
+        "text_inputs_nWKGhq",
+        "text_inputs_NpxrJc",
+        "select_inputs_kM4dAH",
+        "textarea_3XDzkw"
+      ],
+      "settings": {
+        "bg_color": "#ffffff",
+        "header": "Submit your application",
+        "copy": "",
+        "submit_btn_copy": "Submit",
+        "success_header": "",
+        "success_copy": "",
+        "error_header": "",
+        "error_copy": "",
+        "error_btn_copy": "",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "image_with_content_blocks": {
+      "type": "image-with-content-blocks",
+      "blocks": {
+        "heading_with_copy_Uapzxd": {
+          "type": "_heading-with-copy",
+          "name": "Heading with copy",
+          "settings": {
+            "heading_type": "h2",
+            "heading": "FREE PRO SAMPLE BOX",
+            "copy": "We need a cute little copy that goes here. Lets make this short and sweet please."
+          },
+          "blocks": {}
+        },
+        "bulletpoints_frFmef": {
+          "type": "_bulletpoints",
+          "name": "Bulletpoints",
+          "settings": {},
+          "blocks": {
+            "bulletpoint_with_icon_P68PWA": {
+              "type": "_bulletpoint-with-icon",
+              "name": "Bulletpoint with icon",
+              "settings": {
+                "icon": "orange-checkmark",
+                "heading": "Value $125+"
+              },
+              "blocks": {}
+            },
+            "bulletpoint_with_icon_ypiBaa": {
+              "type": "_bulletpoint-with-icon",
+              "name": "Bulletpoint with icon",
+              "settings": {
+                "icon": "orange-checkmark",
+                "heading": "6 items or more"
+              },
+              "blocks": {}
+            },
+            "bulletpoint_with_icon_cGBCzM": {
+              "type": "_bulletpoint-with-icon",
+              "name": "Bulletpoint with icon",
+              "settings": {
+                "icon": "orange-checkmark",
+                "heading": "Shipped for free"
+              },
+              "blocks": {}
+            },
+            "bulletpoint_with_icon_KHYJrk": {
+              "type": "_bulletpoint-with-icon",
+              "name": "Bulletpoint with icon",
+              "settings": {
+                "icon": "orange-checkmark",
+                "heading": "2 editions / year"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "bulletpoint_with_icon_P68PWA",
+            "bulletpoint_with_icon_ypiBaa",
+            "bulletpoint_with_icon_cGBCzM",
+            "bulletpoint_with_icon_KHYJrk"
+          ]
+        },
+        "heading_with_copy_3gtc48": {
+          "type": "_heading-with-copy",
+          "name": "Heading with copy",
+          "settings": {
+            "heading_type": "h1",
+            "heading": "Predefined Payment terms, applies at checkout",
+            "copy": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          },
+          "blocks": {}
+        },
+        "button_with_context_8a43Qf": {
+          "type": "_button-with-context",
+          "name": "Button with context",
+          "settings": {
+            "link_copy": "APPLY",
+            "url": "shopify://collections",
+            "context": "No a member",
+            "context_subheading": "<a href=\"/collections\" title=\"All collections\">Order online now</a>"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading_with_copy_Uapzxd",
+        "bulletpoints_frFmef",
+        "heading_with_copy_3gtc48",
+        "button_with_context_8a43Qf"
+      ],
+      "disabled": true,
+      "settings": {
+        "image": "shopify://shop_images/Gemini_Generated_Image_8uegvp8uegvp8ueg.png",
+        "justify_content": "start",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "featured_collection_jaFwkf": {
+      "type": "featured-collection",
+      "name": "Featured collection",
+      "settings": {
+        "collection": "best-sellers",
+        "number_of_products": "12",
+        "bg_color": "",
+        "heading": "New Arrivals",
+        "subheading": "",
+        "alignment": "start",
+        "link_copy": "",
+        "url": "",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    }
+  },
+  "order": [
+    "html_video_section_Yx7gTT",
+    "main",
+    "hero_a4cPTR",
+    "hero_Ubw4pm",
+    "intro-section",
+    "image_copy_blocks",
+    "custom_contact_form",
+    "image_with_content_blocks",
+    "featured_collection_jaFwkf"
+  ]
+}

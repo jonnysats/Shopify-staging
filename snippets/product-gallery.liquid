@@ -1,0 +1,526 @@
+{%- comment -%}
+	Renders product main image and its gallery of images
+	
+	Accepts:
+	- product {Object} use 'with, as' keywords
+	- combined_listing_template {Boolean}
+	- alt_version: {Boolean}
+	- version: {String} mobile|desktop
+	
+	Usage:
+	{%- render 'product-gallery' with product as product, alt_version: false, version: 'desktop' -%}
+
+{%- endcomment -%}
+{%- liquid
+	comment
+		# Get real count of all product media, counting real extra images from metadata
+	endcomment
+	assign images_size = 0
+
+	comment
+		# Validate if we should show extra images, not related to variants
+	endcomment
+	assign show_extra_images = product.metafields.theme.show_extra_images.value
+	assign hide_non_variant_images = product.metafields.theme.hide_non_variant_images.value
+
+	comment
+		# Avoid showing extra images if animation on variant images is on
+	endcomment
+	if hide_non_variant_images == true
+		assign show_extra_images = false
+	endif
+
+	comment
+		# If metafield is true, count extra images
+	endcomment
+	if show_extra_images == true
+		assign images_size = product.media.size
+
+		comment
+			# Get first image of the extra images available
+		endcomment
+		assign featured_media = blank
+		for media in product.media
+			comment
+				Check if current media is assigned to a variant
+			endcomment
+			assign media_variant = blank
+			for variant in product.variants
+				if variant.featured_media.id == media.id
+					assign media_variant = variant
+					break
+				endif
+			endfor
+
+			comment
+				# If no variant assigned to media, make it first avail image
+			endcomment
+			if media_variant == blank
+				assign featured_media = media
+				break
+			endif
+		endfor
+	endif
+
+	comment
+		# Count variant images and metafield images
+	endcomment
+	for variant in product.variants
+		assign variant_image = variant.featured_media
+							
+		comment
+			# Only count variant images
+		endcomment
+		if variant_image == blank
+			continue
+		endif
+
+		assign images_size = images_size | plus: 1
+
+		comment
+			# Add extra images to the total images size
+		endcomment
+		if variant.metafields.theme.extra_images != blank
+			assign images_size = images_size | plus: variant.metafields.theme.extra_images.value.images.value.count
+		endif
+	endfor
+-%}
+<div class="col-12 col-lg">
+	{%- assign current_variant = product.selected_or_first_available_variant -%}
+	<div class="product-image-wrapper position-relative{% if images_size <= 1 %} pb-4 pb-lg-0{% endif %}" data-product-image-zoom-wrapper data-product-featured-image-wrapper data-media-id="{{ current_variant.featured_media.id | default: product.featured_media.id }}">
+		{%- liquid
+			comment
+				# If extra images is selected at first of extra images
+			endcomment
+			if show_extra_images and featured_media != blank
+				assign featured_image = featured_media | where: 'media_type', 'image' | first
+			else
+				assign featured_image = current_variant.featured_image | default: product.featured_image
+			endif			
+			
+			comment
+				ZOOM IMAGE
+			endcomment
+			if featured_image != blank
+				echo featured_image | image_url: width: 2560 | image_tag: class: 'w-100 h-100 position-absolute start-0 top-0 d-none d-lg-block product-image', data-product-zoom-image: '', loading: 'eager', fetchpriority: 'high'
+			elsif settings.no_image != blank
+				echo settings.no_image | image_url: width: 2560 | image_tag: class: 'w-100 h-100 position-absolute start-0 top-0 d-none d-lg-block product-image', data-product-zoom-image: '', loading: 'eager', fetchpriority: 'high'
+			else
+				assign fallback_image_name = "placeholder.jpg" | asset_img_url: '2560x'
+				echo '<img src="' | append: fallback_image_name | append: '" class="w-100 h-100 position-absolute start-0 top-0 d-none d-lg-block product-image" data-product-zoom-image />'
+			endif
+
+			comment
+				ORIGINAL IMAGE
+			endcomment
+			render 'responsive-bg-image', image: featured_image, image_attributes: 'data-product-featured-image', image_class: 'img-fluid product-image', lazyloading_style: 'eager', fetch_priority: true
+		-%}
+	</div>
+</div>
+{%- if images_size > 1 -%}
+	{%- liquid
+		assign flickity_arrows = true
+		assign flickity_dots = false
+		assign flickity_loop = true
+		assign flickity_group_cells = false
+		assign flickity_adaptive_height = false
+		assign flickity_contain = false
+		assign arrow_shape = 'M6.25 1L0.75 6.5L6.25 12'
+		assign cell_selector = 'visible-cell'
+	-%}
+	<div class="col-12{% if alt_version == false %} col-lg{% if version == 'desktop' %} px-lg-4{% endif %}{% endif %}">
+		{%- comment -%} PRODUCT THUMBNAILS - MOBILE ONLY {%- endcomment -%}
+		{%- if version == 'mobile' -%}
+			{%- liquid
+				comment
+					If less than 6 on mobile disable loop
+				endcomment
+				if images_size <= 6
+					assign flickity_loop = false
+					assign flickity_group_cells = true
+				endif
+			-%}
+			<div class="container-xl product-thumbnail pt-2 d-lg-none px-0{% if hide_non_variant_images == true %} hide-extra-images{% endif %}" data-product-thumbnails data-section-id="mobileThumb{{ section.id }}" data-section-type="genericSlider">
+				<div class="row{% if alt_version == false %} my-4{% else %} mb-4 mt-2{% endif %}{% if images_size > 6 %} px-3{% else %} px-0{% endif %} g-0" data-generic-slider data-arrows="{{ flickity_arrows }}" data-arrow-shape="{{ arrow_shape }}" data-dots="{{ flickity_dots }}" data-loop="{{ flickity_loop }}" data-adaptive-height="{{ flickity_adaptive_height }}" data-group-cells="{{ flickity_group_cells }}" data-contain="{{ flickity_contain }}">
+					{%- comment -%} Keep Track of media position (count for extra info images as well) {%- endcomment -%}
+					{%- assign media_position = 0 -%}
+					{%- comment -%}
+						# If metafield to show gallery item is truthy
+						show regular items first
+					{%- endcomment -%}
+					{%- if show_extra_images -%}
+						{%- for media in product.media -%}
+							{%- liquid
+								comment
+									# check first that the current media is not attached to a variant
+								endcomment
+								assign media_variant = blank
+								for variant in product.variants
+									if variant.featured_media.id == media.id
+										assign media_variant = variant
+										break
+									endif
+								endfor
+
+								if media_variant != blank
+									continue
+								endif
+
+								assign media_position = media_position | plus: 1
+							-%}
+							{%- if media.media_type == 'image' -%}
+								<div class="col-2 d-flex justify-content-center px-1 thumbnail-cell" data-thumb-selected="{% if featured_media.id == media.id %}true{% else %}false{% endif %}" data-thumb-variant-selected="false" data-media-id="{{ media.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+									<a href="{{ media | image_url: width: 1480 }}" title="{{ media.alt | escape | default: "product thumbnail media" }}">
+										{%- render 'responsive-bg-image', image: media.src, image_class: 'product-image' lazyloading_style: 'eager', aspect_ratio: false -%}
+									</a>
+								</div>
+							{%- elsif media.media_type == 'video' -%}
+								<div class="col-2 px-1" data-thumb-selected="{% if featured_media.id == media.id %}true{% else %}false{% endif %}" data-thumb-variant-selected="false" data-media-id="{{ media.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+									{{ media | media_tag: image_size: '2048x', autoplay: true, loop: false, controls: true, preload: 'none' }}
+								</div>
+							{%- elsif media.media_type == 'external_video' -%}
+								{%- assign video_class = 'js-' | append: media.host -%}
+								<div class="col-2 px-1" data-thumb-selected="{% if featured_media.id == media.id %}true{% else %}false{% endif %}" data-thumb-variant-selected="false" data-media-id="{{ media.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+									{%- liquid
+										if media.host == 'youtube'
+											echo media | external_video_url: autoplay: true, loop: false, playlist: media.external_id | external_video_tag: class: video_class, loading: 'lazy'
+										else
+											echo media | external_video_url: autoplay: true, loop: false | external_video_tag: class: video_class, loading: 'lazy'
+										endif
+									-%}
+								</div>
+							{%- endif -%}
+						{%- endfor -%}
+					{%- endif -%}
+					{%- comment -%}
+						# Display variant and metafield images only
+					{%- endcomment -%}
+					{%- for variant in product.variants -%}
+						{%- liquid
+							assign variant_image = variant.featured_media
+							
+							comment
+								# If media has no variant attached continue with next media item
+								Only skip extra/regular images on metafield value
+							endcomment
+							if variant_image == blank
+								continue
+							endif
+
+							comment
+								Increase media position
+							endcomment
+							assign media_position = media_position | plus: 1
+
+							comment
+								Validate whether variant thumb should be selected first or not
+							endcomment
+							assign selected = false
+
+							comment
+								# check there's not a featured media selected first
+							endcomment
+							if featured_media == blank
+								if product.selected_or_first_available_variant.id == variant.id
+									assign selected = true
+								endif
+
+								comment
+									# Check if variant-subimage is selected
+								endcomment
+								assign variant_thumb_selected = false
+								if variant.metafields.theme.extra_images != blank and product.selected_or_first_available_variant.id == variant.id
+									assign variant_thumb_selected = true
+								endif
+							endif
+						-%}
+						<div class="col-2 d-flex justify-content-center px-1 thumbnail-cell{% if hide_non_variant_images == true and variant_thumb_selected == true %} {{ cell_selector }}{% endif %}" data-thumb-selected="{{ selected }}" data-thumb-variant-selected="{{ variant_thumb_selected }}" data-media-variant-id="{{ variant.id }}" data-media-id="{{ variant_image.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+							<a href="{{ variant_image | image_url: width: 1480 }}" title="{{ variant.title | escape | default: "product thumbnail media" }}">
+								{%- render 'responsive-bg-image', image: variant_image.src, image_class: 'product-image' lazyloading_style: 'eager', aspect_ratio: false -%}
+							</a>
+						</div>
+						{%- comment -%}
+							# Append variant attached images
+						{%- endcomment -%}
+						{%- if variant.metafields.theme.extra_images != blank -%}
+							{%- assign extra_images = variant.metafields.theme.extra_images.value.images.value -%}
+							{%- for image in extra_images -%}
+								{%- assign media_position = media_position | plus: 1 -%}
+								<div class="col-2 d-flex justify-content-center px-1 thumbnail-cell{% if hide_non_variant_images == true and variant_thumb_selected == true %} {{ cell_selector }}{% endif %}" data-thumb-selected="false" data-thumb-variant-selected="{{ variant_thumb_selected }}" data-media-variant-id="{{ variant.id }}" data-media-id="{{ image.id }}" data-selected-index="1" data-media-position="{{ media_position }}" data-extra-image>
+									<a href="{{ image | image_url: width: 1480 }}" title="{{ variant.title | escape | default: "product thumbnail media" }}">
+										{%- render 'responsive-bg-image', image: image.src, lazyloading_style: 'eager', aspect_ratio: false -%}
+									</a>
+								</div>
+							{%- endfor -%}
+						{%- endif -%}
+					{%- endfor -%}
+				</div>
+			</div>
+		{%- endif -%}
+		{%- if version == 'desktop' -%}
+			{%- if alt_version == false -%}
+				{%- comment -%} PRODUCT THUMBNAILS - DESKTOP ONLY {%- endcomment -%}
+				{%- liquid
+					comment
+						If less than 4 on desktop disable loop
+					endcomment
+					if images_size <= 4
+						assign flickity_loop = false
+						assign flickity_group_cells = true
+					endif
+				-%}
+				<div class="product-thumbnail pt-2 pt-lg-4 d-none d-lg-block{% if hide_non_variant_images == true %} hide-extra-images{% endif %}" data-product-thumbnails data-section-id="desktopThumb{{ section.id }}" data-section-type="genericSlider">
+					<div class="row px-3" data-generic-slider data-draggable="false" data-arrows="{{ flickity_arrows }}" data-arrow-shape="{{ arrow_shape }}" data-dots="{{ flickity_dots }}" data-loop="{{ flickity_loop }}" data-adaptive-height="{{ flickity_adaptive_height }}" data-group-cells="{{ flickity_group_cells }}" data-contain="{{ flickity_contain }}">
+						{%- comment -%} Keep Track of media position (count for extra info images as well) {%- endcomment -%}
+						{%- assign media_position = 0 -%}
+						{%- comment -%}
+							# If metafield to show gallery item is truthy
+							show regular items first
+						{%- endcomment -%}
+						{%- if show_extra_images -%}
+							{%- for media in product.media -%}
+								{%- liquid
+									comment
+										# check first that the current media is not attached to a variant
+									endcomment
+									assign media_variant = blank
+									for variant in product.variants
+										if variant.featured_media.id == media.id
+											assign media_variant = variant
+											break
+										endif
+									endfor
+
+									if media_variant != blank
+										continue
+									endif
+
+									assign media_position = media_position | plus: 1
+								-%}
+								{%- if media.media_type == 'image' -%}
+									<div class="thumbnail-cell d-grid align-items-center px-lg-2" data-thumb-selected="{% if featured_media.id == media.id %}true{% else %}false{% endif %}" data-thumb-variant-selected="false" data-media-id="{{ media.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+										<a href="{{ media | image_url: width: 1480 }}" title="{{ media.alt | escape | default: "product thumbnail media" }}">
+											{%- render 'responsive-bg-image', image: media.src, image_class: 'product-image' lazyloading_style: 'eager', aspect_ratio: false -%}
+										</a>
+									</div>
+								{%- elsif media.media_type == 'video' -%}
+									<div class="thumbnail-cell d-grid align-items-center px-lg-2" data-thumb-selected="{% if featured_media.id == media.id %}true{% else %}false{% endif %}" data-thumb-variant-selected="false" data-media-id="{{ media.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+										{{ media | media_tag: image_size: '2048x', autoplay: true, loop: false, controls: true, preload: 'none' }}
+									</div>
+								{%- elsif media.media_type == 'external_video' -%}
+									{%- assign video_class = 'js-' | append: media.host -%}
+									<div class="thumbnail-cell d-grid align-items-center px-lg-2" data-thumb-selected="{% if featured_media.id == media.id %}true{% else %}false{% endif %}" data-thumb-variant-selected="false" data-media-id="{{ media.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+										{%- liquid
+											if media.host == 'youtube'
+												echo media | external_video_url: autoplay: true, loop: false, playlist: media.external_id | external_video_tag: class: video_class, loading: 'lazy'
+											else
+												echo media | external_video_url: autoplay: true, loop: false | external_video_tag: class: video_class, loading: 'lazy'
+											endif
+										-%}
+									</div>
+								{%- endif -%}
+							{%- endfor -%}
+						{%- endif -%}
+						{%- comment -%}
+							# Display variant and metafield images only
+						{%- endcomment -%}
+						{%- for variant in product.variants -%}
+							{%- liquid
+								assign variant_image = variant.featured_media
+								
+								comment
+									# If media has no variant attached continue with next media item
+									Only skip extra/regular images on metafield value
+								endcomment
+								if variant_image == blank
+									continue
+								endif
+
+								comment
+									Increase media position
+								endcomment
+								assign media_position = media_position | plus: 1
+
+								comment
+									Validate whether variant thumb should be selected first or not
+								endcomment
+								assign selected = false
+
+								comment
+									# check there's not a featured media selected first
+								endcomment
+								if featured_media == blank
+									if product.selected_or_first_available_variant.id == variant.id
+										assign selected = true
+									endif
+
+									comment
+										# Check if variant-subimage is selected
+									endcomment
+									assign variant_thumb_selected = false
+									if variant.metafields.theme.extra_images != blank and product.selected_or_first_available_variant.id == variant.id
+										assign variant_thumb_selected = true
+									endif
+								endif
+							-%}
+							<div class="thumbnail-cell d-grid align-items-center px-lg-2{% if hide_non_variant_images == true and variant_thumb_selected == true %} {{ cell_selector }}{% endif %}" data-thumb-selected="{{ selected }}" data-thumb-variant-selected="{{ variant_thumb_selected }}" data-media-variant-id="{{ variant.id }}" data-media-id="{{ variant_image.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+								<a href="{{ variant_image | image_url: width: 1480 }}" title="{{ variant.title | escape | default: "product thumbnail media" }}">
+									{%- render 'responsive-bg-image', image: variant_image.src, image_class: 'product-image' lazyloading_style: 'eager', aspect_ratio: false -%}
+								</a>
+							</div>
+							{%- comment -%}
+								# Append variant attached images
+							{%- endcomment -%}
+							{%- if variant.metafields.theme.extra_images != blank -%}
+								{%- assign extra_images = variant.metafields.theme.extra_images.value.images.value -%}
+								{%- for image in extra_images -%}
+									{%- assign media_position = media_position | plus: 1 -%}
+									<div class="thumbnail-cell d-grid align-items-center px-lg-2{% if hide_non_variant_images == true and variant_thumb_selected == true %} {{ cell_selector }}{% endif %}" data-thumb-selected="false" data-thumb-variant-selected="{{ variant_thumb_selected }}" data-media-variant-id="{{ variant.id }}" data-media-id="{{ image.id }}" data-selected-index="1" data-media-position="{{ media_position }}" data-extra-image>
+										<a href="{{ image | image_url: width: 1480 }}" title="{{ variant.title | escape | default: "product thumbnail media" }}">
+											{%- render 'responsive-bg-image', image: image.src, lazyloading_style: 'eager', aspect_ratio: false -%}
+										</a>
+									</div>
+								{%- endfor -%}
+							{%- endif -%}
+						{%- endfor -%}
+					</div>
+				</div>
+			{%- else -%}
+				{%- comment -%} PRODUCT THUMBNAILS ALTERNATE - DESKTOP ONLY {%- endcomment -%}
+				<div class="product-thumbnail{% if hide_non_variant_images == true %} alt-desktop-gallery hide-extra-images position-relative{% endif %}" data-thumbnail-desktop>
+					<div class="row gx-3 gy-4 d-none d-lg-flex pt-4" data-product-thumbnails>
+						{%- comment -%} Keep Track of media position (count for extra info images as well) {%- endcomment -%}
+						{%- assign media_position = 0 -%}
+						{%- comment -%}
+							# If metafield to show gallery item is truthy
+							show regular items first
+						{%- endcomment -%}
+						{%- if show_extra_images -%}
+							{%- for media in product.media -%}
+								{%- liquid
+									comment
+										# check first that the current media is not attached to a variant
+									endcomment
+									assign media_variant = blank
+									for variant in product.variants
+										if variant.featured_media.id == media.id
+											assign media_variant = variant
+											break
+										endif
+									endfor
+
+									if media_variant != blank
+										continue
+									endif
+
+									assign media_position = media_position | plus: 1
+								-%}
+								{%- if media.media_type == 'image' -%}
+									<div class="col-2 alt-thumbnail" data-thumb-selected="{% if featured_media.id == media.id %}true{% else %}false{% endif %}" data-thumb-variant-selected="false" data-media-id="{{ media.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+										<a href="{{ media | image_url: width: 1480 }}" title="{{ media.alt | escape | default: "product thumbnail media" }}">
+											{%- render 'responsive-bg-image', image: media.src, lazyloading_style: 'eager', image_class: 'product-image' aspect_ratio: false -%}
+										</a>
+									</div>
+								{%- elsif media.media_type == 'video' -%}
+									<div class="col-2 alt-thumbnail" data-thumb-selected="{% if featured_media.id == media.id %}true{% else %}false{% endif %}" data-thumb-variant-selected="false" data-media-id="{{ media.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+										{{ media | media_tag: image_size: '2048x', autoplay: true, loop: false, controls: true, preload: 'none' }}
+									</div>
+								{%- elsif media.media_type == 'external_video' -%}
+									{%- assign video_class = 'js-' | append: media.host -%}
+									<div class="col-2 alt-thumbnail" data-thumb-selected="{% if featured_media.id == media.id %}true{% else %}false{% endif %}" data-thumb-variant-selected="false" data-media-id="{{ media.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+										{%- liquid
+											if media.host == 'youtube'
+												echo media | external_video_url: autoplay: true, loop: false, playlist: media.external_id | external_video_tag: class: video_class, loading: 'lazy'
+											else
+												echo media | external_video_url: autoplay: true, loop: false | external_video_tag: class: video_class, loading: 'lazy'
+											endif
+										-%}
+									</div>
+								{%- endif -%}
+							{%- endfor -%}
+						{%- endif -%}
+						{%- comment -%}
+							# Display variant and metafield images only
+						{%- endcomment -%}
+						{%- for variant in product.variants -%}
+							{%- liquid
+								assign variant_image = variant.featured_media
+								
+								comment
+									# If media has no variant attached continue with next media item
+									Only skip extra/regular images on metafield value
+								endcomment
+								if variant_image == blank
+									continue
+								endif
+
+								comment
+									Increase media position
+								endcomment
+								assign media_position = media_position | plus: 1
+
+								comment
+									Validate whether variant thumb should be selected first or not
+								endcomment
+								assign selected = false
+
+								comment
+									# check there's not a featured media selected first
+								endcomment
+								if featured_media == blank
+									if product.selected_or_first_available_variant.id == variant.id
+										assign selected = true
+									endif
+
+									comment
+										# Check if variant-subimage is selected
+									endcomment
+									assign variant_thumb_selected = false
+									if variant.metafields.theme.extra_images != blank and product.selected_or_first_available_variant.id == variant.id
+										assign variant_thumb_selected = true
+									endif
+								endif
+							-%}
+							{%- comment -%}
+								# Capture html/liquid and decide to wrap the thumbs if option for variant only thumb is set to true
+							{%- endcomment -%}
+							{%- capture images_container -%}
+								<div class="col-2 alt-thumbnail" data-thumb-selected="{{ selected }}" data-thumb-variant-selected="{{ variant_thumb_selected }}" data-media-variant-id="{{ variant.id }}" data-media-id="{{ variant_image.id }}" data-selected-index="1" data-media-position="{{ media_position }}">
+									<a href="{{ variant_image | image_url: width: 1480 }}" title="{{ variant.title | escape | default: "product thumbnail media" }}">
+										{%- render 'responsive-bg-image', image: variant_image.src, lazyloading_style: 'eager', image_class: 'product-image' aspect_ratio: false -%}
+									</a>
+								</div>
+								{%- comment -%}
+									# Append variant attached images
+								{%- endcomment -%}
+								{%- if variant.metafields.theme.extra_images != blank -%}
+									{%- assign extra_images = variant.metafields.theme.extra_images.value.images.value -%}
+									{%- for image in extra_images -%}
+										{%- assign media_position = media_position | plus: 1 -%}
+										<div class="col-2 alt-thumbnail" data-thumb-selected="false" data-thumb-variant-selected="{{ variant_thumb_selected }}" data-media-variant-id="{{ variant.id }}" data-media-id="{{ image.id }}" data-selected-index="1" data-media-position="{{ media_position }}" data-extra-image>
+											<a href="{{ image | image_url: width: 1480 }}" title="{{ variant.title | escape | default: "product thumbnail media" }}">
+												{%- render 'responsive-bg-image', image: image.src, lazyloading_style: 'eager', aspect_ratio: false -%}
+											</a>
+										</div>
+									{%- endfor -%}
+								{%- endif -%}
+							{%- endcapture -%}
+							{%- comment -%}
+								# If only related variants are allowed to show in thumbnails wrap them to do animations
+							{%- endcomment -%}
+							{%- if hide_non_variant_images == true -%}
+								<div class="product-gallery-item col-12">
+									<div class="row gx-3 gy-4">
+										{{- images_container -}}
+									</div>
+								</div>
+							{%- else -%}
+								{{- images_container -}}
+							{%- endif -%}
+						{%- endfor -%}
+					</div>
+				</div>
+			{%- endif -%}
+		{%- endif -%}
+	</div>
+{%- endif -%}

@@ -1,0 +1,25 @@
+{%- layout 'none' -%}
+{%- render 'drawer-cart' -%}
+{%- liquid 
+	comment 
+		We do this to reference in the right sequence the settings from the drawer cart in hte drawer cart section
+		? NOTE: Since this section is using the "drawer-cart" snippet only, 
+		?		any theme setting nested in another snippet inside "drawer cart" snippet is lost to the section
+		?		for example, the drawer cart theme settings inside "drawer-cart-upsell" snippet (nested inside "/snippet/drawer-cart.liquid")
+	endcomment
+	
+	comment 
+		theme-check-disable UnusedAssign
+	endcomment
+	assign drawer_cart_upsell_enable = settings.drawer_cart_upsell_enable
+	assign drawer_cart_upsell_title = settings.drawer_cart_upsell_title
+	assign drawer_cart_upsell_fallback_product_list = settings.drawer_cart_upsell_fallback_product_list
+-%}
+{% schema %}
+{
+	"name": "Drawer Cart",
+	"blocks": [
+		{ "type": "@app" }
+	]
+}
+{% endschema %}

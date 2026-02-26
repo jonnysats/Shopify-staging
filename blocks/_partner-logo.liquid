@@ -1,0 +1,29 @@
+{%- if block.settings.logo != blank -%}
+	<div class="logo rounded-4 border overflow-hidden mx-auto mt-2 mb-4"{% if block.settings.color != blank %} style="--bs-border-color: {{ block.settings.color }};"{% endif %}>
+		{%- render 'responsive-image', image: block.settings.logo -%}
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Partner - Logo",
+	"tag": null,
+	"settings": [
+		{
+			"type": "image_picker",
+			"id": "logo",
+			"label": "Logo"
+		},
+		{
+			"type": "color",
+			"id": "color",
+			"label": "Border Color",
+			"default": "#E6E6E6"
+		}
+	],
+	"presets": [
+		{
+			"name": "Partner - Logo"
+		}
+	]
+}
+{% endschema %}

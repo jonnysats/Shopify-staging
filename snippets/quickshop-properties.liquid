@@ -1,0 +1,31 @@
+{%- comment -%}
+	Add data inline properties to the HTML of elements that require quickshop functionality
+	
+	Usage:
+	{%- render 'quickshop-properties', product: product -%}
+	
+{%- endcomment -%}
+{%- liquid
+	if product != blank
+		comment
+		# Base property name that properties related to quickshop will expand (ex: data-quickshop-handle)
+		endcomment
+		assign property_base = "data-quickshop"
+		
+		comment
+		# Property to trigger quickshop modal
+		endcomment
+		assign handle_property = property_base | append: '-handle="' | append: product.handle | append: '"'
+		
+		echo handle_property
+		
+		comment
+		# If product has only a default variant, append variant id to add to cart immediately (Skip modal)
+		endcomment
+		if product.has_only_default_variant == true
+			assign variant_id_property = property_base | append: '-variant-id="' | append: product.selected_or_first_available_variant.id | append: '"'
+			echo " "
+			echo variant_id_property
+		endif
+	endif 
+-%}

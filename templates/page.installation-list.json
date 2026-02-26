@@ -1,0 +1,112 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "hero",
+      "disabled": true,
+      "settings": {
+        "height": "800px",
+        "height_mobile": "500px",
+        "show_overlay": true,
+        "overlay_option": "gradient",
+        "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "image": "shopify://shop_images/image-simple-hero_ae493a65-c894-4d98-8e48-ad050cd032dd.jpg",
+        "heading": "",
+        "heading_color": "#ffffff",
+        "subheading": "",
+        "subheading_color": "#ffffff",
+        "copy": "",
+        "copy_color": "#ffffff",
+        "button_copy_1": "",
+        "button_url_1": "",
+        "button_copy_2": "",
+        "button_url_2": "",
+        "vertical_alignment_desktop": "end",
+        "horizontal_alignment_desktop": "start",
+        "text_alignment_desktop": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_mobile": "center",
+        "text_alignment_mobile": "center",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "install-blocks": {
+      "type": "installation-blocks",
+      "blocks": {
+        "installation_UcwQtj": {
+          "type": "installation",
+          "settings": {
+            "page": "ceramic-install-guide",
+            "copy": "",
+            "btn_copy": "Download pdf",
+            "btn_copy_2": "See page"
+          }
+        },
+        "installation_KxBbtX": {
+          "type": "installation",
+          "settings": {
+            "page": "engineered-hardwood-flooring-installation-guide",
+            "copy": "",
+            "btn_copy": "Download pdf",
+            "btn_copy_2": "See page"
+          }
+        },
+        "installation_hx6mVz": {
+          "type": "installation",
+          "settings": {
+            "page": "large-format-porcelain-tile-installation-guide",
+            "copy": "",
+            "btn_copy": "Download pdf",
+            "btn_copy_2": "See page"
+          }
+        },
+        "installation_atVYfR": {
+          "type": "installation",
+          "settings": {
+            "page": "tile-install-guide",
+            "copy": "",
+            "btn_copy": "Download pdf",
+            "btn_copy_2": "See page"
+          }
+        }
+      },
+      "block_order": [
+        "installation_UcwQtj",
+        "installation_KxBbtX",
+        "installation_hx6mVz",
+        "installation_atVYfR"
+      ],
+      "settings": {
+        "header": "{{ page.title }}",
+        "is_h1": true,
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "follow-us-social": {
+      "type": "follow-us-social",
+      "settings": {
+        "title": "",
+        "social_links": [],
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "install-blocks",
+    "follow-us-social"
+  ]
+}

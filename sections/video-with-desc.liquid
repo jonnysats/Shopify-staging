@@ -1,0 +1,31 @@
+{% if product.metafields.custom.video_url %}
+  <div class="video-with-desc-wrapper px-4">
+    <div class="row g-0 align-items-center">
+      <!-- Left half: description -->
+      <div class="col-12 col-md-6 col-lg-5 px-4 text-start">
+        {% if product.metafields.custom.video_description %}
+          <div class="product-video-description">
+            <h3>See It In Action</h3>
+            <p>{{ product.metafields.custom.video_description }}</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Right half: cropped video -->
+      <div class="col-12 col-md-6 col-lg-7 px-0 text-end">
+        <video autoplay muted loop playsinline class="video-full-crop">
+          <source src="{{ product.metafields.custom.video_url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Video with Description",
+  "settings": [],
+  "presets": [{ "name": "Video with Description" }]
+}
+{% endschema %}

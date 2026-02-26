@@ -1,0 +1,35 @@
+{%- comment -%}
+Renders a style tag that will render in the <head> of the website
+
+Usage:
+{%- render 'inline-css' -%}
+{%- endcomment -%}
+<style>
+:root {
+	--xs							: 0;
+	--sm							: 576px;
+	--md							: 768px;
+	--lg							: 992px;
+	--xl							: 1200px;
+	--xxl							: 1400px;
+	--section-padding-common		: 1.5rem;
+	--no-padding					: 0;
+	--small-padding					: .5rem;
+	--default-padding				: 1rem;
+	--large-padding					: 3rem;
+	--xlarge-padding				: 5rem;
+	--announcement-banner-height	: 43px;
+	--header-height					: calc(81px + var(--announcement-banner-height));
+	--brand-green					: #184A3E;
+	--brand-orange 					: #FD6908;
+	--default-transition-speed		: .36s;
+}
+
+/* LARGE */
+@media (min-width: 992px) {
+	:root {
+		--announcement-banner-height: 48px;
+		--header-height				: calc(117px + var(--announcement-banner-height));
+	}
+}
+</style>

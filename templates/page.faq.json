@@ -1,0 +1,231 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "hero",
+      "disabled": true,
+      "settings": {
+        "height": "500px",
+        "height_mobile": "500px",
+        "show_overlay": false,
+        "overlay_option": "gradient",
+        "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "image": "shopify://shop_images/Zellige_2.gif",
+        "heading": "",
+        "heading_color": "#ffffff",
+        "subheading": "",
+        "subheading_color": "#ffffff",
+        "copy": "",
+        "copy_color": "#ffffff",
+        "button_copy_1": "",
+        "button_url_1": "",
+        "button_copy_2": "",
+        "button_url_2": "",
+        "vertical_alignment_desktop": "end",
+        "horizontal_alignment_desktop": "start",
+        "text_alignment_desktop": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_mobile": "center",
+        "text_alignment_mobile": "center",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "faqs": {
+      "type": "faq-accordions",
+      "blocks": {
+        "faq_accordion_bDbCM9": {
+          "type": "_faq-accordion",
+          "name": "FAQ Topic Accordion",
+          "settings": {
+            "topic": "delivery-processing-time"
+          },
+          "blocks": {
+            "faq_question_wDXbc6": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "How Can I Order Samples?",
+                "answer": "Samples can be added directly from any product page. Sample orders typically ship within 2–3 business days via UPS or FedEx Ground. We strongly encourage ordering samples before placing a full order so you can experience the material’s color and texture in person. For best results, view samples in the actual installation space, as lighting can significantly affect tone. While we do our best to ship all samples together, some may ship separately if certain items are temporarily out of stock. For additional questions, please email support@renosource.co or schedule a consultation appointment. "
+              },
+              "blocks": {}
+            },
+            "faq_question_UiqweP": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "Overages",
+                "answer": "Customers are responsible for confirming all order quantities based on accurate measurements and desired overage. We generally recommend ordering 10-20% extra material to ensure you have enough product to complete the project without interruption. We always recommend consulting with your installer to confirm measurements and overage before placing an order."
+              },
+              "blocks": {}
+            },
+            "faq_question_6eRFRF": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "When Will My Order Ship",
+                "answer": "Most orders are processed in 2-4 business days. Shipping time from our warehouse to your jobsite ranges from 1-10 business days. For made to order products we will indicate the current lead time on the product pages. Lead times are estimates and may vary due to shipping and logistics conditions. "
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "faq_question_wDXbc6",
+            "faq_question_UiqweP",
+            "faq_question_6eRFRF"
+          ]
+        },
+        "faq_accordion_ydPQ4G": {
+          "type": "_faq-accordion",
+          "name": "FAQ Topic Accordion",
+          "settings": {
+            "topic": "are-your-tiles-suitable-for-both-residential-and-commercial-projects"
+          },
+          "blocks": {
+            "faq_question_BB6hra": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "How Do I Know if My Order Shipped?",
+                "answer": "You will receive a shipping confirmation email with your tracking information. Additionally, you can check the status of your order by logging into your account. "
+              },
+              "blocks": {}
+            },
+            "faq_question_bnwpf6": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "How Will My Order Ship? ",
+                "answer": "All orders ship throughout the United States via LTL (less-than-truckload) freight carriers. Once your order reaches the carrier’s local terminal, the freight company will contact you directly to schedule a curbside delivery date and time window. Orders are delivered palletized to the curb only. Boxes typically weigh 35–60 lbs each, so please plan ahead for assistance in moving materials from the curb to your space, as drivers are not permitted to bring materials inside or assist beyond curbside drop-off. Delivery timelines are estimates and may vary based on location and carrier availability. The carrier will confirm the final delivery window once your shipment is ready for local delivery."
+              },
+              "blocks": {}
+            },
+            "faq_question_dm69TF": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "What If I Miss My Delivery Window ",
+                "answer": "Missed delivery appointments or refused shipments may result in storage, re-delivery, or return fees charged by the freight carrier. These fees are the responsibility of the customer."
+              },
+              "blocks": {}
+            },
+            "faq_question_Jk6jCH": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "Inspecting Your Delivery",
+                "answer": "Customers are responsible for inspecting all shipments at the time of delivery for visible damage or shortages. Any issues must be:Noted clearly on the delivery receipt before signingPhotographed while the driver is presentFailure to note damage or shortages at delivery may prevent us from filing a freight claim.If you notice any issues, please contact Reno Source within 48 hours of delivery with photos and written documentation. We’ll work quickly to resolve transit-related damage or shortages. Claims reported after this window cannot be processed, as carriers do not accept claims beyond that timeframe.Installation of materials constitutes acceptance of the materials. Please do not install materials if you believe to be in any way problematic. Once materials are installed we are no longer responsible. "
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "faq_question_BB6hra",
+            "faq_question_bnwpf6",
+            "faq_question_dm69TF",
+            "faq_question_Jk6jCH"
+          ]
+        },
+        "faq_accordion_QifFLH": {
+          "type": "_faq-accordion",
+          "name": "FAQ Topic Accordion",
+          "settings": {
+            "topic": "problem-with-order"
+          },
+          "blocks": {
+            "faq_question_nBDB7K": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "Can I modify an order",
+                "answer": "If you’d like to make changes to an order please contact us as soon as possible. We will do our best to accommodate your request but once an order is processed we will be limited to what we can do. To make changes please email us at support@renosource.co or call us at 702-900-7366"
+              },
+              "blocks": {}
+            },
+            "faq_question_8AWg4m": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "What To Do If I Received The Wrong Product",
+                "answer": "If you feel that you received the wrong product please email us at support@renosource.co or call us at 702-900-7366"
+              },
+              "blocks": {}
+            },
+            "faq_question_Cc8Cqj": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "What To Do If My Order Was Damaged in Transit",
+                "answer": "While we take great care to package orders securely, materials can occasionally be damaged during freight transit. If your shipment arrives with damaged or missing items, we’re here to help. Please inspect your delivery at the time it arrives, before signing the delivery receipt. If you notice any visible damage or shortages: Clearly note the issue on the delivery receipt before signing. Take photos of the damage while the driver is present. Failure to document damage at delivery may prevent us from filing a freight claim with the carrier. If damage is discovered, please contact Reno Source within 48 hours of delivery with the following: Your order number. The quantity of damaged material. Clear photos of the damaged items and packaging. Once received, we’ll work quickly to evaluate the claim and coordinate replacements for any items damaged in transit. Please note that freight carriers only allow one claim per shipment, and claims reported after the 48-hour window cannot be processed. Do not refuse deliveries with damaged product. Usually the vast majority of the material is still usable and only a small portion is damaged. "
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "faq_question_nBDB7K",
+            "faq_question_8AWg4m",
+            "faq_question_Cc8Cqj"
+          ]
+        },
+        "faq_accordion_DijDMh": {
+          "type": "_faq-accordion",
+          "name": "FAQ Topic Accordion",
+          "settings": {
+            "topic": "cancellations-returns"
+          },
+          "blocks": {
+            "faq_question_gqgqJr": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "What If I Need to Cancel My Order",
+                "answer": "Reno Source will only accept cancellations prior to an order shipping. If you need to cancel please contact us as soon as possible.  "
+              },
+              "blocks": {}
+            },
+            "faq_question_qTQVjn": {
+              "type": "_faq-question",
+              "name": "FAQ Question and Answer",
+              "settings": {
+                "title": "Do You Accept Returns ",
+                "answer": "We accept returns on regularly priced items within 180 days of purchase. Samples and sale items are final sale and not eligible for return. Original shipping charges are non-refundable. All approved returns are subject to a 15% restocking fee, returned materials must be in their original packaging and in the same condition as received. Customers are responsible for arranging and covering return shipping costs. An RMA (Return Merchandise Authorization) is required for all returns. To request an RMA, please email support@renosource.co"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "faq_question_gqgqJr",
+            "faq_question_qTQVjn"
+          ]
+        }
+      },
+      "block_order": [
+        "faq_accordion_bDbCM9",
+        "faq_accordion_ydPQ4G",
+        "faq_accordion_QifFLH",
+        "faq_accordion_DijDMh"
+      ],
+      "settings": {
+        "header": "<center>FAQ</center>",
+        "is_h1": true,
+        "copy": "",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "faqs"
+  ]
+}

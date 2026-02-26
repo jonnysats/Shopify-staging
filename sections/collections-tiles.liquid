@@ -1,0 +1,108 @@
+{%- if section.blocks.size > 0 -%}
+	{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom -%}
+	{{ 'collections-tiles.css' | asset_url | stylesheet_tag: preload: true }}
+	{{ 'shop-the-look-slider.css' | asset_url | stylesheet_tag }}
+	<script src="{{ 'tiles-collections-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	<script src="{{ 'shop-the-look-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	<div class="container pt-2 pt-lg-0 mt-lg-0">
+		{%- content_for "blocks" -%}
+	</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Tiles Collections",
+  "class": "section-collection section-shop-the-look-slider section-collection-tiles", 
+  "tag": "section",
+  "settings": [
+	{
+	  "type": "range",
+	  "id": "number_of_products",
+	  "min": 4,
+	  "max": 40,
+	  "step": 2,
+	  "default": 8,
+	  "label": "Products Per Slider"
+	},
+	{
+		"type": "checkbox",
+		"id": "show_percent_off",
+		"label": "Show % discount on product grid images",
+		"default": true
+	},
+	{
+		"type": "header",
+		"content": "Shop the look"
+	},
+	{
+		"type": "checkbox",
+		"id": "show_first_dot_by_default",
+		"label": "Show first tooltip by default",
+		"default": true
+	},
+	{
+		"type": "header",
+		"content": "Section Settings"
+	},
+	{
+		"type": "select",
+		"id": "padding_amount_top",
+		"label": "Top Section Padding",
+		"options": [
+			{
+				"value": "no",
+				"label": "None"
+			},
+			{
+				"value": "small",
+				"label": "Small"
+			},
+			{
+				"value": "default",
+				"label": "Medium (Default)"
+			},
+			{
+				"value": "large",
+				"label": "Large"
+			},
+			{
+				"value": "xlarge",
+				"label": "Extra Large"
+			}
+		],
+		"default": "default"
+	},
+	{
+		"type": "select",
+		"id": "padding_amount_bottom",
+		"label": "Bottom Section Padding",
+		"options": [
+			{
+				"value": "no",
+				"label": "None"
+			},
+			{
+				"value": "small",
+				"label": "Small"
+			},
+			{
+				"value": "default",
+				"label": "Medium (Default)"
+			},
+			{
+				"value": "large",
+				"label": "Large"
+			},
+			{
+				"value": "xlarge",
+				"label": "Extra Large"
+			}
+		],
+		"default": "default"
+	}
+  ],
+  "blocks": [
+	{ "type": "_slider-collections" }
+  ]
+}
+{% endschema %}

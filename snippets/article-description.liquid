@@ -1,0 +1,16 @@
+{%- comment -%}
+	Renders an article's tags, title, publisher, publisher date, description, and  a read more link
+
+	Accepts:
+	- article: {Object} Shopify article object
+	
+	Usage:
+	{%- render 'article-description', article: article -%}
+
+{%- endcomment -%}
+<header>
+	<!-- Article title -->
+	<h2 class="h3 article-title text-transform-none text-decoration-none mb-3">{{ article.title }}</h2>
+</header>
+<!-- Article content -->
+<p>{{ article.excerpt_or_content | strip_html | truncatewords: settings.blog_truncate }}</p>

@@ -1,0 +1,138 @@
+{%- if section.blocks.size > 0 and section.settings.image != blank -%}
+	{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom -%}
+	{{ 'image-with-content-blocks.css' | asset_url | stylesheet_tag }}
+	<div class="row g-0 d-block d-lg-none">
+		<div class="col">
+			{%- render 'responsive-image', image: section.settings.image -%}
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-lg-6 pe-sm-5 pe-xl-3 d-none d-lg-block">
+				{%- render 'responsive-image', image: section.settings.image -%}
+			</div>
+			<div class="col-12 col-lg-6 ps-xl-5 pt-4 pt-lg-0 mt-2 mt-lg-0">
+				<div class="image-with-content-blocks d-flex flex-column row-gap-4 h-100 pt-2 pt-lg-0 justify-content-{{ section.settings.justify_content }}">
+					{%- content_for "blocks" -%}
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Image with content",
+	"tag": "section",
+	"class": "section-image-with-content-blocks",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Featured image"
+		},
+		{
+			"type": "image_picker",
+			"id": "image",
+			"label": "Image"
+		},
+		{
+			"type": "header",
+			"content": "Blocks"
+		},
+		{
+			"type": "select",
+			"id": "justify_content",
+			"label": "Position of elements",
+			"options": [
+				{
+					"value": "start",
+					"label": "Top"
+				},
+				{
+					"value": "center",
+					"label": "Center"
+				},
+				{
+					"value": "end",
+					"label": "Bottom"
+				},
+				{
+					"value": "between",
+					"label": "Evenly Spaced"
+				}
+			],
+			"default": "start"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"blocks": [
+		{ "type": "_bulletpoints" },
+		{ "type": "_heading-with-copy" },
+		{ "type": "_button-with-context" },
+		{ "type": "_divider-border" },
+ 	],
+	"presets": [
+		{
+			"name": "Image with content"
+		}
+	]
+}
+{% endschema %}

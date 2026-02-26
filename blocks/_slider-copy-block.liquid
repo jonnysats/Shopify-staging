@@ -1,0 +1,465 @@
+{%- liquid
+	comment
+	  Define if we have 2 columns or only 1 to show
+	endcomment
+	assign has_two_sides = false
+	assign has_copy_side = false
+	assign has_image_side = false
+
+	comment
+	# Validate what type of metafield we should use for content
+	True - use single slider (old) or False - use slider list (new) 
+	endcomment
+	assign use_single_slider = product.metafields.theme.use_single_slider.value
+
+	comment
+	# Determine if content should come from variant or product level metadata
+	endcomment
+	assign use_content_section_from_variant = product.metafields.theme.content_section_from_variant
+
+	comment
+	# Get variant data in case we will need to overwrite the data
+	endcomment
+	assign current_variant = product.selected_or_first_available_variant
+	assign slider_block_settings = blank
+	assign slider_blocks = current_variant.metafields.theme.sliders_images_copy_block_settings.value
+
+	comment
+	  # Keep count only of slider type of blocks
+	endcomment
+	assign slider_block_index = 0
+	
+	comment
+	  # Get current block to use
+	endcomment
+	for block_section in section.blocks
+		comment
+		# Only count slider blocks
+		endcomment
+		if block_section.id contains 'slider_copy_block'
+			assign slider_block_index = slider_block_index | plus: 1
+		endif
+
+		comment
+		  # Grab current block index
+		endcomment
+		if block_section.id == block.id
+			assign current_slider_index = slider_block_index | minus: 1
+		endif
+	endfor
+
+
+	comment
+	  # Loop for each slider block to find the right one
+	endcomment
+	for slider_block in slider_blocks
+		comment
+		  # If slider block index match with current metaobject index, select current data
+		endcomment
+		if forloop.index0 == current_slider_index
+			assign slider_block_settings = slider_block
+		endif
+	endfor
+
+	comment
+	# Validate if we should use single slider (old)
+	endcomment
+	if use_single_slider == true
+		comment
+		# In case that there are many slider blocks, only add content to the first one
+		endcomment
+		if current_slider_index == 0
+			assign slider_block_settings = current_variant.metafields.theme.slider_images_copy_block_settings.value
+		else
+			comment
+			# Do not show content if there more than one block, and we're using single metafield (old one)
+			endcomment
+			assign slider_block_settings = blank
+		endif
+	endif
+	
+	assign block_images = blank
+	assign block_tag = blank
+	assign block_header = blank
+	assign block_copy = blank
+	assign block_btn_url = blank
+	assign block_btn_label = blank
+	assign block_second_btn_url = blank
+	assign block_second_btn_label = blank
+	assign show_block_images = true
+	assign images_count = block.blocks.size
+	assign product_dots_list = blank
+		
+	comment
+	# Override images count and flag, if section setting for variant mode is set to true
+	endcomment
+	if use_content_section_from_variant == true
+		assign show_block_images = false
+		assign block_images = slider_block_settings.images.value
+		assign images_count = block_images.count
+	endif
+
+	comment
+	# Assign tag label from block setting first, overwrite if variant setting is set to true
+	endcomment
+	assign block_tag = block.settings.tag
+
+	if use_content_section_from_variant == true
+		assign block_tag = slider_block_settings.tag
+	endif
+
+	comment
+	# Assign a header value from block setting first, overwrite if variant setting is set to true
+	endcomment
+	assign block_header = block.settings.heading
+	
+	if use_content_section_from_variant == true
+		assign block_header = slider_block_settings.header
+	endif
+
+	comment
+	# Assign copy value from block setting first, overwrite if variant setting is set to true
+	endcomment
+	assign block_copy = block.settings.copy
+	
+	if use_content_section_from_variant == true
+		assign block_copy = slider_block_settings.copy
+	endif
+
+	comment
+	# Set values from buttons from block settings first, override if variant mode is set to true
+	endcomment
+	assign block_btn_url = block.settings.btn_link
+	assign block_btn_label = block.settings.btn_copy
+	
+	if use_content_section_from_variant == true
+		assign block_btn_url = slider_block_settings.button_link
+		assign block_btn_label = slider_block_settings.button_copy
+	endif
+
+	assign block_second_btn_url = block.settings.btn_link_2
+	assign block_second_btn_label = block.settings.btn_copy_2
+	
+	if use_content_section_from_variant == true
+		assign block_second_btn_url = slider_block_settings.second_button_link
+		assign block_second_btn_label = slider_block_settings.second_button_copy
+	endif
+
+	comment
+	# Validate if we should use product dots list, from block settings or variant metafields 
+	endcomment
+	
+	comment
+	# For product dots at the product level, validate source of data per slide
+	endcomment
+	assign block_index = 0
+	for block_item in section.blocks
+		comment
+		# Check only slider copy
+		endcomment
+		if block_item.id contains 'slider_copy_block'
+			comment
+			# Assign first dot list for first slider block
+			endcomment
+			if block_index == 0
+				assign product_dots_list = section.settings.product_dot_lists
+			endif
+
+			comment
+			# Assign second dot list for second slider block
+			endcomment
+			if block_index == 1
+				assign product_dots_list = section.settings.second_product_dot_lists
+			endif
+
+			comment
+			# Break the loop, if dot list found for any block
+			endcomment
+			if product_dots_list != blank
+				break
+			endif
+
+			assign block_index = block_index | plus: 1
+		endif
+	endfor
+
+	if use_content_section_from_variant == true
+		assign product_dots_list = slider_block_settings.product_dot_lists.value
+	endif
+
+	if block_header != blank or block_copy != blank
+		assign has_copy_side = true
+	endif
+
+	if images_count > 0
+		assign has_image_side = true
+	elsif show_block_images == true and block_images.count > 0
+		assign has_image_side = true
+	endif
+	
+	if has_copy_side == true and has_image_side == true
+		assign has_two_sides = true
+	endif
+
+	comment
+	# Collect grid option
+	endcomment
+	assign grid_option = section.settings.grid_option
+
+	comment
+	# Flickity Settings
+	endcomment
+	assign flickity_arrows = false
+	assign flickity_dots = false
+	assign flickity_loop = true
+	assign flickity_adaptive_height = true
+	assign flickity_images_loaded = true
+	assign text_alignment_mobile = block.settings.text_alignment_mobile | replace: 'left', 'start' | replace: 'center', 'center' | replace: 'right', 'end'
+	assign text_alignment_desktop = block.settings.text_alignment_desktop | replace: 'left', 'start' | replace: 'center', 'center' | replace: 'right', 'end'
+-%}
+{%- comment -%}
+# If no blocks set up for section, use variant metadata if is any available
+{%- endcomment -%}
+{%- capture content_for_blocks -%}
+	{%- if show_block_images == true -%}
+		{%- content_for 'blocks' -%}
+	{%- else -%}
+		{%- if block_images.count > 0 -%}
+			{%- for image in block_images -%}
+				{%- if image != blank -%}
+					<div class="col-12">
+						<div class="img-wrapper w-100 position-relative">
+							{%- render 'responsive-image', image: image, image_class: 'img-fluid' -%}
+							{%- if product_dots_list != blank -%}
+								{%- comment -%} Display products dots for each block {%- endcomment -%}
+								{%- for product_dot_list in product_dots_list -%}
+									{%- if forloop.parentloop.index0 == forloop.index0 -%}
+										{%- comment -%} Display product dot list {%- endcomment -%}
+										{%- for product_dot in product_dot_list.dot_list.value -%}
+											{%- render 'product-dot', product_item: product_dot.product.value, horizontal_offset: product_dot.horizontal_offset.value, vertical_offset: product_dot.vertical_offset.value -%}	
+										{%- endfor -%}
+									{%- endif -%}
+								{%- endfor -%}
+							{%- endif -%}
+						</div>
+					</div>
+				{%- endif -%}
+			{%- endfor -%}
+		{%- endif -%}
+	{%- endif -%}
+{%- endcapture -%}
+{%- comment -%}
+  Capture repeating IMAGE BLOCK code
+{%- endcomment -%}
+{%- capture image_block -%}
+	<div class="col col-image">
+		{%- if section.settings.show_heading_at_top == true -%}
+			<div class="copy-wrapper copy-wrapper-top align-start">
+				{%- if block_tag != blank -%}
+					<div class="badge text-bg-success px-2"><span>{{ block_tag }}</span></div>
+				{%- endif -%}
+				{%- if block_header != blank -%}
+					<h2 class="mb-lg-4">{{ block_header }}</h2>
+				{%- endif -%}
+				{%- if section.settings.show_copy_at_top == true and block_copy != blank -%}
+					<p class="copy-at-top">{{ block_copy }}</p>
+				{%- endif -%}
+			</div>
+		{%- endif -%}
+		<div class="row flex-nowrap px-3{% if product_dots_list != blank %} section-shop-the-look-slider{% endif %} position-relative" data-generic-slider data-arrows="{{ flickity_arrows }}" data-dots="{{ flickity_dots }}" data-loop="{{ flickity_loop }}" data-adaptive-height="{{ flickity_adaptive_height }}" data-images-loaded="{{ flickity_images_loaded }}">
+			{{ content_for_blocks }}
+		</div>
+	</div>
+{%- endcapture -%}
+{%- comment -%}
+  Capture repeating COPY BLOCK code
+{%- endcomment -%}
+{%- capture copy_block -%}
+	<div class="block-image-copy col col-copy d-flex justify-content-{{ block.settings.horizontal_alignment_mobile }} justify-content-lg-{{ block.settings.horizontal_alignment_desktop }} text-{{ text_alignment_mobile }} text-lg-{{ text_alignment_desktop }}">
+		<div class="copy-wrapper align-start">
+			{%- if block_tag != blank and section.settings.show_heading_at_top == false -%}
+				<div class="badge text-bg-success px-2"><span>{{ block_tag }}</span></div>
+			{%- endif -%}
+			{%- if block_header != blank -%}
+				<h2>{{ block_header }}</h2>
+			{%- endif -%}
+			{%- if block_copy != blank -%}
+				<p>{{ block_copy }}</p>
+			{%- endif -%}
+			{%- if block_btn_url != blank and block_btn_label != blank -%}
+				{%- comment -%} Links buttons {%- endcomment -%}
+				<div class="row row-cols-lg-auto g-2 justify-content-{{ text_alignment_mobile }} justify-content-lg-{{ text_alignment_desktop }} pt-2 pb-3 pb-lg-0{% if images_count > 1 and block.settings.show_arrows == true %} mb-3{% endif %}">
+					<div class="col button-wrapper">
+						<a href="{{ block_btn_url }}" class="btn w-100 btn-lg-long btn-primary" title="{{ block_btn_label | escape }}">{{ block_btn_label }}</a>
+					</div>
+					{%- if block_second_btn_url != blank and block_second_btn_label != blank -%}
+						<div class="col button-wrapper">
+							<a href="{{ block_second_btn_url }}" class="btn w-100 btn-lg-long btn-outline-primary" title="{{ block_second_btn_label | escape }}">{{ block_second_btn_label }}</a>
+						</div>
+					{%- endif -%}
+				</div>
+			{%- endif -%}
+			{%- if images_count > 1 and block.settings.show_arrows == true -%}
+				{%- render 'slider-custom-nav-buttons', justify_style: text_alignment_mobile, justify_style_lg: text_alignment_desktop -%}
+			{%- endif -%}
+		</div>
+	</div>
+{%- endcapture -%}
+{%- comment -%}
+	# Hide block content if no main data found
+{%- endcomment -%}
+{%- if images_count >= 1 -%}
+	{{ 'shop-the-look-slider.css' | asset_url | stylesheet_tag }}
+	<script src="{{ 'shop-the-look-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	{%- if grid_option == 'linear' -%}
+		<div class="row gy-4 gy-lg-0 py-3 py-lg-custom gx-lg-5 row-cols-1{% if has_two_sides == true %} row-cols-lg-2{% endif %} align-items-lg-{{ block.settings.vertical_alignment_desktop }}" data-section-id="{% if use_content_section_from_variant == true %}{{ block.id }}{% else %}{{ section.id }}{% endif %}" data-section-type="shopTheLookSlider" data-slider-section data-remove-extra-tooltips="{{ show_block_images }}" data-show-first-tooltip-default="{{ section.settings.show_first_dot_by_default }}" {{ block.shopify_attributes }}>
+			{%- comment -%} Image block {%- endcomment -%}
+			{{ image_block }}
+			{%- comment -%} Copy block {%- endcomment -%}
+			{{ copy_block }}
+		</div>
+	{%- elsif grid_option == 'grid-3-by-row' -%}
+		<div class="col px-lg-3" data-section-id="{% if use_content_section_from_variant == true %}{{ block.id }}{% else %}{{ section.id }}{% endif %}" data-section-type="shopTheLookSlider" data-slider-section data-remove-extra-tooltips="{{ show_block_images }}" data-show-first-tooltip-default="{{ section.settings.show_first_dot_by_default }}" {{ block.shopify_attributes }}>
+			{%- comment -%} Image block {%- endcomment -%}
+			{{ image_block }}
+			{%- comment -%} Copy block {%- endcomment -%}
+			{{ copy_block }}
+		</div>
+	{%- endif -%}
+{%- endif -%}
+{% schema %}
+{
+	"name": "Slider / Copy BLock",
+	"tag": null,
+	"settings": [
+		{
+			"type": "header",
+			"content": "Block Settings",
+			"info": "If dynamic content from variant is enabled on section, content will rely on variant metadata and update will be triggered when variant changes"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_arrows",
+			"label": "Show Slider Arrows?"
+		},
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Header"
+		},
+		{
+			"type": "richtext",
+			"id": "copy",
+			"label": "Copy"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "tag",
+			"label": "Tag"
+		},
+		{
+			"type": "text",
+			"id": "btn_copy",
+			"label": "Button Copy"
+		},
+		{
+			"type": "url",
+			"id": "btn_link",
+			"label": "Button Link"
+		},
+		{
+			"type": "text",
+			"id": "btn_copy_2",
+			"label": "Second Button Copy"
+		},
+		{
+			"type": "url",
+			"id": "btn_link_2",
+			"label": "Second Button Link"
+		},
+		{
+			"type": "select",
+			"id": "vertical_alignment_desktop",
+			"label": "Vertical Alignment",
+			"info": "Will apply to the desktop view of 'Linear' layout",
+			"options": [
+				{
+					"value": "start",
+					"label": "Top"
+				},
+				{
+					"value": "center",
+					"label": "Center"
+				},
+				{
+					"value": "end",
+					"label": "Bottom"
+				}
+			],
+			"default": "center"
+		},
+		{
+			"type": "text_alignment",
+			"id": "text_alignment_desktop",
+			"label": "Text Alignment",
+			"default": "left"
+		},
+		{
+			"type": "select",
+			"id": "horizontal_alignment_desktop",
+			"label": "Horizontal Alignment",
+			"info": "Will apply to the desktop view of 'Linear' layout",
+			"options": [
+				{
+					"value": "start",
+					"label": "Left"
+				},
+				{
+					"value": "center",
+					"label": "Center"
+				},
+				{
+					"value": "end",
+					"label": "Right"
+				}
+			],
+			"default": "start"
+		},
+		{
+			"type": "text_alignment",
+			"id": "text_alignment_mobile",
+			"label": "Text Alignment Mobile",
+			"default": "left"
+		},
+		{
+			"type": "select",
+			"id": "horizontal_alignment_mobile",
+			"label": "Horizontal Alignment",
+			"info": "Will apply to the desktop view of 'Linear' layout",
+			"options": [
+				{
+					"value": "start",
+					"label": "Left"
+				},
+				{
+					"value": "center",
+					"label": "Center"
+				},
+				{
+					"value": "end",
+					"label": "Right"
+				}
+			],
+			"default": "start"
+		}
+	],
+	"blocks": [
+		{ "type": "_slider-image-slide" }
+	],
+	"presets": [
+		{
+			"name": "Slider / Copy Block"
+		}
+	]
+}
+{% endschema %}

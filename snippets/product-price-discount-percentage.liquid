@@ -1,0 +1,70 @@
+{%- comment -%}
+	Output a discount percentage of a product related to it's product price if the product is on sale (compare at price > product price)
+	
+	Example: 
+		Price: 120$
+		Compare at price: 200$
+		
+		Output {Number}: 40 (meant to represent 40% off)
+
+	Accepts:
+	- product {Object}: Shopify product object
+	- is_variant {Boolean}: Check if grid item is a variant instead of a product
+
+	Usage:
+	{%- render 'product-price-discount-percentage', product: product -%}
+
+{%- endcomment -%}
+{%- liquid
+	
+	comment
+	# Declare variable to output discount percentage as nil (null) by default
+	endcomment
+	assign discount_percentage = nil
+
+	comment
+	# Declare variant variable origin 
+	endcomment
+	if is_variant == false
+		assign variant = product.selected_or_first_available_variant
+	else
+		assign variant = product
+	endif
+
+	comment
+	# Grab the product price of the selected variant and multiply by 1.0 to coarse it into a float
+	endcomment
+	assign product_price = variant.price | times: 1.0
+	
+	comment
+	# Grab the product compare at price of the selected variant and multiply by 1.0 to coarse it into a float
+	endcomment
+	assign compare_at_price = variant.compare_at_price | times: 1.0
+
+	comment
+	# Only if the product is on sale we will calculate discount percentage
+	endcomment
+	if compare_at_price > product_price
+		comment
+		# Calculate the discount ratio
+		endcomment
+		assign ratio = product_price | divided_by: compare_at_price
+		
+		comment
+		# Produce the discount percentage
+		endcomment
+		assign discount_ratio = 1 | minus: ratio | times: 100 | round
+		
+		comment
+		# If all values are above 0, re-assign value of output variable
+		endcomment
+		if compare_at_price > 0 and product_price > 0 and discount_ratio > 0
+			assign discount_percentage = discount_ratio
+		endif
+	endif
+	
+	comment
+	# Output discount percentage (will be captured as "string")
+	endcomment
+	echo discount_percentage
+-%}

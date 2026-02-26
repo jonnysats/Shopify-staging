@@ -1,0 +1,1178 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Header",
+  "type": "header",
+  "sections": {
+    "bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "announcement_background_color": "#ffffff",
+        "announcement_copy_color": "#184a3e",
+        "announcement_copy": "15% OFF - Use code #happyholidays",
+        "mobile_announcement_copy": ""
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "mega_menu_68Dk6P": {
+          "type": "_mega-menu",
+          "name": "SMALL FORMAT",
+          "settings": {
+            "new_img": "shopify://shop_images/Dimore-3_copy.jpg",
+            "new_arrival": "ash-2x6-gloss-porcelain-tile",
+            "title": "New Arrival",
+            "copy": "Meet Villa - Italian glamour. Just landed",
+            "label": "SHOP NOW",
+            "top_img": "shopify://shop_images/0220_1_96cce349-d5c2-4292-bb78-bbb6575d6658.jpg",
+            "top_selling": "terra-3x16-matte-porcelain-tile",
+            "title_2": "Argilla",
+            "copy_2": "Spanish ceramic that celebrates natural imperfection — organic textures and an earthy palette.",
+            "label_2": "Shop Now"
+          },
+          "blocks": {
+            "menu_category_VxhKxD": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "Material",
+                "img": "shopify://shop_images/Ivory_1.webp",
+                "img_mobile": "shopify://shop_images/Ivory_1.webp"
+              },
+              "blocks": {
+                "sub_category_item_Jy3WgC": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Porcelain",
+                    "url": "shopify://metaobjects/collection_family/porcelain-tiles"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_Ke9tUr": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Ceramic",
+                    "url": "shopify://metaobjects/collection_family/ceramic"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_ipDa6H": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Terracotta",
+                    "url": "shopify://metaobjects/collection_family/terracotta-family"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_NpFm4U": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Zellige",
+                    "url": "shopify://collections/handmade-zellige-tiles"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_apdRj4": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "disabled": true,
+                  "settings": {
+                    "title": "Terrazo",
+                    "url": "shopify://collections/italian-terrazzo"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_nnCJa3": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Stone",
+                    "url": "shopify://metaobjects/collection_family/stone-family"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_Jy3WgC",
+                "sub_category_item_Ke9tUr",
+                "sub_category_item_ipDa6H",
+                "sub_category_item_NpFm4U",
+                "sub_category_item_apdRj4",
+                "sub_category_item_nnCJa3"
+              ]
+            },
+            "menu_category_m4CdtL": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "CATEGORY",
+                "img": "shopify://shop_images/Collection_List_Cover_-_Install_Style-030-Edit.webp",
+                "img_mobile": "shopify://shop_images/Collection_List_Cover_-_Install_Style-030-Edit.webp"
+              },
+              "blocks": {
+                "sub_category_item_qk9nEH": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Best Seller",
+                    "url": "shopify://collections/marble-editions-porcelain-tile"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_gUNb8K": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "New",
+                    "url": "shopify://collections/stone-editions"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_FMPBMt": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Trending",
+                    "url": "shopify://collections/vinyl-floors"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_qk9nEH",
+                "sub_category_item_gUNb8K",
+                "sub_category_item_FMPBMt"
+              ]
+            },
+            "menu_category_9iprt8": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "disabled": true,
+              "settings": {
+                "title": "Color",
+                "img": "shopify://shop_images/Menu_Box-4.jpg",
+                "img_mobile": "shopify://shop_images/Menu_Box-4.jpg"
+              },
+              "blocks": {
+                "sub_category_item_wCr7zA": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "White",
+                    "url": "shopify://collections/hard-wood-flooring"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_V348Rn": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Beige",
+                    "url": "shopify://collections/vinyl-floor"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_EFUV4T": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Yellow",
+                    "url": "shopify://collections/trims"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_cPg3EX": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Pink",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_DiHK9b": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Blue",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_j7fLwM": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Green",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_pnVYPY": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Black",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_kyGFzc": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Red",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_wCr7zA",
+                "sub_category_item_V348Rn",
+                "sub_category_item_EFUV4T",
+                "sub_category_item_cPg3EX",
+                "sub_category_item_DiHK9b",
+                "sub_category_item_j7fLwM",
+                "sub_category_item_pnVYPY",
+                "sub_category_item_kyGFzc"
+              ]
+            },
+            "menu_category_PMmyBz": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "Shape",
+                "img": "shopify://shop_images/Warehouse_Final-20_4_41d99b8f-66d9-41b0-a266-6c2b62ecc0ea.jpg",
+                "img_mobile": "shopify://shop_images/Warehouse_Final-20_4_41d99b8f-66d9-41b0-a266-6c2b62ecc0ea.jpg"
+              },
+              "blocks": {
+                "sub_category_item_wxcmnH": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Square",
+                    "url": "shopify://collections/vanities-type-1"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_QtfaT8": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Rectangle",
+                    "url": "shopify://collections/vanities-type-2"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_JCaLM7": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Hexagon",
+                    "url": "shopify://collections/vanities-type-5"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_V8U3d8": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Octagon",
+                    "url": "shopify://collections/vanities-type-6"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_7atemE": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Mosaic",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_wxcmnH",
+                "sub_category_item_QtfaT8",
+                "sub_category_item_JCaLM7",
+                "sub_category_item_V8U3d8",
+                "sub_category_item_7atemE"
+              ]
+            },
+            "menu_category_Mcqdwy": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "Installation Materials",
+                "img": "shopify://shop_images/Gemini_Generated_Image_z6qpo3z6qpo3z6qp.webp",
+                "img_mobile": "shopify://shop_images/Gemini_Generated_Image_z6qpo3z6qpo3z6qp.webp"
+              },
+              "blocks": {
+                "sub_category_item_GtPk3X": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "All",
+                    "url": "shopify://collections/doors-1"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_aRM4JL": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Sealer",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_Cy9ezh": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Cleaner",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_kJ6jna": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Grout",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_GtPk3X",
+                "sub_category_item_aRM4JL",
+                "sub_category_item_Cy9ezh",
+                "sub_category_item_kJ6jna"
+              ]
+            }
+          },
+          "block_order": [
+            "menu_category_VxhKxD",
+            "menu_category_m4CdtL",
+            "menu_category_9iprt8",
+            "menu_category_PMmyBz",
+            "menu_category_Mcqdwy"
+          ]
+        },
+        "mega_menu_B8xJji": {
+          "type": "_mega-menu",
+          "name": "LARGE FORMAT",
+          "settings": {
+            "new_img": "shopify://shop_images/Large_Format-5.jpg",
+            "new_img_mobile": "shopify://shop_images/Large_Format-5.jpg",
+            "new_arrival": "almond-cement-look-matte-porcelain-tile",
+            "title": "Large Format Tiles",
+            "copy": "Perfect for your home",
+            "label": "",
+            "top_img": "shopify://shop_images/Large_Format-4.jpg",
+            "top_img_mobile": "shopify://shop_images/Large_Format-4.jpg",
+            "top_selling": "breccia-capraia-3d-mable-look-porcelain-tile",
+            "title_2": "bold look. real texture.",
+            "copy_2": "",
+            "label_2": ""
+          },
+          "blocks": {
+            "menu_category_Y9WFib": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "MATERIAL"
+              },
+              "blocks": {
+                "sub_category_item_cbe4na": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Porcelain",
+                    "url": "shopify://collections/porcelain-large-format"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_AVCkWz": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Terrazzo",
+                    "url": "shopify://collections/italian-terrazzo"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_PQ6VVL": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "disabled": true,
+                  "settings": {
+                    "title": "Stone",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_dNJWHz": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "disabled": true,
+                  "settings": {
+                    "title": "Marble",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_cbe4na",
+                "sub_category_item_AVCkWz",
+                "sub_category_item_PQ6VVL",
+                "sub_category_item_dNJWHz"
+              ]
+            },
+            "menu_category_wXGe6p": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "LOOK",
+                "img": "shopify://shop_images/Breccia_Capraia_Marble_Look_Porcelain_Tile_b339e20f-4124-4c68-8a68-32ff317924d0.jpg",
+                "img_mobile": "shopify://shop_images/Breccia_Capraia_Marble_Look_Porcelain_Tile_b339e20f-4124-4c68-8a68-32ff317924d0.jpg"
+              },
+              "blocks": {
+                "sub_category_item_i8KJRe": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Stone Look",
+                    "url": "shopify://collections/stone-editions"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_3EXwCL": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Marble Look",
+                    "url": "shopify://collections/marble-editions-porcelain-tile"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_YBgxn4": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Cement Look",
+                    "url": "shopify://collections/cement-editions"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_MM3qH8": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Wood Look",
+                    "url": "shopify://collections/vinyl-floors"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_iwcJwi": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Terrazzo",
+                    "url": "shopify://collections/italian-terrazzo"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_i8KJRe",
+                "sub_category_item_3EXwCL",
+                "sub_category_item_YBgxn4",
+                "sub_category_item_MM3qH8",
+                "sub_category_item_iwcJwi"
+              ]
+            },
+            "menu_category_3aMCW8": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "SIZE",
+                "img": "shopify://shop_images/Slate_Cement_Look_Porcelain_Tile_e9847127-a19b-42ce-b8ea-a54d33cb1224.jpg",
+                "img_mobile": "shopify://shop_images/Slate_Cement_Look_Porcelain_Tile_e9847127-a19b-42ce-b8ea-a54d33cb1224.jpg"
+              },
+              "blocks": {
+                "sub_category_item_cBeX93": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "12X24",
+                    "url": "shopify://collections/large-format-12x24"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_NraxyX": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "24X24",
+                    "url": "shopify://collections/large-format-24x24"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_LUDBPD": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "24X48",
+                    "url": "shopify://collections/large-format-24x48"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_PXjqRi": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "48X48",
+                    "url": "shopify://collections/large-format-48x48"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_MC69MQ": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Mosaic",
+                    "url": "shopify://collections/large-format-porcelain-mosaic"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_cBeX93",
+                "sub_category_item_NraxyX",
+                "sub_category_item_LUDBPD",
+                "sub_category_item_PXjqRi",
+                "sub_category_item_MC69MQ"
+              ]
+            },
+            "menu_category_cVGzeB": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "CATEGORY",
+                "img": "shopify://shop_images/2nd_Block_-_Still_Large_format_Marble_-53_91e619cb-54e8-40b6-8b4c-be27fff31785.jpg"
+              },
+              "blocks": {
+                "sub_category_item_nAx8jP": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Best Sellers",
+                    "url": "shopify://collections/large-format-best-seller"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_TjagVx": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "New",
+                    "url": "shopify://collections/large-format-best-seller-copy"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_Khj3wU": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Trending",
+                    "url": "shopify://collections/large-format-trending"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_nAx8jP",
+                "sub_category_item_TjagVx",
+                "sub_category_item_Khj3wU"
+              ]
+            },
+            "menu_category_dHPKJT": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "Install Material",
+                "img": "shopify://shop_images/2nd_Block_-_Still_Large_format_Marble_-30.jpg",
+                "img_mobile": "shopify://shop_images/2nd_Block_-_Still_Large_format_Marble_-30.jpg"
+              },
+              "blocks": {
+                "sub_category_item_ecXzGV": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "All",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_gcx66K": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Sealer",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_EHj9pg": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Cleaner",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_DyyrBm": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Grout",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_ecXzGV",
+                "sub_category_item_gcx66K",
+                "sub_category_item_EHj9pg",
+                "sub_category_item_DyyrBm"
+              ]
+            }
+          },
+          "block_order": [
+            "menu_category_Y9WFib",
+            "menu_category_wXGe6p",
+            "menu_category_3aMCW8",
+            "menu_category_cVGzeB",
+            "menu_category_dHPKJT"
+          ]
+        },
+        "mega_menu_Uehqqp": {
+          "type": "_mega-menu",
+          "name": "FLOORING",
+          "settings": {
+            "new_img": "shopify://shop_images/Enginireed_Wood_Floor_-8_copy.jpg",
+            "new_arrival": "almond-cement-look-matte-porcelain-tile",
+            "title": "The perfect color for your home",
+            "copy": "Build to last a lifetime",
+            "label": "",
+            "top_img": "shopify://shop_images/Enginireed_Wood_Floor_c1d99591-bca0-48ab-97e7-ec53ccb6db13.jpg",
+            "top_img_mobile": "shopify://shop_images/Enginireed_Wood_Floor_c1d99591-bca0-48ab-97e7-ec53ccb6db13.jpg",
+            "top_selling": "no-12-engineered-wood-flooring",
+            "title_2": "Colors that matter",
+            "copy_2": "N. 12 Engineered Wood Floor",
+            "label_2": "Shop Now"
+          },
+          "blocks": {
+            "menu_category_W9RpFe": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "MATERIAL",
+                "img": "shopify://shop_images/Screenshot_2026-02-03_at_5.15.26_PM.png",
+                "img_mobile": "shopify://shop_images/Screenshot_2026-02-03_at_5.15.26_PM.png"
+              },
+              "blocks": {
+                "sub_category_item_XpKEdU": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Wood",
+                    "url": "shopify://collections/engineered-wood-flooring"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_dPpbYH": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Vinyl",
+                    "url": "shopify://collections/vinyl-floor"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_baxyY9": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Porcelain",
+                    "url": "shopify://collections/wood-look-floor-porcelain"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_f7MB88": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Trims",
+                    "url": "shopify://collections/trims"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_XpKEdU",
+                "sub_category_item_dPpbYH",
+                "sub_category_item_baxyY9",
+                "sub_category_item_f7MB88"
+              ]
+            },
+            "menu_category_7b7Cfn": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "CATEGORY",
+                "img": "shopify://shop_images/Screenshot_2026-02-03_at_5.15.43_PM.png",
+                "img_mobile": "shopify://shop_images/Screenshot_2026-02-03_at_5.15.43_PM.png"
+              },
+              "blocks": {
+                "sub_category_item_tpWTgH": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Trending",
+                    "url": "shopify://collections/floor-trending"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_cAqgeJ": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "New",
+                    "url": "shopify://collections/floor-new"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_zkKQax": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Best Seller",
+                    "url": "shopify://collections/floor-new-copy"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_tpWTgH",
+                "sub_category_item_cAqgeJ",
+                "sub_category_item_zkKQax"
+              ]
+            },
+            "menu_category_hT4URP": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "Width",
+                "img": "shopify://shop_images/Screenshot_2026-02-03_at_5.16.00_PM.png",
+                "img_mobile": "shopify://shop_images/Screenshot_2026-02-03_at_5.16.00_PM.png"
+              },
+              "blocks": {
+                "sub_category_item_ypBVfN": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "7.5\"",
+                    "url": "shopify://collections/floor-7-5"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_efydAV": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "8\"",
+                    "url": "shopify://collections/floor-8"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_iWrNfF": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "9\"",
+                    "url": "shopify://collections/floor-9"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_jQeMRR": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "9.5\"",
+                    "url": "shopify://collections/floor-9-5"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_ypBVfN",
+                "sub_category_item_efydAV",
+                "sub_category_item_iWrNfF",
+                "sub_category_item_jQeMRR"
+              ]
+            },
+            "menu_category_xYENP6": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "Color",
+                "img": "shopify://shop_images/Screenshot_2026-02-03_at_5.16.29_PM.png",
+                "img_mobile": "shopify://shop_images/Screenshot_2026-02-03_at_5.16.29_PM.png"
+              },
+              "blocks": {
+                "sub_category_item_YkY7yw": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Blond",
+                    "url": "shopify://collections/floor-color-blond"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_RUznwQ": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Honey",
+                    "url": "shopify://collections/floor-color-honey"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_qh3eNj": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Amber",
+                    "url": "shopify://collections/floor-color-amber"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_zLXVrh": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Brunette",
+                    "url": "shopify://collections/floor-color-brunette"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_YkY7yw",
+                "sub_category_item_RUznwQ",
+                "sub_category_item_qh3eNj",
+                "sub_category_item_zLXVrh"
+              ]
+            },
+            "menu_category_AXiCFU": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "Install Material",
+                "img": "shopify://shop_images/Screenshot_2026-02-03_at_5.16.45_PM.png",
+                "img_mobile": "shopify://shop_images/Screenshot_2026-02-03_at_5.16.45_PM.png"
+              },
+              "blocks": {
+                "sub_category_item_re6JkN": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Glue",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_re6JkN"
+              ]
+            }
+          },
+          "block_order": [
+            "menu_category_W9RpFe",
+            "menu_category_7b7Cfn",
+            "menu_category_hT4URP",
+            "menu_category_xYENP6",
+            "menu_category_AXiCFU"
+          ]
+        },
+        "mega_menu_HCHfgR": {
+          "type": "_mega-menu",
+          "name": "VANITIES",
+          "settings": {
+            "new_img": "shopify://shop_images/Type_6_36__White_3bacc362-b25e-4766-9ec5-004e035852f0.jpg",
+            "new_img_mobile": "shopify://shop_images/Type_6_36__White_3bacc362-b25e-4766-9ec5-004e035852f0.jpg",
+            "new_arrival": "almond-2x2-cement-look-porcelain-tile-mosaic",
+            "title": "The right vanity for your space",
+            "copy": "Colors and Sizes that match your needs",
+            "label": "",
+            "top_img": "shopify://shop_images/Screenshot_2026-02-03_at_5.31.50_PM.png",
+            "top_img_mobile": "shopify://shop_images/Screenshot_2026-02-03_at_5.31.50_PM.png",
+            "top_selling": "type-5-bathroom-vanity",
+            "title_2": "Medium Oak",
+            "copy_2": "Beautiful",
+            "label_2": ""
+          },
+          "blocks": {
+            "menu_category_ytRPjd": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "COLOR",
+                "img": "shopify://shop_images/Type_5_Bathroom_Vanity___Zellige_Ecru_7b84cf86-caec-4264-ad68-795c9e8848f5.jpg",
+                "img_mobile": "shopify://shop_images/Type_5_Bathroom_Vanity___Zellige_Ecru_7b84cf86-caec-4264-ad68-795c9e8848f5.jpg"
+              },
+              "blocks": {
+                "sub_category_item_4mxpke": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Cream",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_AE9tgA": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Plaster",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_3g73rd": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Taupe",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_gAGtDk": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "disabled": true,
+                  "settings": {
+                    "title": "Light Blue",
+                    "url": "https://therenosource.com/"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_LcP8mb": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Harvest Oak",
+                    "url": "shopify://collections/vanity-taupe-copy-1"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_Vxfqx6": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Reserve Oak",
+                    "url": "shopify://collections/vanity-harvest-oak-copy"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_4mxpke",
+                "sub_category_item_AE9tgA",
+                "sub_category_item_3g73rd",
+                "sub_category_item_gAGtDk",
+                "sub_category_item_LcP8mb",
+                "sub_category_item_Vxfqx6"
+              ]
+            },
+            "menu_category_7AmpQ3": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "CATEGORY",
+                "img": "shopify://shop_images/Type_5_60__Medium_Oak_7449e6b5-8bc3-4609-8f72-0387aebe30d9.jpg",
+                "img_mobile": "shopify://shop_images/Type_5_60__Medium_Oak_7449e6b5-8bc3-4609-8f72-0387aebe30d9.jpg"
+              },
+              "blocks": {
+                "sub_category_item_HPcyHQ": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Trending",
+                    "url": "shopify://collections/vanity-trending"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_akVCXw": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "New",
+                    "url": "shopify://collections/vanity-best-seller-copy"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_PR4K9W": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Best Seller",
+                    "url": "shopify://collections/vanity-best-seller"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_HPcyHQ",
+                "sub_category_item_akVCXw",
+                "sub_category_item_PR4K9W"
+              ]
+            },
+            "menu_category_fxFKCG": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "SIZE",
+                "img": "shopify://shop_images/Type_1_60__Vanity_Cream_a65f7c2b-a687-491b-96f0-fe9d1a672370.jpg",
+                "img_mobile": "shopify://shop_images/Type_1_60__Vanity_Cream_a65f7c2b-a687-491b-96f0-fe9d1a672370.jpg"
+              },
+              "blocks": {
+                "sub_category_item_8mz7yA": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "24\" - 30\"",
+                    "url": "shopify://collections/vanity-24-to-30"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_TXFxw7": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "36\" - 42\"",
+                    "url": "shopify://collections/vanity-24-to-30-copy"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_3dCmxp": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "48\" - 60\"",
+                    "url": "shopify://collections/vanity-36-to-42-copy"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_8mz7yA",
+                "sub_category_item_TXFxw7",
+                "sub_category_item_3dCmxp"
+              ]
+            },
+            "menu_category_dptPEQ": {
+              "type": "_menu-category",
+              "name": "Menu Category",
+              "settings": {
+                "title": "SINKS",
+                "img": "shopify://shop_images/Type_2_60__Cream.jpg",
+                "img_mobile": "shopify://shop_images/Type_2_60__Cream.jpg"
+              },
+              "blocks": {
+                "sub_category_item_3dBMzY": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Single",
+                    "url": "shopify://collections/vanity-single-sink"
+                  },
+                  "blocks": {}
+                },
+                "sub_category_item_p7Qx6q": {
+                  "type": "_sub-category-item",
+                  "name": "Sub Category Item",
+                  "settings": {
+                    "title": "Double",
+                    "url": "shopify://collections/vanity-doble-sink"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "sub_category_item_3dBMzY",
+                "sub_category_item_p7Qx6q"
+              ]
+            }
+          },
+          "block_order": [
+            "menu_category_ytRPjd",
+            "menu_category_7AmpQ3",
+            "menu_category_fxFKCG",
+            "menu_category_dptPEQ"
+          ]
+        }
+      },
+      "block_order": [
+        "mega_menu_68Dk6P",
+        "mega_menu_B8xJji",
+        "mega_menu_Uehqqp",
+        "mega_menu_HCHfgR"
+      ],
+      "custom_css": [],
+      "settings": {
+        "menu": "menu-test",
+        "sticky_menu": false,
+        "btn_label": "TEST 1",
+        "btn_url": "",
+        "label_1": "",
+        "copy_1": "",
+        "label_2": "",
+        "copy_2": ""
+      }
+    },
+    "drawer-cart": {
+      "type": "drawer-cart",
+      "settings": {}
+    }
+  },
+  "order": [
+    "bar",
+    "header",
+    "drawer-cart"
+  ]
+}

@@ -1,0 +1,82 @@
+{%- comment -%}
+	Renders a free shipping message for the cart with a featured image
+
+	Accepts:
+	 - free_shipping_goal: {Number}
+	 - free_shipping_success_message: {String}
+	 - free_shipping_spent_message: {String}
+	 - free_shipping_image: {Image}
+
+	Usage:
+		{%- render 'cart-free-shipping-bar', 
+			free_shipping_image: section.settings.free_shipping_image, 
+			free_shipping_goal: section.settings.free_shipping_goal, 
+			free_shipping_success_message: section.settings.free_shipping_success_message, 
+			free_shipping_spent_message: section.settings.free_shipping_spent_message 
+		-%}
+
+{%- endcomment -%}
+{%- if cart.item_count > 0 and free_shipping_goal != blank and free_shipping_success_message != blank and free_shipping_spent_message != blank -%}
+	<div class="cart-free-shipping p-3 p-lg-2">
+		<div class="row flex-lg-row-reverse p-0 p-lg-1">
+			{%- if free_shipping_image != blank -%}
+				<div class="col-12 col-lg-auto">
+					<div class="cart-free-shipping-featured-image">
+						{%- render 'responsive-image', image: free_shipping_image, lazyloading_style: 'eager' -%}
+					</div>
+				</div>
+			{%- endif -%}
+			<div class="col">
+				{%- liquid 
+					
+					comment
+					# Boolean flag to determinate if customer achieved free shipping or not
+					endcomment
+					assign free_shipping_goal_met = false
+					
+					comment
+					# String of characters to place the "remaining" amount to free shipping
+					endcomment
+					assign needle = "%money%"
+					
+					comment
+					# Free shipping goal amount
+					endcomment
+					assign goal = free_shipping_goal | times: 100
+					
+					comment
+					# Cart total price amount
+					endcomment
+					assign current_cart_total = cart.total_price
+					
+					comment
+					# Remaining until free shipping
+					endcomment
+					assign remaining = goal | minus: current_cart_total | round
+					
+					comment
+					# Remaining amount wrapped in span to highlight with color
+					endcomment
+					assign remaining_p = remaining | money_without_trailing_zeros | prepend: "<span class='text-secondary'>" | append: "</span>"
+					
+					comment
+					# If remaining if less or equal to 0 it means free shipping was met, if not, there is still [x] dollars to spent to reach free shipping
+					endcomment
+					if remaining <= 0
+						assign free_shipping_goal_met = true
+					endif
+				-%}
+				<p class="cart-free-shipping-bar-title text-uppercase pt-1 fs-5 fw-bold text-black mb-0">
+					{%- if free_shipping_goal_met == true -%}
+						{{ free_shipping_success_message }}
+					{%- else -%}
+						{{ free_shipping_spent_message | replace: needle, remaining_p }}
+					{%- endif -%}
+				</p>
+				{%- if free_shipping_spent_support_message != blank -%}
+					<p class="cart-free-shipping-bar-subtitle pt-1 fs-6 mb-0">{{ free_shipping_spent_support_message }}</p>
+				{%- endif -%}
+			</div>
+		</div>
+	</div>
+{%- endif -%}

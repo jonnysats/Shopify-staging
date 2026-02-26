@@ -1,0 +1,121 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_LTVT8r": {
+      "type": "hero",
+      "name": "Hero",
+      "settings": {
+        "height": "500px",
+        "height_mobile": "500px",
+        "show_overlay": false,
+        "overlay_option": "gradient",
+        "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "image": "shopify://shop_images/Bardiglio_12x12_Tumbled_Marble_Mosaic_60a50259-ad4c-4d64-976f-3d2320d2d9b3.jpg",
+        "heading": "",
+        "heading_color": "#fff",
+        "subheading": "",
+        "subheading_color": "#fff",
+        "copy": "",
+        "copy_color": "#fff",
+        "button_copy_1": "",
+        "button_url_1": "",
+        "button_copy_2": "",
+        "button_url_2": "",
+        "vertical_alignment_desktop": "end",
+        "horizontal_alignment_desktop": "start",
+        "text_alignment_desktop": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_mobile": "center",
+        "text_alignment_mobile": "center",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "custom_contact_form_7Y6Ghg": {
+      "type": "custom-contact-form",
+      "blocks": {
+        "text_inputs_JmDKHW": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "full",
+            "heading": "Name:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_TLjjdc": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Email:",
+            "placeholder": "",
+            "input_type": "email",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_89Q7A6": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "half",
+            "heading": "Phone:",
+            "placeholder": "",
+            "input_type": "tel",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "textarea_rP6xEm": {
+          "type": "textarea",
+          "settings": {
+            "heading": "Message:",
+            "placeholder": "",
+            "required": true
+          }
+        }
+      },
+      "block_order": [
+        "text_inputs_JmDKHW",
+        "text_inputs_TLjjdc",
+        "text_inputs_89Q7A6",
+        "textarea_rP6xEm"
+      ],
+      "name": "Custom contact form",
+      "settings": {
+        "bg_color": "#ffffff",
+        "header": "",
+        "copy": "",
+        "submit_btn_copy": "Submit",
+        "success_header": "",
+        "success_copy": "",
+        "error_header": "",
+        "error_copy": "",
+        "error_btn_copy": "",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    }
+  },
+  "order": [
+    "hero_LTVT8r",
+    "custom_contact_form_7Y6Ghg"
+  ]
+}

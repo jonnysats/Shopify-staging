@@ -1,0 +1,24 @@
+{%- comment -%}
+	Renders an Accordion for extra content using metaobjects
+	
+	Accepts:
+	- product: {Object} Product Object
+	
+	Usage:
+	{%- render 'product-category-banner' with product as product -%}
+	
+{%- endcomment -%}
+{%- if product.category != blank -%}
+	<div class="category-banner">
+		<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				{%- if product.category.ancestors.size > 0 -%}
+					{%- for ancestor in product.category.ancestors -%}
+						<li class="breadcrumb-item">{{ ancestor }}</li>
+					{%- endfor -%}
+				{%- endif -%}
+				<li class="breadcrumb-item active" aria-current="page">{{ product.category.name }}</li>
+			</ol>
+		</nav>
+	</div>
+{%- endif -%}

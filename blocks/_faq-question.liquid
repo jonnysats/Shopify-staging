@@ -1,0 +1,38 @@
+{%- if block.settings.title != blank and block.settings.answer != blank -%}
+	<div class="accordion-item faq-accordion" {{ block.shopify_attributes }}>
+		<h3 class="accordion-header no-animation" id="faqAccordionHeading{{ block.settings.title | handleize }}">
+			<button class="accordion-button text-capitalize px-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTopic{{ block.settings.title | handleize }}" aria-expanded="true" aria-controls="collapseTopic{{ block.settings.title | handleize }}">{{ block.settings.title }}</button>
+		</h3>
+		<div id="collapseTopic{{ block.settings.title | handleize }}" class="accordion-collapse collapse show" aria-labelledby="faqAccordionHeading{{ block.settings.title | handleize }}">
+			<div class="accordion-body p-0 pt-lg-3 pe-lg-5">
+				<div class="content pb-3 pb-lg-0">
+					<p class="mb-0" {{ block.shopify_attributes }}>{{ block.settings.answer }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+
+{% schema %}
+{
+	"name": "FAQ Question and Answer",
+	"tag": null,
+	"settings": [
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Question"
+		},
+		{
+			"type": "text",
+			"id": "answer",
+			"label": "Answer"
+		}
+	],
+	"presets": [
+		{
+			"name": "FAQ Question and Answer"
+		}
+	]
+}
+{% endschema %}

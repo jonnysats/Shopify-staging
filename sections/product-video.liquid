@@ -1,0 +1,8 @@
+{% if product.metafields.custom.video_url %}
+  <div class="product-video-wrapper" style="margin-top: 20px;">
+    <video autoplay muted loop playsinline style="width: 100%; height: auto; display: block; border-radius: 10px;">
+      <source src="{{ product.metafields.custom.video_url }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+{% endif %}

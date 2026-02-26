@@ -1,0 +1,179 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "hero",
+      "disabled": true,
+      "settings": {
+        "height": "500px",
+        "height_mobile": "500px",
+        "show_overlay": false,
+        "overlay_option": "gradient",
+        "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "image": "shopify://shop_images/Bardiglio_12x12_Tumbled_Marble_Mosaic_60a50259-ad4c-4d64-976f-3d2320d2d9b3.jpg",
+        "heading": "",
+        "heading_color": "#ffffff",
+        "subheading": "",
+        "subheading_color": "#ffffff",
+        "copy": "",
+        "copy_color": "#ffffff",
+        "button_copy_1": "",
+        "button_url_1": "",
+        "button_copy_2": "",
+        "button_url_2": "",
+        "vertical_alignment_desktop": "end",
+        "horizontal_alignment_desktop": "start",
+        "text_alignment_desktop": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_mobile": "center",
+        "text_alignment_mobile": "center",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "contact-blocks": {
+      "type": "contact-blocks",
+      "blocks": {
+        "contact_4GG3UR": {
+          "type": "contact",
+          "settings": {
+            "icon_bg": "#f5f5f7",
+            "icon": "shopify://shop_images/phone-call.png",
+            "title": "Phone",
+            "copy": "Have a quick question or need help thinking through your project? Give us a call and we’ll help you get clear on materials, quantities, and next steps. <a href=\"tel:702-900-RENO (7366)</strong></em>\" title=\"tel:7029007366\"><em><strong>702-900-RENO (7366)</strong></em></a>",
+            "btn_copy": "702-900-RENO (7366)",
+            "btn_link": ""
+          }
+        },
+        "contact_gnpPri": {
+          "type": "contact",
+          "settings": {
+            "icon_bg": "#f5f5f7",
+            "icon": "shopify://shop_images/lineicons_zoom.png",
+            "title": "Schedule a Video call",
+            "copy": "Need help narrowing selections or visualizing your space? Schedule a video call for design-minded guidance on materials and finishes.",
+            "btn_copy": "Book Call",
+            "btn_link": "https://therenosource.com/pages/calendly"
+          }
+        },
+        "contact_EynUgJ": {
+          "type": "contact",
+          "settings": {
+            "icon_bg": "#f5f5f7",
+            "icon": "shopify://shop_images/mail.png",
+            "title": "Send us an email",
+            "copy": "Have a detailed question or need support with an existing order? Email us anytime and we’ll get back to you as quickly as possible <a href=\"mailto:support@renosource.co\" title=\"mailto:support@renosource.co\"><em><strong>support@renosource.co</strong></em></a>",
+            "btn_copy": "Send email",
+            "btn_link": ""
+          }
+        },
+        "contact_U8aMT7": {
+          "type": "contact",
+          "settings": {
+            "icon_bg": "#f5f5f7",
+            "icon": "shopify://shop_images/help-circle.png",
+            "title": "FAQ",
+            "copy": "Looking for quick answers on samples, shipping, returns, or installation prep?Our FAQ covers the most common questions to help you order with confidence.",
+            "btn_copy": "Explore FAQ",
+            "btn_link": "https://therenosource.com/pages/calendly?view=faq"
+          }
+        }
+      },
+      "block_order": [
+        "contact_4GG3UR",
+        "contact_gnpPri",
+        "contact_EynUgJ",
+        "contact_U8aMT7"
+      ],
+      "settings": {
+        "header": "Contact Us",
+        "is_h1": false,
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    },
+    "custom-contact-form": {
+      "type": "custom-contact-form",
+      "blocks": {
+        "text_inputs_U676AG": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "full",
+            "heading": "Entire Name:",
+            "placeholder": "",
+            "input_type": "text",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "text_inputs_r3FRjy": {
+          "type": "text-inputs",
+          "settings": {
+            "display_type": "full",
+            "heading": "E-mail address:",
+            "placeholder": "",
+            "input_type": "email",
+            "required": true,
+            "hidden_input": false,
+            "input_trigger": "",
+            "input_trigger_name": ""
+          }
+        },
+        "select_inputs_WJT3f8": {
+          "type": "select-inputs",
+          "settings": {
+            "display_type": "full",
+            "heading": "Select Topic",
+            "option_list": "Shipping; Order Question; Refund; Address Change",
+            "select_default": "Others",
+            "required": false
+          }
+        },
+        "textarea_3ai8gH": {
+          "type": "textarea",
+          "settings": {
+            "heading": "Message:",
+            "placeholder": "",
+            "required": false
+          }
+        }
+      },
+      "block_order": [
+        "text_inputs_U676AG",
+        "text_inputs_r3FRjy",
+        "select_inputs_WJT3f8",
+        "textarea_3ai8gH"
+      ],
+      "settings": {
+        "bg_color": "#f5f5f7",
+        "header": "Send us a Message",
+        "copy": "",
+        "submit_btn_copy": "Submit",
+        "success_header": "",
+        "success_copy": "",
+        "error_header": "",
+        "error_copy": "",
+        "error_btn_copy": "",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "contact-blocks",
+    "custom-contact-form"
+  ]
+}

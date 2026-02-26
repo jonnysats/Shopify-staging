@@ -1,0 +1,320 @@
+{%- if section.blocks.size > 0 -%}
+	{{ 'revolving.css' | asset_url | stylesheet_tag: preload: is_first_section }}
+	{%- if section.settings.enable_slider == true -%}
+		<script src="{{ 'marquee-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	{%- endif -%}
+	{%- liquid
+		render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom
+		assign text_alignment_desktop = section.settings.text_alignment_desktop | replace: 'left', 'start' | replace: 'right', 'end'
+		assign text_alignment_mobile = section.settings.text_alignment_mobile | replace: 'left', 'start' | replace: 'right', 'end'
+	-%}
+	<div class="bg-wrapper{% if section.settings.bg_color != blank %} py-3{% endif %}"{% if section.settings.bg_color %} style="--bg-color: {{ section.settings.bg_color }};"{% endif %}>
+		{%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+			<div class="container">
+					<div class="row pb-2 pb-lg-3 mb-3 mb-lg-3">
+						<div class="col-12 d-flex justify-content-{{ section.settings.horizontal_alignment_mobile }} justify-content-lg-{{ section.settings.horizontal_alignment_desktop }}">
+							<div class="copy-wrapper text-{{ text_alignment_mobile }} text-lg-{{ text_alignment_desktop }}">
+								{%- if section.settings.heading != blank -%}
+									<h3{% if section.settings.heading_color != blank or section.settings.heading_size != blank %} style="{% if section.settings.heading_color != blank and section.settings.heading_color != 'rgba(0,0,0,0)' %}color: {{ section.settings.heading_color }};{% endif %}{% if section.settings.heading_size != blank %} font-size: {{ section.settings.heading_size }};{% endif %}"{% endif %}>{{ section.settings.heading }}</h3>
+								{%- endif -%}
+								{%- if section.settings.subheading != blank -%}
+									<p class="mb-0"{% if section.settings.subheading_color != blank %}style="color: {{ section.settings.subheading_color }};"{% endif %}>{{ section.settings.subheading }}</p>
+								{%- endif -%}
+							</div>
+						</div>
+					</div>
+			</div>
+		{%- endif -%}
+		<div class="container{% if section.settings.enable_slider == true %}{% if section.blocks.size > 2 %} container-sm-fluid{% endif %}{% if section.blocks.size > 6 %} container-lg-fluid{% endif %}{% endif %}"{% if section.settings.enable_slider == true %} data-section-id="{{ section.id }}" data-section-type="marqueeSlider"{% endif %}>
+			{%- liquid
+					assign flickity_arrows = false
+					assign flickity_dots = false
+					assign flickity_loop = true
+					assign flickity_adaptive_height = false
+					assign flickity_images_loaded = true
+					assign flickity_contain = true
+					assign flickity_group_cells = false
+					assign flickity_autoplay = 0
+					assign flickity_selected_attraction = 0.015
+					assign flickity_friction = 0.25
+					assign flickity_lazy_load = false
+				-%}
+			<div class="row gy-3 gy-lg-7 gx-lg-6 marquee-wrapper{% if section.blocks.size > 2 %} mx-0{% endif %}{% if section.blocks.size < 7 %} desktop-margin{% endif %}"{% if section.settings.icons_size != blank %} style="--max-icon-size: {{ section.settings.icons_size }}px; --max-icon-size-mobile: {{ section.settings.icons_size_mobile }}px;"{% endif %}{% if section.settings.enable_slider %} data-generic-slider data-ticker="true" data-ticker-speed="{{ section.settings.slider_speed | divided_by: 100.0 }}" data-selected-attraction="{{ flickity_selected_attraction }}" data-friction="{{ flickity_friction }}" data-arrows="{{ flickity_arrows }}" data-group-cells="{{ flickity_group_cells }}" data-dots="{{ flickity_dots }}" data-loop="{{ flickity_loop }}" data-adaptive-height="{{ flickity_adaptive_height }}" data-images-loaded="{{ flickity_images_loaded }}" data-lazy-load="{{ flickity_lazy_load }}" data-watch-css="{% if section.blocks.size > 6 %}false{% else %}true{% endif %}" data-marquee-wrapper{% endif %}>
+				{%- for block in section.blocks -%}
+					{%- if block.settings.icon != blank -%}
+						<div class="col-6 col-lg-2" data-scroll-item>
+							{%- if block.settings.link != blank and block.settings.title != blank -%}
+								<a class="icon-link-wrapper link" href="{{ block.settings.link }}" title="{{ block.settings.title | escape }}"{% if block.settings.title_color != blank %} style="color: {{ block.settings.title_color }};"{% endif %}>
+							{%- else -%}
+								<div class="icon-link-wrapper"{% if block.settings.title_color != blank %} style="color: {{ block.settings.title_color }};"{% endif %}>
+							{%- endif -%}
+								<div class="icon-wrapper mx-auto pb-1">
+									{%- render 'responsive-image', image: block.settings.icon, image_class: 'img-fluid', lazyloading_style: 'eager' -%}
+								</div>
+							{%- if block.settings.title != blank -%}
+								<div class="title-wrapper">
+									{{ block.settings.title }}
+								</div>
+							{%- endif -%}
+							{%- if block.settings.link != blank and block.settings.title != blank -%}
+								</a>
+							{%- else -%}
+								</div>
+							{%- endif -%}
+						</div>
+					{%- endif -%}
+				{%- endfor -%}
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Revolving Reassurance",
+	"tag": "section",
+	"class": "section-revolving-reassurance text-center overflow-hidden",
+	"settings": [
+		{
+			"type": "checkbox",
+			"id": "enable_slider",
+			"label": "Enable Revolving Slider?",
+			"default": true,
+			"info": "This section only revolves on desktop when there are 7 or more icons added"
+		},
+		{
+			"type": "range",
+			"id": "slider_speed",
+			"label": "Speed of Revolving Slider",
+			"min": 30,
+			"max": 150,
+			"step": 10,
+			"default": 100,
+			"visible_if": "{{ section.settings.enable_slider == true }}"
+		},
+		{
+			"type": "color",
+			"id": "bg_color",
+			"label": "Background Color"
+		},
+		{
+			"type": "range",
+			"id": "icons_size",
+			"min": 25,
+			"max": 200,
+			"step": 5,
+			"unit": "px",
+			"label": "Maximum Width of Icons (Desktop)",
+			"default": 100
+		},
+		{
+			"type": "range",
+			"id": "icons_size_mobile",
+			"min": 25,
+			"max": 200,
+			"step": 5,
+			"unit": "px",
+			"label": "Maximum Width of Icons (Mobile)",
+			"default": 50
+		},
+		{
+			"type": "header",
+			"content": "Copy",
+		},
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Heading"
+		},
+		{
+			"type": "color",
+			"id": "heading_color",
+			"label": "Heading Color",
+			"default": "#09091A"
+		},
+		{
+			"type": "select",
+			"id": "heading_size",
+			"label": "Heading Size",
+			"options": [
+				{
+					"value": "2rem",
+					"label": "Small"
+				},
+				{
+					"value": "3rem",
+					"label": "Medium"
+				},
+				{
+					"value": "4rem",
+					"label": "Large"
+				}
+			],
+			"default": "4rem"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "subheading",
+			"label": "Subheading"
+		},
+		{
+			"type": "color",
+			"id": "subheading_color",
+			"label": "Subheading Color",
+			"default": "#6D6E71"
+		},
+		{
+			"type": "header",
+			"content": "Desktop Alignment"
+		},
+		{
+			"type": "select",
+			"id": "horizontal_alignment_desktop",
+			"label": "Horizontal Alignment",
+			"options": [
+				{
+					"value": "start",
+					"label": "Left"
+				},
+				{
+					"value": "center",
+					"label": "Center"
+				},
+				{
+					"value": "end",
+					"label": "Right"
+				}
+			],
+			"default": "start"
+		},
+		{
+			"type": "text_alignment",
+			"id": "text_alignment_desktop",
+			"label": "Text Alignment",
+			"default": "left"
+		},
+		{
+			"type": "header",
+			"content": "Mobile Alignment"
+		},
+		{
+			"type": "select",
+			"id": "horizontal_alignment_mobile",
+			"label": "Horizontal Alignment (Mobile)",
+			"options": [
+				{
+					"value": "start",
+					"label": "Left"
+				},
+				{
+					"value": "center",
+					"label": "Center"
+				},
+				{
+					"value": "end",
+					"label": "Right"
+				}
+			],
+			"default": "center"
+		},
+		{
+			"type": "text_alignment",
+			"id": "text_alignment_mobile",
+			"label": "Text Alignment (Mobile)",
+			"default": "center"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "no"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"blocks": [
+		{
+			"type": "reassurance",
+			"name": "Reassurance Block",
+			"settings": [
+				{
+					"type": "image_picker",
+					"id": "icon",
+					"label": "Icon"
+				},
+				{
+					"type": "richtext",
+					"id": "title",
+					"label": "Copy"
+				},
+				{
+					"type": "color",
+					"id": "title_color",
+					"label": "Copy Color"
+				},
+				{
+					"type": "url",
+					"id": "link",
+					"label": "Link"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Revolving Reassurance"
+		}
+	]
+}
+{% endschema %}

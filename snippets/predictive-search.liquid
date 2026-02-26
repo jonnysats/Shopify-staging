@@ -1,0 +1,71 @@
+{%- comment -%}
+	Render dropdown list of products based on user search query
+	
+	Accepts:
+	- context {String} screen size
+	
+	Usage:
+	{%- render 'predictive-search', context: 'mobile' -%}
+	
+{%- endcomment -%}
+<section class="predictive-search d-flex predictive-search-extended{% if context == 'mobile' %} d-lg-none{% else %} d-none d-lg-block border{% endif %}" data-section-id="predictiveSearch" data-section-type="predictiveSearch" data-search-use-local-section="true" data-predictive-search-enabled="{{ settings.extended_search }}">
+	{%- if context != 'mobile' -%}
+		<form action="/search" method="get" class="off{% if settings.extended_search == false %} regular-search{% endif %} position-relative" role="search" data-needs-validation novalidate data-search-form>
+			<div class="input-group align-items-center flex-nowrap">
+				<input type="hidden" name="type" value="product">
+				<input class="form-control border-0 p-md-2 px-xl-3" name="q" type="search" placeholder="Search..." aria-label="Search" autocomplete="off" autofocus required>
+				<button type="submit" class="border border-0 bg-transparent link-primary p-0 search-icon me-1 me-md-3" data-search-icon>
+					{%- render 'icons' with 'search' -%}
+				</button>
+				{%- if settings.extended_search == true -%}
+					<button type="button" class="btn-close h-100 position-absolute p-0" aria-label="Close" data-close-results><span class="visually-hidden">Close Search Results</span></button>
+				{%- endif -%}
+			</div>
+		</form>
+	{%- else -%}
+		<a href="#offcanvasSearchTop" class="search-icon" title="Search the store" data-search-btn data-bs-toggle="offcanvas" role="button" aria-controls="offcanvasSearchTop">
+			{%- render 'icons' with 'search' -%}
+		</a>
+		<div class="offcanvas offcanvas-top search-offcanvas" tabindex="-1" id="offcanvasSearchTop" aria-labelledby="offcanvasSearchTopLabel">
+			<div class="offcanvas-header visually-hidden">
+				<h5 class="offcanvas-title visually-hidden" id="offcanvasSearchTopLabel">Predective Search offcanvas</h5>
+			</div>
+			<div class="offcanvas-body py-4 px-0">
+				<div class="container-fluid">
+					<div class="px-1">
+						<div class="row g-0 align-items-center">
+							<div class="col pe-2">
+								<form action="/search" method="get" role="search" data-needs-validation="true" novalidate="true" data-search-form>
+									<div class="input-group position-relative">
+										<input type="hidden" name="type" value="product">
+										<input class="form-control py-2 pe-5" name="q" type="search" placeholder="Search..." aria-label="Search" autocomplete="off" autofocus required>
+										{%- if settings.extended_search == true -%}
+											{%- render 'icons' with 'search', icon_classes: 'position-absolute end-0 h-100 top-0 me-3' -%}
+										{%- else -%}
+											<button type="submit" class="border border-0 bg-transparent p-0 position-absolute search-icon-btn end-0 h-100 top-0 me-3">
+												<span class="visually-hidden">Search icon button</span>
+												{%- render 'icons' with 'search' -%}
+											</button>
+										{%- endif -%}
+									</div>
+								</form>
+							</div>
+							<div class="col-auto d-flex">
+								<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"><span class="visually-hidden">Close</span></button>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12 px-0">
+							<div class="search-results overflow-hidden d-none px-0" data-search-results></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{%- endif -%}
+	{%- comment -%} Desktop results {%- endcomment -%}
+	{%- if context != 'mobile' -%}
+		<div class="search-results position-absolute start-0 w-100 bg-white d-none d-lg-block" data-search-results></div>
+	{%- endif -%}
+</section>

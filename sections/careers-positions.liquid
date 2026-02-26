@@ -1,0 +1,121 @@
+{%- if section.blocks.size > 0 -%}
+	{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom -%}
+	{{ 'careers-positions.css' | asset_url | stylesheet_tag }}
+	<script src="{{ 'careers.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	<div class="container" data-section-id="{{ section.id }}" data-section-type="careersForms">
+		<div class="row g-3 g-lg-custom">
+			{%- content_for 'blocks' -%}
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Positions",
+	"tag": "section",
+	"class": "section-careers-positions",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Form settings",
+			"info": "IMPORTANT: Make sure to add an email field - it is required by Shopify."
+		},
+		{
+			"type": "text",
+			"id": "form_heading",
+			"label": "Form Header"
+		},
+		{
+			"type": "text",
+			"id": "submit_btn_copy",
+			"label": "Submit button copy",
+			"default": "Submit"
+		},
+		{
+			"type": "header",
+			"content": "Form Success Message"
+		},
+		{
+			"type": "text",
+			"id": "success_copy",
+			"label": "Success Copy"
+		},
+		{
+			"type": "header",
+			"content": "Form Error Message"
+		},
+		{
+			"type": "text",
+			"id": "error_copy",
+			"label": "Error Copy"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"blocks": [
+		{ "type": "_modal-block" }
+	],
+	"presets": [
+		{
+			"name": "Positions"
+		}
+	]
+}
+{% endschema %}

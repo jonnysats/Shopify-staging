@@ -1,0 +1,23 @@
+{%- if block.settings.heading != blank -%}
+	<div class="py-3">
+		<h2 class="text-center">{{ block.settings.heading }}</h2>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Partner - Heading",
+	"tag": null,
+	"settings": [
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Heading"
+		}
+	],
+	"presets": [
+		{
+			"name": "Partner - Heading"
+		}
+	]
+}
+{% endschema %}

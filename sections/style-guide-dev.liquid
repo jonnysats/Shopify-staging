@@ -1,0 +1,218 @@
+<style>
+	svg.icon { width: 24px; }
+</style>
+<div class="container py-5">
+	<!-- HEADINGS/TEXT -->
+	<div class="row py-3">
+		<div class="col">
+			<h1>H1 text for Heading - UPPER CASE TEXT</h1>
+			<div class="text-center">
+				<h2>H2 text for Heading - UPPER CASE TEXT</h2>
+			</div>
+			<div class="text-end">
+				<h3>H3 text for Heading - UPPER CASE TEXT</h3>
+			</div>
+			<h4>H4 text for Heading - UPPER CASE TEXT</h4>
+			<h5>H5 text for Heading - UPPER CASE TEXT</h5>
+			<h6>H6 text for Heading - UPPER CASE TEXT</h6>
+			<div class="copy-wrapper">
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			</div>
+		</div>
+	</div>
+	
+	<!-- BUTTONS -->
+	<div class="row row-cols-auto row-cols-lg-4 py-3 gy-3">
+		<div class="col">
+			<a class="btn btn-primary" href="javascript: return false;" title="Button">
+				<span class="anim-wrapper">
+					<span class="initial">Button Primary</span>
+					<span class="end">Button Primary</span>
+				</span>
+			</a>
+		</div>
+		<div class="col">
+			<a class="btn btn-primary disabled" href="javascript: return false;" title="Button">
+				<span class="anim-wrapper">
+					<span class="initial">Button Primary</span>
+					<span class="end">Button Primary</span>
+				</span>
+			</a>
+		</div>
+		<div class="col">
+			<a class="btn btn-outline-primary" href="javascript: return false;" title="Button">
+				<span class="anim-wrapper">
+					<span class="initial">Primary outline</span>
+					<span class="end">Primary outline</span>
+				</span>
+			</a>
+		</div>
+		<div class="col">
+			<a class="btn btn-outline-primary disabled" href="javascript: return false;" title="Button">
+				<span class="anim-wrapper">
+					<span class="initial">Primary outline</span>
+					<span class="end">Primary outline</span>
+				</span>
+			</a>
+		</div>
+		<div class="col">
+			<a class="btn btn-secondary" href="javascript: return false;" title="Button">
+				<span class="anim-wrapper">
+					<span class="initial">Button Secondary</span>
+					<span class="end">Button Secondary</span>
+				</span>
+			</a>
+		</div>
+		<div class="col">
+			<a class="btn btn-secondary disabled" href="javascript: return false;" title="Button">
+				<span class="anim-wrapper">
+					<span class="initial">Button Secondary</span>
+					<span class="end">Button Secondary</span>
+				</span>
+			</a>
+		</div>
+		<div class="col">
+			<a class="btn btn-outline-secondary" href="javascript: return false;" title="Button">
+				<span class="anim-wrapper">
+					<span class="initial">Secondary Outline</span>
+					<span class="end">Secondary Outline</span>
+				</span>
+			</a>
+		</div>
+		<div class="col">
+			<a class="btn btn-outline-secondary disabled" href="javascript: return false;" title="Button">
+				<span class="anim-wrapper">
+					<span class="initial">Secondary Outline</span>
+					<span class="end">Secondary Outline</span>
+				</span>
+			</a>
+		</div>
+	</div>
+
+	<div class="row row-cols-auto row-cols-lg-4 py-3 my-2 gy-3" style="background: #495057;">
+		<div class="col mt-0">
+			<a class="btn btn-ternary" href="javascript: return false;" title="Button">
+				<span class="anim-wrapper">
+					<span class="initial">Button ternary</span>
+					<span class="end">Button ternary</span>
+				</span>
+			</a>
+		</div>
+		<div class="col mt-0">
+			<a class="btn btn-ternary disabled" href="javascript: return false;" title="Button">
+				<span class="anim-wrapper">
+					<span class="initial">Ternary disabled</span>
+					<span class="end">Ternary disabled</span>
+				</span>
+			</a>
+		</div>
+	</div>
+
+	<div class="row row-cols-auto row-cols-lg-4 py-3 my-2 gy-3" style="background: #F5F5F7;">
+		<div class="col mt-0">
+			<a class="btn btn-outline-primary btn-outline-primary-reverse">
+				<span class="anim-wrapper">
+					<span class="initial">Reverse</span>
+					<span class="end">Reverse</span>
+				</span>
+			</a>
+		</div>
+		<div class="col mt-0">
+			<a class="btn btn-outline-primary btn-outline-primary-reverse disabled">
+				<span class="anim-wrapper">
+					<span class="initial">Reverse</span>
+					<span class="end">Reverse</span>
+				</span>
+			</a>
+		</div>
+	</div>
+
+	<!-- LINKS -->
+	<div class="row row-cols-auto row-cols-lg-4 py-3">
+		<div class="col">
+			<a href="javascript: return false;" title="Button">Link Primary</a>
+		</div>
+		<div class="col">
+			<a class="link-secondary" href="javascript: return false;" title="Button">Link Secondary</a>
+		</div>
+	</div>
+
+	<!-- ICONS -->
+	<div class="row row-cols-auto py-3 my-2 gy-3 align-items-center">
+		<div class="col mt-0">
+			{%- render 'icons' with 'account', icon_classes: 'icon' -%}
+		</div>
+		<div class="col mt-0">
+			{%- render 'icons' with 'bag', icon_classes: 'icon' -%}
+		</div>
+		<div class="col mt-0">
+			{%- render 'icons' with 'facebook', icon_classes: 'icon' -%}
+		</div>
+		<div class="col mt-0">
+			{%- render 'icons' with 'instagram', icon_classes: 'icon' -%}
+		</div>	
+	</div>
+
+	<!-- FORMS -->
+	<div class="row py-3">
+		<div class="col-12 mb-4">
+			<h3>Form</h3>
+		</div>
+		<div class="col">
+			<form>
+				<div class="mb-3">
+					<label for="exampleFormControlInput1" class="form-label">Full name</label>
+					<input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Full name">
+				</div>
+				<div class="form-floating mb-3">
+					<input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+					<label for="floatingInput">Email address</label>
+				</div>
+				<div class="form-floating mb-3">
+					<input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+					<label for="floatingPassword">Password</label>
+				</div>
+				<div class="form-floating mb-3">
+					<textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+					<label for="floatingTextarea2">Comments</label>
+				</div>
+				<div class="form-check mb-3 ">
+					<input type="checkbox" class="form-check-input" id="exampleCheck1">
+					<label class="form-check-label" for="exampleCheck1">Check me out</label>
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			  </form>
+		</div>
+	</div>
+
+	<!-- LOADING -->
+	<div class="row py-3">
+		<div class="col-12 mb-4">
+			<h3>Loading Icon for Images</h3>
+		</div>
+		<div class="col-2 mb-4">
+			<div style="max-width: 55px;">
+				<div class="loading-tiles">
+					<div class="square"></div>
+					<div class="square"></div>
+					<div class="square"></div>
+					<div class="square"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% schema %}
+{
+	"name": "Style Guide - Dev",
+	"tag": "section",
+	"class": "section-style-guide-dev",
+	"settings": [],
+	"presets": [
+		{
+			"name": "Style Guide - Dev"
+		}
+	]
+}
+{% endschema %}

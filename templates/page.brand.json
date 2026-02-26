@@ -1,0 +1,202 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "hero",
+      "settings": {
+        "height": "500px",
+        "height_mobile": "500px",
+        "show_overlay": false,
+        "overlay_option": "gradient",
+        "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+        "overlay_color": "#000000",
+        "overlay_opacity": 20,
+        "image": "shopify://shop_images/Factory_Work._7.jpg",
+        "heading": "",
+        "heading_color": "#ffffff",
+        "subheading": "",
+        "subheading_color": "#ffffff",
+        "copy": "",
+        "copy_color": "#ffffff",
+        "button_copy_1": "",
+        "button_url_1": "",
+        "button_copy_2": "",
+        "button_url_2": "",
+        "vertical_alignment_desktop": "end",
+        "horizontal_alignment_desktop": "start",
+        "text_alignment_desktop": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_mobile": "center",
+        "text_alignment_mobile": "center",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "no"
+      }
+    },
+    "intro-section": {
+      "type": "intro-section",
+      "settings": {
+        "horizontal_alignment_desktop": "center",
+        "alignment_desktop": "center",
+        "horizontal_alignment_mobile": "start",
+        "alignment_mobile": "left",
+        "heading": "Letter From Our Founder",
+        "is_h1": false,
+        "copy": "<p>Most homes look the same now. Same gray luxury vinyl. Same white shaker cabinets. Same builder-grade everything. It didn't happen by accident — it happened because the building materials industry pushed convenience over character,<br/>and somewhere along the way, we accepted it.<br/>We shouldn't have.</p>",
+        "padding_amount_top": "xlarge",
+        "padding_amount_bottom": "no"
+      }
+    },
+    "image_copy_blocks_bRPJJG": {
+      "type": "image-copy-blocks",
+      "blocks": {
+        "image_copy_block_cRgFfn": {
+          "type": "_image-copy-block",
+          "name": "Image / Copy Block",
+          "settings": {
+            "image": "shopify://shop_images/1_5a7443e4-a915-45db-916f-7cecd3b97a47.png",
+            "heading": "",
+            "copy": "<p>I grew up sweeping floors in my dad's millwork factory, surrounded by beautiful materials and people who took real craftsmanship seriously. Years later, I tried to renovate my own home and ran straight into the wall everyone else hits: big box stores with nothing worth putting in your house, and specialty showrooms that had the good stuff but treated pricing like a secret and your timeline like a suggestion. The materials I knew existed were out there. They just weren't accessible. So I built Reno Source to change that.</p>",
+            "tag": "",
+            "product_dot_list": "",
+            "show_first_dot_by_default": true,
+            "vertical_alignment_desktop": "center",
+            "text_alignment_desktop": "center",
+            "horizontal_alignment_desktop": "center",
+            "text_alignment_mobile": "center",
+            "horizontal_alignment_mobile": "center"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "image_copy_block_cRgFfn"
+      ],
+      "name": "Image/Video/Copy Blocks",
+      "settings": {
+        "grid_option": "linear",
+        "img_left_right_desktop": "natural",
+        "img_top_bottom_mobile": "natural",
+        "show_heading_at_top": false,
+        "show_copy_at_top": false,
+        "product_dot_lists": [],
+        "second_product_dot_lists": [],
+        "show_first_dot_by_default": true,
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "no"
+      }
+    },
+    "intro_section_GYzXmP": {
+      "type": "intro-section",
+      "blocks": {
+        "links_wfVRtX": {
+          "type": "links",
+          "settings": {
+            "title": "",
+            "link": "",
+            "button_style": "outline-primary"
+          }
+        }
+      },
+      "block_order": [
+        "links_wfVRtX"
+      ],
+      "name": "Intro Section",
+      "settings": {
+        "horizontal_alignment_desktop": "center",
+        "alignment_desktop": "center",
+        "horizontal_alignment_mobile": "center",
+        "alignment_mobile": "center",
+        "heading": "",
+        "is_h1": false,
+        "copy": "<p>We're an online retailer for people who care what their home looks like but don't have a designer's trade account or an \"luxury architect's\" budget. We source directly from manufacturers across the globe, keep real inventory in our own warehouse, and price everything transparently — no markups hidden in a consultation, no inconsistent lead times, no attitude. If you're tired of every renovation looking like every other renovation, you're exactly who we built this for.</p><p>Thank you for being here. </p>",
+        "padding_amount_top": "no",
+        "padding_amount_bottom": "no"
+      }
+    },
+    "split_banner_CAdYWr": {
+      "type": "split-banner",
+      "blocks": {
+        "banner_LEc76j": {
+          "type": "banner",
+          "settings": {
+            "image_or_video": "image",
+            "image": "shopify://shop_images/0220_1_1.jpg",
+            "show_overlay": false,
+            "overlay_option": "gradient",
+            "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+            "overlay_color": "#000000",
+            "overlay_opacity": 20,
+            "heading": "",
+            "heading_color": "",
+            "subheading": "",
+            "subheading_color": "",
+            "copy": "",
+            "copy_color": "",
+            "btn_copy": "",
+            "btn_link": "",
+            "button_style": "primary",
+            "vertical_alignment_desktop": "end",
+            "horizontal_alignment_desktop": "start",
+            "text_alignment_desktop": "left",
+            "vertical_alignment_mobile": "center",
+            "horizontal_alignment_mobile": "center",
+            "text_alignment_mobile": "center"
+          }
+        },
+        "banner_Wkj3aU": {
+          "type": "banner",
+          "settings": {
+            "image_or_video": "image",
+            "image": "shopify://shop_images/0220_1.jpg",
+            "show_overlay": false,
+            "overlay_option": "gradient",
+            "overlay_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)",
+            "overlay_color": "#000000",
+            "overlay_opacity": 20,
+            "heading": "",
+            "heading_color": "",
+            "subheading": "",
+            "subheading_color": "",
+            "copy": "",
+            "copy_color": "",
+            "btn_copy": "",
+            "btn_link": "",
+            "button_style": "primary",
+            "vertical_alignment_desktop": "end",
+            "horizontal_alignment_desktop": "start",
+            "text_alignment_desktop": "left",
+            "vertical_alignment_mobile": "center",
+            "horizontal_alignment_mobile": "center",
+            "text_alignment_mobile": "center"
+          }
+        }
+      },
+      "block_order": [
+        "banner_LEc76j",
+        "banner_Wkj3aU"
+      ],
+      "name": "Split Banner",
+      "settings": {
+        "height": "500px",
+        "height_mobile": "300px",
+        "padding_amount_top": "default",
+        "padding_amount_bottom": "default"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "intro-section",
+    "image_copy_blocks_bRPJJG",
+    "intro_section_GYzXmP",
+    "split_banner_CAdYWr"
+  ]
+}

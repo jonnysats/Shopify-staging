@@ -1,0 +1,58 @@
+{%- if block.settings.link_copy != blank or block.settings.url != blank -%}
+	<div class="block-button-with-context d-flex gap-5 align-items-center mt-2" {{ block.shopify_attributes }}>
+		<a class="col-4 col-lg-3 btn btn-primary" href="{{ block.settings.url }}" title="{{ block.settings.link_copy }}">
+			{{ block.settings.link_copy }}
+		</a>
+		{%- if block.settings.context != blank or block.settings.context_subheading != blank -%}
+			<div class="block-context d-flex flex-column">
+				{%- if block.settings.context != blank -%}
+					<p class="mb-0">{{ block.settings.context }}</p>
+				{%- endif -%}
+				{%- if block.settings.context_subheading != blank -%}
+					<p class="mb-0">{{ block.settings.context_subheading }}</p>
+				{%- endif -%}
+			</div>
+		{%- endif -%}
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Button with context",
+	"tag": null,
+	"settings": [
+		{
+			"type": "header",
+			"content": "Button"
+		},
+		{
+			"type": "text",
+			"id": "link_copy",
+			"label": "Copy",
+		},
+		{
+			"type": "url",
+			"id": "url",
+			"label": "Link"
+		},
+		{
+			"type": "header",
+			"content": "Context"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "context",
+			"label": "Context heading"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "context_subheading",
+			"label": "Context subheading"
+		}
+	],
+	"presets": [
+		{
+			"name": "Button with context"
+		}
+	]
+}
+{% endschema %}

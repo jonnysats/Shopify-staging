@@ -1,0 +1,327 @@
+{%- liquid
+	comment
+	  Check is this is the first section on the page
+	endcomment
+	if section.index == 1
+		assign is_first_section = true
+	else
+		assign is_first_section = false
+	endif
+-%}
+{{ 'video.css' | asset_url | stylesheet_tag: preload: is_first_section }}
+<script src="{{ 'video-banner.js' | asset_url }}" defer crossorigin="anonymous"></script>
+{%- liquid
+	if section.blocks.size > 0
+		assign shopify_video = section.blocks | where: 'type', 'shopify_video'
+		assign external_video = section.blocks | where: 'type', 'external_video'
+	endif
+
+	assign alignment = section.settings.alignment
+	if section.settings.alignment == 'left'
+		assign alignment = 'start'
+	elsif section.settings.alignment == 'right'
+		assign alignment = 'end'
+	endif
+	render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom
+-%}
+{%- capture empty_placeholder -%}
+	{%- comment -%} Display placeholder for preview image {%- endcomment -%}
+	<div class="video-wrapper d-flex w-100 flex-wrap align-items-center justify-content-center">
+		{%- render 'responsive-bg-image' -%}
+		<div class="heading-wrapper container d-flex align-items-center justify-content-center flex-column h-100" style="--heading-color: {{ section.settings.heading_color }}; --subheading-color: {{ section.settings.subheading_color }}; --caption-color: {{ section.settings.caption_color }};">
+			<div class="copy-wrapper text-{{ alignment }} p-4 p-lg-0">
+				{%- if section.settings.hero_heading != blank -%}
+					{%- if is_first_section == true -%}
+						<h1 class="title pb-3">{{ section.settings.hero_heading }}</h1>
+					{%- else -%}
+						<h2 class="title pb-3">{{ section.settings.hero_heading }}</h2>
+					{%- endif -%}
+				{%- endif -%}
+				{%- if section.settings.hero_sub_heading != blank -%}<p class="subtitle pb-3 h4">{{ section.settings.hero_sub_heading }}</p>{%- endif -%}
+				{%- if section.settings.hero_caption != blank -%}<p>{{ section.settings.hero_caption }}</p>{%- endif -%}
+				{%- if section.settings.hero_btn_text != blank and section.settings.hero_btn_link != blank -%}
+					<a class="btn btn-secondary" href="{{ section.settings.hero_btn_link }}" title="{{ section.settings.hero_btn_text | escape }}">{{ section.settings.hero_btn_text }}</a>
+				{%- endif -%}
+			</div>
+		</div>
+	</div>
+{%- endcapture -%}
+{%- if section.blocks.size > 0 -%}
+	<!-- VIDEO -->
+	{%- for block in section.blocks -%}
+		<div{% if section.settings.enable_fullscreen_height %} class="fullscreen"{% endif %} data-section-id="{{ block.id }}" id="videoBanner-{{ section.id }}" data-section-type="videoBanner" data-provider="{% if block.settings.provider != blank %}{{ block.settings.provider | handleize }}{%- else -%}shopify{% endif %}" data-video-id="{% if block.settings.video_id != blank %}{{ block.settings.video_id }}{% elsif block.settings.video != blank %}{{ block.settings.video.id }}{% endif %}" data-video-autoplay="{{ section.settings.autoplay }}">
+			{%- if block.settings.video != blank -%}
+				{%- if section.settings.autoplay == true -%}
+					<div class="video-wrapper d-flex w-100 flex-wrap align-items-center justify-content-center position-relative">
+						<div class="heading-wrapper container d-flex align-items-center justify-content-center flex-column h-100" style="--heading-color: {{ section.settings.heading_color }}; --subheading-color: {{ section.settings.subheading_color }}; --caption-color: {{ section.settings.caption_color }};">
+							<div class="copy-wrapper text-{{ alignment }} p-5 p-lg-0">
+								{%- if section.settings.hero_heading != blank -%}
+									{%- if is_first_section == true -%}
+										<h1 class="title pb-3">{{ section.settings.hero_heading }}</h1>
+									{%- else -%}
+										<h2 class="title pb-3">{{ section.settings.hero_heading }}</h2>
+									{%- endif -%}
+								{%- endif -%}
+								{%- if section.settings.hero_sub_heading != blank -%}<p class="subtitle pb-3 h4">{{ section.settings.hero_sub_heading }}</p>{%- endif -%}
+								{%- if section.settings.hero_caption != blank -%}<p class="caption">{{ section.settings.hero_caption }}</p>{%- endif -%}
+								{%- if section.settings.hero_btn_text != blank and section.settings.hero_btn_link != blank -%}
+									<a class="btn btn-secondary" href="{{ section.settings.hero_btn_link }}" title="{{ section.settings.hero_btn_text }}">{{ section.settings.hero_btn_text }}</a>
+								{%- endif -%}
+							</div>
+						</div>
+						{%- if section.settings.show_password == true and section.settings.password_modal_trigger != blank -%}
+							<div class="password-trigger-wrapper container-fluid px-0 d-flex align-items-end justify-content-end flex-column h-100 position-absolute z-1">
+								<div class="text-{{ alignment }} py-3 px-2 py-lg-4 px-lg-3">
+									<a class="text-decoration-none" style="color: {{ section.settings.trigger_color }};" href="#" data-bs-toggle="modal" data-bs-target="#passwordModal-{{ section.id }}" title="{{ section.settings.password_modal_trigger | escape }}">{{ section.settings.password_modal_trigger }}</a>
+								</div>
+							</div>
+						{%- endif -%}
+				{%- endif -%}
+					<div id="V{{ section.id }}" class="video-player position-relative">
+						<div class="media-wrapper h-100{% if block.settings.mobile_video != blank %} d-none d-lg-block{% endif %}">
+							{{ block.settings.video | video_tag: autoplay: section.settings.autoplay, preload: 'metadata', image_size: '2400x', loop: section.settings.loop }}
+						</div>
+						{%- if block.settings.mobile_video != blank -%}
+							<div class="mobile-media-wrapper h-100 d-lg-none">
+								{{ block.settings.mobile_video | video_tag: autoplay: section.settings.autoplay, preload: 'metadata', image_size: '2400x', loop: section.settings.loop }}
+							</div>
+						{%- endif -%}
+						{%- if section.settings.autoplay != true -%}
+							<div class="sound-icon sound" data-sound-icon>
+								{%- render 'icons' with 'volume-off' -%}
+								{%- render 'icons' with 'volume-on' -%}
+							</div>
+						{%- endif -%}
+					</div>
+				{%- if section.settings.autoplay == true -%}</div>{%- endif -%}
+			{%- else -%}
+				{%- comment -%} Display placeholder for preview image {%- endcomment -%}
+				{{- empty_placeholder -}}
+			{%- endif -%}
+		</div>
+	{%- endfor -%}
+{%- else -%}
+	{%- comment -%} Display placeholder for preview image {%- endcomment -%}
+	{{- empty_placeholder -}}
+{%- endif -%}
+{%- if section.settings.show_password == true -%}
+	{%- render 'password-modal', section: section, password_heading: section.settings.password_heading, password_placeholder: section.settings.password_placeholder, password_btn_copy: section.settings.password_btn_copy -%}
+{%- endif -%}
+{% schema %}
+{
+	"name": "Video Banner",
+	"class": "section-video-banner section-popup",
+	"tag": "section",
+	"max_blocks": 1,
+	"settings": [
+		{
+			"type": "header",
+			"content": "Video Options"
+		},
+		{
+			"type": "checkbox",
+			"id": "enable_fullscreen_height",
+			"label": "Enable Fullscreen Height?",
+			"default": false
+		},
+		{
+			"type": "checkbox",
+			"id": "autoplay",
+			"label": "Autoplay",
+			"default": true,
+			"info": "Copy will only show if autoplay is ON"
+		},
+		{
+			"type": "checkbox",
+			"id": "loop",
+			"label": "Loop Video?",
+		},
+		{
+			"type": "text_alignment",
+			"id": "alignment",
+			"label": "Text alignment",
+			"default": "center"
+		},
+		{
+			"type": "header",
+			"content": "Password Popup Settings"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_password",
+			"label": "Show Password Link?",
+			"default": false,
+			"info": "This enables the password input pop-up and corresponding trigger"
+		},
+		{
+			"type": "text",
+			"id": "password_modal_trigger",
+			"label": "Password Link Copy",
+			"visible_if": "{{ section.settings.show_password == true }}"
+		},
+		{
+			"type": "color",
+			"id": "trigger_color",
+			"label": "Password Trigger Color",
+			"default": "#fff",
+			"visible_if": "{{ section.settings.show_password == true }}"
+		},
+		{
+			"type": "text",
+			"id": "password_heading",
+			"label": "Password Popup Heading",
+			"default": "Enter Password",
+			"visible_if": "{{ section.settings.show_password == true }}"
+		},
+		{
+			"type": "text",
+			"id": "password_placeholder",
+			"label": "Password Popup Input Placeholder",
+			"default": "Store Password",
+			"visible_if": "{{ section.settings.show_password == true }}"
+		},
+		{
+			"type": "text",
+			"id": "password_btn_copy",
+			"label": "Password Popup Button Copy",
+			"default": "Enter",
+			"visible_if": "{{ section.settings.show_password == true }}"
+		},
+		{
+			"type": "header",
+			"content": "Hero Copy Settings"
+		},
+		{
+			"type": "text",
+			"id": "hero_heading",
+			"label": "Hero Heading",
+			"default": "Video heading"
+		},
+		{
+			"type": "color",
+			"id": "heading_color",
+			"label": "Heading Text Color",
+			"default": "#fff"
+		},
+		{
+			"type": "text",
+			"id": "hero_sub_heading",
+			"label": "Hero Subheading",
+			"default": "subheading"
+		},
+		{
+			"type": "color",
+			"id": "subheading_color",
+			"label": "Subheading Text Color",
+			"default": "#fff"
+		},
+		{
+			"type": "text",
+			"id": "hero_caption",
+			"label": "Hero Caption",
+			"default": "caption"
+		},
+		{
+			"type": "color",
+			"id": "caption_color",
+			"label": "Caption Text Color",
+			"default": "#fff"
+		},
+		{
+			"type": "text",
+			"id": "hero_btn_text",
+			"label": "Hero Button Text",
+			"default": "Button label"
+		},
+		{
+			"type": "url",
+			"id": "hero_btn_link",
+			"label": "Hero Button Link",
+			"default": "/collections"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"blocks": [
+		{
+			"name": "Shopify Hosted Video",
+			"type": "shopify_video",
+			"settings": [
+				{
+					"type": "video",
+					"id": "video",
+					"label": "Shopify Hosted Video (Desktop)"
+				},
+				{
+					"type": "video",
+					"id": "mobile_video",
+					"label": "Shopify Hosted Video (Mobile)"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Video Banner"
+		}
+	]
+}
+{% endschema %}

@@ -1,0 +1,20 @@
+<div class="block-bulletpoints grid gap-4 w-lg-75" {{ block.shopify_attributes }}>
+	{%- content_for 'blocks' -%}
+</div>
+{% schema %}
+{
+	"name": "Bulletpoints",
+	"tag": null,
+	"settings": [],
+	"blocks": [
+		{
+			"type": "_bulletpoint-with-icon"
+		}
+	],
+	"presets": [
+		{
+			"name": "Bulletpoints"
+		}
+	]
+}
+{% endschema %}

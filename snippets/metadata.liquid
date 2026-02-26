@@ -1,0 +1,59 @@
+{%- comment -%}
+	Renders metadata that will render in the <head> of the website
+	
+	Usage:
+	{%- render 'metadata' -%}
+
+{%- endcomment -%}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="{{ settings.theme_light_color }}" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="{{ settings.theme_dark_color }}" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="{{ canonical_url }}">
+<link rel="dns-prefetch" href="//cdn.shopify.com">
+<link rel="dns-prefetch" href="//v.shopify.com">
+{%- if shop.brand.favicon_url != blank -%}
+	<link rel="icon" sizes="32x32" href="{{ shop.brand.favicon_url }}" type="image/png">
+{%- elsif settings.favicon != blank -%}
+	<link rel="icon" sizes="32x32" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" type="image/png">
+{%- endif -%}
+{%- capture seo_title -%}{{ page_title }}{%- if current_tags -%}{%- assign meta_tags = current_tags | join: ', ' -%} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}{%- endif -%}
+{%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{%- endif -%}
+{%- unless page_title contains shop.name %} &ndash; {{ shop.name }} {%- endunless -%}
+{%- endcapture -%}
+{%- if gift_card -%}
+{%- assign formatted_balance = gift_card.balance | money_without_trailing_zeros | strip_html -%}
+<title>{{ 'gift_cards.issued.title' | t: value: formatted_balance, shop: shop.name }}</title>
+{%- else -%}
+<title>{{ seo_title }}</title>
+{%- endif -%}
+{%- if page_description -%}
+	<meta name="description" content="{{ page_description | escape }}">
+{%- elsif collection and collection.description != blank -%}
+	<meta name="description" content="{{ collection.description | escape }}">
+{%- elsif product and product.description != blank -%}
+	<meta name="description" content="{{ product.description | escape }}">
+{%- elsif gift_card -%}
+	<meta name="description" content="{{ 'gift_cards.issued.subtext' | t }}">
+{%- else -%}
+	<meta name="description" content="{{ shop.brand.short_description | default: shop.name | escape }}">
+{%- endif -%}
+{%- render 'social-meta-tags' -%}
+{%- if template contains "product" -%}
+	<script type="application/ld+json">{{- product | structured_data -}}</script>
+{%- elsif template contains "blog" -%}<script type="application/ld+json">
+	{	
+		"@context": "http://schema.org",
+		"@type": "Blog",
+		"name": "{{ blog.title }}",
+		"url": "{{ blog.url }}",
+		"description": "{{ blog.tags }}",
+		"publisher": {
+			"@type": "Organization",
+			"name": "{{ shop.address.company }}"
+		}	
+	}
+	</script>
+{%- elsif template contains "article" -%}
+	<script type="application/ld+json">{{- article | structured_data -}}</script>
+{%- endif -%}

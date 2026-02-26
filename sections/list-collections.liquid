@@ -1,0 +1,132 @@
+{%- liquid
+	render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom
+
+	assign loop_count = 0
+
+	if section.blocks.size > 0
+		capture collection_grid_html
+			for block in section.blocks
+				if block.settings.collection.all_products_count > 0	
+					assign loop_count = loop_count | plus: 1
+					render 'collection-grid', alternate_bg_color: section.settings.bg_color, collection: block.settings.collection, block: block, loop_count: loop_count
+				endif
+			endfor
+		endcapture
+	else
+		capture collection_grid_html
+			for collection in collections
+				if collection.all_products_count > 0
+					assign loop_count = loop_count | plus: 1
+					render 'collection-grid', alternate_bg_color: section.settings.bg_color, collection: collection, loop_count: loop_count
+				endif
+			endfor
+		endcapture
+	endif
+-%}
+<div class="collection-grid pt-4 pt-lg-0">
+	{{- collection_grid_html -}}
+</div>
+{% schema %}
+{
+  "name": "Collection List",
+  "class": "section-list-collection",
+  "tag": "section",
+  "max_blocks": 10,
+  "settings": [
+	{
+	  "type": "header",
+	  "content": "Choose Collections",
+	  "info": "If no collections are added, theme will default to all collections"
+	},
+	{
+		"type": "header",
+		"content": "Alternate Background Color"
+	},
+	{
+		"type": "color",
+		"id": "bg_color",
+		"label": "Background Color",
+		"default": "#F5F5F7"
+	},
+	{
+		"type": "header",
+		"content": "Section Settings"
+	},
+	{
+		"type": "select",
+		"id": "padding_amount_top",
+		"label": "Top Section Padding",
+		"options": [
+			{
+				"value": "no",
+				"label": "None"
+			},
+			{
+				"value": "small",
+				"label": "Small"
+			},
+			{
+				"value": "default",
+				"label": "Medium (Default)"
+			},
+			{
+				"value": "large",
+				"label": "Large"
+			},
+			{
+				"value": "xlarge",
+				"label": "Extra Large"
+			}
+		],
+		"default": "default"
+	},
+	{
+		"type": "select",
+		"id": "padding_amount_bottom",
+		"label": "Bottom Section Padding",
+		"options": [
+			{
+				"value": "no",
+				"label": "None"
+			},
+			{
+				"value": "small",
+				"label": "Small"
+			},
+			{
+				"value": "default",
+				"label": "Medium (Default)"
+			},
+			{
+				"value": "large",
+				"label": "Large"
+			},
+			{
+				"value": "xlarge",
+				"label": "Extra Large"
+			}
+		],
+		"default": "default"
+	}
+  ],
+  "blocks": [
+	{
+	  "type": "collection",
+	  "name": "Collection",
+	  "settings": [
+		{
+		  "type": "collection",
+		  "id": "collection",
+		  "label": "Collection"
+		},
+		{
+		  "type": "image_picker",
+		  "id": "image",
+		  "label": "Alternate Collection Image",
+		  "info": "If none, default collection image will be used."
+		}
+	  ]
+	}
+  ]
+}
+{% endschema %}

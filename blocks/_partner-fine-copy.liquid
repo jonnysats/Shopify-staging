@@ -1,0 +1,23 @@
+{%- if block.settings.copy != blank -%}
+	<div class="fine-copy-wrapper text-center py-2">
+		<p class="text-primary">{{ block.settings.copy }}</p>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Partner - Fine Copy",
+	"tag": null,
+	"settings": [
+		{
+			"type": "inline_richtext",
+			"id": "copy",
+			"label": "Fine Copy"
+		}
+	],
+	"presets": [
+		{
+			"name": "Partner - Fine Copy"
+		}
+	]
+}
+{% endschema %}

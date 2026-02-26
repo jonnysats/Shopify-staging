@@ -1,0 +1,437 @@
+{%- liquid
+	render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom
+	if section.blocks.size > 0
+		assign image_blocks = section.blocks | where: 'type', 'image'
+	endif
+	assign lazyload_style = 'lazy'
+	comment
+	  Check is this is the first section on the page
+	endcomment
+	if section.index == 1
+		assign is_first_section = true
+	else
+		assign is_first_section = false
+	endif
+-%}
+{%- if image_blocks.size > 0 -%}
+	{{ 'hero-slider.css' | asset_url | stylesheet_tag: preload: is_first_section }}
+	<script src="{{ 'hero-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	<style>
+		#shopify-section-{{ section.id }} .hero { min-height: calc({{ section.settings.height_mobile }} - var(--header-height)); }
+		@media (min-width: 768px) {
+			#shopify-section-{{ section.id }} .hero { min-height: {% if section.settings.height == '100vh' %}calc({{ section.settings.height }} - var(--header-height)){% else %}{{ section.settings.height }}{% endif %}; }
+		}
+		{%- if section.settings.height_mobile != 'auto' and section.settings.height_mobile != '100vh' -%}
+			@media (max-width: 768px) {
+				#shopify-section-{{ section.id }} .hero { min-height: {{ section.settings.height_mobile }}; }
+			}
+		{%- endif -%}
+		{%- if section.settings.height != 'auto' and section.settings.height != '100vh' -%}
+			@media (min-width: 768px) {
+				#shopify-section-{{ section.id }} .hero { min-height: {{ section.settings.height }}; }
+			}
+		{%- endif -%}
+	</style>
+	<div data-section-id="{{ section.id }}" id="heroSliderFlickity{{ section.id }}" data-section-type="heroSliderFlickity">
+		<div id="hero-slider-{{ section.id }}" class="hero-slider" data-arrows="false" data-loop="false" data-adaptive-height="false" data-dots="{% if image_blocks.size > 1 %}true{% else %}false{% endif %}" data-hero-slider>
+			{%- for block in image_blocks -%}
+				{%- if block.settings.image != blank -%}
+					{%- liquid
+						comment
+						  Get alignments to avoid colliding elements
+						endcomment
+						assign vertical_alignment = block.settings.vertical_alignment_desktop
+						assign horizontal_alignment = block.settings.horizontal_alignment_desktop
+						assign vertical_alignment_mobile = block.settings.vertical_alignment_mobile
+						assign horizontal_alignment_mobile = block.settings.horizontal_alignment_mobile
+						comment
+						  Transform Shopify Text Alignment to BT code (start|center|end)
+						endcomment
+						assign text_alignment_desktop = block.settings.text_alignment_desktop | replace: 'left', 'start' | replace: 'right', 'end'
+						assign text_alignment_mobile = block.settings.text_alignment_mobile | replace: 'left', 'start' | replace: 'right', 'end'
+						comment
+						  Prep the code for the overlay
+						endcomment
+						if block.settings.overlay_option == 'gradient'
+							assign overlay_color = block.settings.overlay_gradient
+						else
+							assign overlay_color = block.settings.overlay_color
+						endif
+						comment
+						  Eagerly load first slide image
+						endcomment
+						if forloop.first and is_first_section == true
+							assign lazyload_style = 'eager'
+						endif
+					-%}
+					<div class="slider-cell w-100 d-flex" {{ block.shopify_attributes }}>
+						<div class="hero position-relative{% if vertical_alignment_mobile == 'end' %} hero-bottom-mobile{% endif %}{% if vertical_alignment == 'end' and horizontal_alignment == 'end' %} hero-bottom-desktop{% endif %}" style="--heading-color: {{ block.settings.heading_color }}; --subheading-color: {{ block.settings.subheading_color }}; --copy-color: {{ block.settings.copy_color }};">
+							{%- render 'hero-inner-section',
+								is_first_section: is_first_section,
+								show_overlay: block.settings.show_overlay,
+								overlay_color: overlay_color, 
+								overlay_opacity: block.settings.overlay_opacity,
+								image: block.settings.image,
+								image_mobile: block.settings.image_mobile,
+								heading: block.settings.heading,
+								subheading: block.settings.subheading,
+								copy: block.settings.copy,
+								button_copy_1: block.settings.button_copy_1,
+								button_url_1: block.settings.button_url_1,
+								button_copy_2: block.settings.button_copy_2,
+								button_url_2: block.settings.button_url_2,
+								vertical_alignment_desktop: vertical_alignment,
+								vertical_alignment_mobile: vertical_alignment_mobile,
+								horizontal_alignment_desktop: horizontal_alignment,
+								horizontal_alignment_mobile: horizontal_alignment_mobile,
+								text_alignment_desktop: text_alignment_desktop,
+								text_alignment_mobile: text_alignment_mobile,
+								lazyloading_style: lazyload_style
+							-%}
+						</div>
+					</div>
+				{%- endif -%}
+			{%- endfor -%}
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Hero Slider Advanced",
+	"class": "section-hero-slider position-relative",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Dimensions"
+		},
+		{
+			"type": "select",
+			"id": "height",
+			"label": "Banner Height",
+			"options": [
+				{
+					"value": "800px",
+					"label": "800px"
+				},
+				{
+					"value": "100vh",
+					"label": "Full Height"
+				},
+				{
+					"value": "auto",
+					"label": "Natural"
+				}
+			],
+			"default": "800px"
+		},
+		{
+			"type": "select",
+			"id": "height_mobile",
+			"label": "Banner Height (mobile)",
+			"options": [
+				{
+					"value": "500px",
+					"label": "500px"
+				},
+				{
+					"value": "100vh",
+					"label": "Full Height"
+				},
+				{
+					"value": "auto",
+					"label": "Natural"
+				}
+			],
+			"default": "500px"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"blocks": [
+		{
+			"name": "Slider Image",
+			"type": "image",
+			"settings": [
+				{
+					"type": "image_picker",
+					"id": "image",
+					"label": "Image"
+				},
+				{
+					"type": "image_picker",
+					"id": "image_mobile",
+					"label": "Mobile Image"
+				},
+				{
+					"type": "header",
+					"content": "Overlay"
+				},
+				{
+					"type": "checkbox",
+					"id": "show_overlay",
+					"label": "Show Overlay?"
+				},
+				{
+					"type": "select",
+					"id": "overlay_option",
+					"label": "Overlay Options",
+					"options": [
+						{
+							"value": "gradient",
+							"label": "Gradient"
+						},
+						{
+							"value": "color",
+							"label": "Single Color"
+						}
+					],
+					"default": "gradient"
+				},
+				{
+					"type": "color_background",
+					"id": "overlay_gradient",
+					"label": "Overlay Gradient",
+					"default": "linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.8) 100%)"
+				},
+				{
+				  "type": "color",
+				  "id": "overlay_color",
+				  "label": "Hero Overlay Color",
+				  "default": "#000000"
+				},
+				{
+				  "type": "range",
+				  "id": "overlay_opacity",
+				  "min": 0,
+				  "max": 100,
+				  "step": 10,
+				  "unit": "%",
+				  "label": "Opacity",
+				  "default": 20
+				},
+				{
+					"type": "header",
+					"content": "Desktop Alignment"
+				},
+				{
+					"type": "select",
+					"id": "vertical_alignment_desktop",
+					"label": "Vertical Alignment",
+					"options": [
+						{
+							"value": "start",
+							"label": "Top"
+						},
+						{
+							"value": "center",
+							"label": "Center"
+						},
+						{
+							"value": "end",
+							"label": "Bottom"
+						}
+					],
+					"default": "end"
+				},
+				{
+					"type": "select",
+					"id": "horizontal_alignment_desktop",
+					"label": "Horizontal Alignment",
+					"options": [
+						{
+							"value": "start",
+							"label": "Left"
+						},
+						{
+							"value": "center",
+							"label": "Center"
+						},
+						{
+							"value": "end",
+							"label": "Right"
+						}
+					],
+					"default": "start"
+				},
+				{
+					"type": "text_alignment",
+					"id": "text_alignment_desktop",
+					"label": "Text Alignment",
+					"default": "left"
+				},
+				{
+					"type": "header",
+					"content": "Mobile Alignment"
+				},
+				{
+					"type": "select",
+					"id": "vertical_alignment_mobile",
+					"label": "Vertical Alignment (Mobile)",
+					"options": [
+						{
+							"value": "start",
+							"label": "Top"
+						},
+						{
+							"value": "center",
+							"label": "Center"
+						},
+						{
+							"value": "end",
+							"label": "Bottom"
+						}
+					],
+					"default": "center"
+				},
+				{
+					"type": "select",
+					"id": "horizontal_alignment_mobile",
+					"label": "Horizontal Alignment (Mobile)",
+					"options": [
+						{
+							"value": "start",
+							"label": "Left"
+						},
+						{
+							"value": "center",
+							"label": "Center"
+						},
+						{
+							"value": "end",
+							"label": "Right"
+						}
+					],
+					"default": "center"
+				},
+				{
+					"type": "text_alignment",
+					"id": "text_alignment_mobile",
+					"label": "Text Alignment (Mobile)",
+					"default": "center"
+				},
+				{
+					"type": "header",
+					"content": "Copy",
+				},
+				{
+					"type": "text",
+					"id": "heading",
+					"label": "heading"
+				},
+				{
+					"type": "color",
+					"id": "heading_color",
+					"label": "Heading Text Color",
+					"default": "#fff"
+				},
+				{
+					"type": "inline_richtext",
+					"id": "subheading",
+					"label": "Subheading"
+				},
+				{
+					"type": "color",
+					"id": "subheading_color",
+					"label": "Subheading Text Color",
+					"default": "#fff"
+				},
+				{
+					"type": "inline_richtext",
+					"id": "copy",
+					"label": "Copy"
+				},
+				{
+					"type": "color",
+					"id": "copy_color",
+					"label": "Copy Color",
+					"default": "#fff"
+				},
+				{
+					"type": "text",
+					"id": "button_copy_1",
+					"label": "Primary Button"
+				},
+				{
+					"type": "url",
+					"id": "button_url_1",
+					"label": "Primary Link"
+				},
+				{
+					"type": "text",
+					"id": "button_copy_2",
+					"label": "Secondary Button"
+				},
+				{
+					"type": "url",
+					"id": "button_url_2",
+					"label": "Secondary Link"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Hero Slider Advanced"
+		}
+	]
+}
+{% endschema %}

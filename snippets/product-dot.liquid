@@ -1,0 +1,68 @@
+{%- comment -%}
+	Renders a tooltip product dot
+	
+	Accepts:
+	- product_item: {Object} Product Object
+	- horizontal_offset: {Number} Dot position X
+	- vertical_offset: {Number} Dot position Y
+	
+	Usage:
+	{%- render 'product-dot', product_item: block.settings.product, horizontal_offset: block.settings.horizontal_offset, vertical_offset: block.settings.vertical_offset -%}
+	
+{%- endcomment -%}
+{%- if product_item != blank -%}
+	{%- assign product = product_item -%}
+	{%- if product.featured_image != blank -%}
+		{%- comment -%}
+			The content for the dropdowns is captured below.
+			Saved here rather than at the top of section due to content
+			being determined by section block settings
+		{%- endcomment -%}
+		{%- capture content -%}
+			<div class="d-flex product-tooltip text-start">
+				<div class="d-flex justify-content-center img-wrapper">
+					<a href="{{ product.url }}" title="{{ product.title | escape }}">
+						{%- render 'responsive-image', image: product.featured_image, wrapper_class: "d-none d-lg-block h-100", width: 160, height: 160 -%}
+						{%- render 'responsive-image', image: product.featured_image, wrapper_class: "d-block d-lg-none h-100", width: 120, height: 120 -%}
+					</a>
+				</div>
+				<div class="col ps-2 ps-lg-3 product-info d-flex">
+					<a href="{{ product.url }}" title="{{ product.title | escape }}">
+						<p class="mb-0">{{ product.title }}</p>
+						<div class="mt-1 mt-lg-3">
+							{%- render 'product-price', context: 'product', product: product -%}
+						</div>
+					</a>
+				</div>
+			</div>
+		{%- endcapture -%}
+		{%- liquid
+			assign stringified_content = content | escape
+			comment
+			# We do this check as a "safeguard" to avoid the dots going outside of the image container at the bottom right corner if the offset is 0%
+			endcomment
+			assign max_guard = 90
+			assign min_guard = 15
+			assign guard_class_x = false
+			assign guard_class_y = false
+			
+			if vertical_offset >= max_guard
+				assign guard_class_y = "dot-guard-max-y"
+			endif
+			if vertical_offset <= min_guard
+				assign guard_class_y = "dot-guard-min-y"
+			endif
+			if horizontal_offset >= max_guard
+				assign guard_class_x = "dot-guard-max-x"
+			endif
+			if horizontal_offset <= min_guard
+				assign guard_class_x = "dot-guard-min-x"
+			endif
+		-%}
+		<div id="tooltip-{{ block.id }}" class="dot-tooltip tooltip-dot-container-offset tooltip-center position-absolute{% if guard_class_x != false %} {{ guard_class_x }}{% endif %}{% if guard_class_y != false %} {{ guard_class_y }}{% endif %}" data-dot-tooltip data-bs-toggle="tooltip" data-bs-html="true" data-bs-custom-class="product-dot-tooltip-menu{% if product.price_varies == true or product.compare_at_price_varies == true %} product-dot-tooltip-menu-price-varies{% endif %}" data-bs-title="{{ stringified_content }}" {{ block.shopify_attributes }} style="--vertical-offset: {{ vertical_offset }}%; --horizontal-offset: {{ horizontal_offset }}%;">
+			<div class="dot d-block m-1">
+				<div class="inner-dot"></div>
+			</div>
+		</div>
+	{%- endif -%}
+{%- endif -%}

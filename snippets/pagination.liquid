@@ -1,0 +1,56 @@
+{%- comment -%}
+	Renders pagination element
+	
+	Accepts:
+	- paginate: {Object} Shopify paginate object
+	- show_more: {Boolean} Show more button option
+	- show_more_text: {String} Show more text
+	- no_more_text: {String} Show No more text
+	- hide_on_end: {Boolean} Hide button on end
+	- context: {String} Optional
+	
+	Usage:
+	{%- render 'pagination', paginate: paginate, show_more: false, context: 'blog' -%}
+	
+{%- endcomment -%}
+{%- if paginate.pages > 1 -%}
+<div class="row">
+	<div class="col{% if context == 'blog' %} pb-4 mb-4{% else %}py-5{% endif %} px-0 px-lg-3">
+		<nav aria-label="pagination">
+			<div class="pagination-wrapper position-relative overflow-hidden d-flex">
+				<ul class="pagination mx-auto">
+					{%- for part in paginate.parts -%}
+						{%- if forloop.first -%}
+							<li class="page-item{% unless paginate.previous.is_link %} disabled{% endunless %}">
+								<a class="page-link paginate-prev" href="{{ paginate.parts.first.url | default: collection.url }}" aria-label="First">
+									{%- render 'icons' with 'chevron-double-left' -%}
+								</a>
+							</li>
+							<li class="page-item{% unless paginate.previous.is_link %} disabled{% endunless %}">
+								<a class="page-link paginate-prev paginate-single" href="{{ paginate.previous.url | default: collection.url }}" aria-label="Previous">
+									{%- render 'icons' with 'chevron-left' -%}
+								</a>
+							</li>
+						{%- endif -%}
+						<li class="page-item{% if paginate.current_page == part.title %} active{% endif %}">
+							<a class="page-link" href="{{ part.url | default: collection.url }}" title="{{ part.title }}">{{ part.title }}</a>
+						</li>
+						{%- if forloop.last -%}
+							<li class="page-item{% unless paginate.next.is_link %} disabled{% endunless %}">
+								<a class="page-link paginate-next paginate-single" href="{{ paginate.next.url | default: collection.url }}" aria-label="Next">
+									{%- render 'icons' with 'chevron-right' -%}
+								</a>
+							</li>
+							<li class="page-item{% unless paginate.next.is_link %} disabled{% endunless %}">
+								<a class="page-link paginate-next" href="{{ paginate.parts.last.url | default: collection.url }}" aria-label="Last">
+									{%- render 'icons' with 'chevron-double-right' -%}
+								</a>
+							</li>
+						{%- endif -%}
+					{%- endfor -%}
+				</ul>
+			</div>
+		</nav>
+	</div>
+</div>
+{%- endif -%}

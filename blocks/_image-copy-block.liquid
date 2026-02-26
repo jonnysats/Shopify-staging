@@ -1,0 +1,358 @@
+{%- liquid
+	comment
+	  Define if we have 2 columns or only 1 to show
+	endcomment
+	assign has_two_sides = false
+	assign has_copy_side = false
+	assign has_image_side = false
+
+	comment
+	# Determine if content should come from variant or product level metadata
+	endcomment
+	assign use_content_section_from_variant = product.metafields.theme.content_section_from_variant
+	
+	comment
+	# Get variant data in case we will need to overwrite the data
+	endcomment
+	assign current_variant = product.selected_or_first_available_variant
+	assign image_block_settings = current_variant.metafields.theme.image_copy_block_settings.value
+	assign image_block = blank
+	assign block_tag = blank
+	assign block_header = blank
+	assign block_copy = blank
+	assign product_dot_list = blank
+		
+	comment
+	# Assign image value from setting, overwrite if variant setting is set to true
+	endcomment
+	assign image_block = block.settings.image
+
+	if use_content_section_from_variant == true
+		assign image_block = image_block_settings.image.value
+	endif
+
+	comment
+	# Assign tag label value from setting, overwrite if variant setting is set to true
+	endcomment
+	assign block_tag = block.settings.tag
+	
+	if use_content_section_from_variant == true
+		assign block_tag = image_block_settings.tag
+	endif
+
+	comment
+	# Assign header value from setting, overwrite if variant setting is set to true
+	endcomment
+	assign block_header = block.settings.heading
+
+	if use_content_section_from_variant == true
+		assign block_header = image_block_settings.header
+	endif
+
+	comment
+	# Assign copy value from setting, overwrite if variant setting is set to true
+	endcomment
+	assign block_copy = block.settings.copy
+	
+	if use_content_section_from_variant == true
+		assign block_copy = image_block_settings.copy
+	endif
+
+	comment
+	# Assign product dot from either settings or variant is variant option is set to true
+	endcomment
+	assign product_dot_list = block.settings.product_dot_list.dot_list
+	
+	if use_content_section_from_variant == true
+		assign product_dot_list = image_block_settings.product_dot_list.value.dot_list
+	endif
+	
+	comment
+	# If buttons are coming from variant, use them if not validate block size
+	endcomment
+	assign buttons_size = block.blocks.size
+	assign no_block_buttons = false
+
+	if use_content_section_from_variant == true
+		assign buttons_size = 0
+		
+		if image_block_settings.button_link != blank or image_block_settings.second_button_link != blank
+			comment
+			# Add size for each button active
+			endcomment
+			if image_block_settings.button_copy != blank and image_block_settings.button_link != blank
+				assign buttons_size = buttons_size | plus: 1
+			endif
+
+			if image_block_settings.second_button_copy != blank and image_block_settings.second_button_link != blank
+				assign buttons_size = buttons_size | plus: 1
+			endif
+			
+			comment
+			# Set flag to not use button blocks
+			endcomment
+			assign no_block_buttons = true
+		endif
+	endif
+
+	if block_header != blank or block_copy != blank or buttons_size > 0
+		assign has_copy_side = true
+	endif
+	if image_block != blank
+		assign has_image_side = true
+	endif
+	if has_copy_side == true and has_image_side == true
+		assign has_two_sides = true
+	endif
+
+	comment
+	  Collect grid option
+	endcomment
+	assign grid_option = section.settings.grid_option
+
+	assign text_alignment_mobile = block.settings.text_alignment_mobile | replace: 'left', 'start' | replace: 'center', 'center' | replace: 'right', 'end'
+	assign text_alignment_desktop = block.settings.text_alignment_desktop | replace: 'left', 'start' | replace: 'center', 'center' | replace: 'right', 'end'
+-%}
+{%- capture content_for_blocks -%}
+	{%- unless no_block_buttons == true -%}
+		{%- content_for 'blocks' -%}
+	{%- else -%}
+		{%- if image_block_settings.button_copy != blank and image_block_settings.button_link != blank -%}
+			<div class="col button-wrapper">
+				<a href="{{ image_block_settings.button_link }}" class="btn w-100 btn-lg-long btn-primary" title="{{ image_block_settings.button_copy | escape }}">
+					<span class="anim-wrapper">
+						<span class="initial">{{ image_block_settings.button_copy }}</span>
+						<span class="end">{{ image_block_settings.button_copy }}</span>
+					</span>
+				</a>
+			</div>
+		{%- endif -%}
+		{%- if image_block_settings.second_button_copy != blank and image_block_settings.second_button_link != blank -%}
+			<div class="col button-wrapper">
+				<a href="{{ image_block_settings.second_button_link }}" class="btn w-100 btn-lg-long btn-primary" title="{{ image_block_settings.second_button_copy | escape }}">
+					<span class="anim-wrapper">
+						<span class="initial">{{ image_block_settings.second_button_copy }}</span>
+						<span class="end">{{ image_block_settings.second_button_copy }}</span>
+					</span>
+				</a>
+			</div>
+		{%- endif -%}
+	{%- endunless -%}
+{%- endcapture -%}
+{%- comment -%}
+  Capture repeating IMAGE BLOCK code
+{%- endcomment -%}
+{%- capture image_block -%}
+	{%- if image_block != blank -%}
+		<div class="col col-image{% if product_dot_list != blank %} section-shop-the-look-slider{% endif %} position-relative">
+			{%- if section.settings.show_heading_at_top == true -%}
+				<div class="copy-wrapper copy-wrapper-top align-start">
+					{%- if block_tag != blank -%}
+						<div class="badge text-bg-success px-2"><span>{{ block_tag }}</span></div>
+					{%- endif -%}
+					{%- if block_header != blank -%}
+						<h2 class="mb-lg-4">{{ block_header }}</h2>
+					{%- endif -%}
+					{%- if section.settings.show_copy_at_top == true and block_copy != blank -%}
+						<p class="copy-at-top">{{ block_copy }}</p>
+					{%- endif -%}
+				</div>
+			{%- endif -%}
+			{%- render 'responsive-image', image: image_block, wrapper_class: 'brighten' -%}
+			{%- if product_dot_list != blank -%}
+				{%- comment -%} Display product dot list {%- endcomment -%}
+				{%- for product_dot in product_dot_list.value -%}
+					{%- render 'product-dot', product_item: product_dot.product.value, horizontal_offset: product_dot.horizontal_offset.value, vertical_offset: product_dot.vertical_offset.value -%}	
+				{%- endfor -%}
+			{%- endif -%}
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+{%- comment -%}
+  Capture repeating COPY BLOCK code
+{%- endcomment -%}
+{%- capture copy_block -%}
+	<div class="block-image-copy col col-copy d-flex justify-content-{{ block.settings.horizontal_alignment_mobile }} justify-content-lg-{{ block.settings.horizontal_alignment_desktop }} text-{{ text_alignment_mobile }} text-lg-{{ text_alignment_desktop }}">
+		<div class="copy-wrapper align-start">
+			{%- if block_tag != blank and section.settings.show_heading_at_top == false -%}
+				<div class="badge text-bg-success px-2"><span>{{ block_tag }}</span></div>
+			{%- endif -%}
+			{%- if block_header != blank -%}
+				<h2>{{ block_header }}</h2>
+			{%- endif -%}
+			{%- if block_copy != blank -%}
+				<p>{{ block_copy }}</p>
+			{%- endif -%}
+			{%- comment -%} Links button (Two Buttons Block) {%- endcomment -%}
+			<div class="row row-cols-lg-auto g-2 justify-content-{{ text_alignment_mobile }} justify-content-lg-{{ text_alignment_desktop }} pt-2 pb-3 pb-lg-0">
+				{{ content_for_blocks }}
+			</div>
+		</div>
+	</div>
+{%- endcapture -%}
+{%- comment -%}
+	# Hide block content if no main data found
+{%- endcomment -%}
+{%- if image_block != blank -%}
+	{%- if grid_option == 'linear' -%}
+		<div class="row gy-4 gy-lg-0 py-3 py-lg-custom gx-lg-5 row-cols-1{% if has_two_sides == true %} row-cols-lg-2{% endif %} align-items-lg-{{ block.settings.vertical_alignment_desktop }}" data-section-id="{{ block.id }}" data-section-type="shopTheLookSlider" data-show-first-tooltip-default="{{ block.settings.show_first_dot_by_default }}" {{ block.shopify_attributes }}>
+			{{ 'shop-the-look-slider.css' | asset_url | stylesheet_tag }}
+			<script src="{{ 'shop-the-look-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+			{%- comment -%} Image block {%- endcomment -%}
+			{{ image_block }}
+			{%- comment -%} Copy block {%- endcomment -%}
+			{{ copy_block }}
+		</div>
+	{%- elsif grid_option == 'grid-3-by-row' -%}
+		<div class="col px-lg-3" data-section-id="{{ block.id }}" data-section-type="shopTheLookSlider" data-show-first-tooltip-default="{{ block.settings.show_first_dot_by_default }}" {{ block.shopify_attributes }}>
+			{{ 'shop-the-look-slider.css' | asset_url | stylesheet_tag }}
+			<script src="{{ 'shop-the-look-slider.js' | asset_url }}" defer crossorigin="anonymous"></script>
+			{%- comment -%} Image block {%- endcomment -%}
+			{{ image_block }}
+			{%- comment -%} Copy block {%- endcomment -%}
+			{{ copy_block }}
+		</div>
+	{%- endif -%}
+{%- endif -%}
+{% schema %}
+{
+	"name": "Image / Copy Block",
+	"tag": null,
+	"settings": [
+		{
+			"type": "header",
+			"content": "Block Settings",
+			"info": "If dynamic content from variant is enabled on section, content will rely on variant metadata and update will be triggered when variant changes"
+		},
+		{
+			"type": "header",
+			"content": "Image"
+		},
+		{
+			"type": "image_picker",
+			"id": "image",
+			"label": "Image"
+		},
+		{
+			"type": "header",
+			"content": "Copy"
+		},
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Header"
+		},
+		{
+			"type": "richtext",
+			"id": "copy",
+			"label": "Copy"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "tag",
+			"label": "Tag"
+		},
+		{
+			"type": "header",
+			"content": "Tooltip",
+		},
+		{
+			"type": "metaobject",
+			"id": "product_dot_list",
+			"label": "Product Dot List",
+			"metaobject_type": "product_dot_list"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_first_dot_by_default",
+			"label": "Show First Tooltip By Default?",
+			"default": true
+		},
+		{
+			"type": "select",
+			"id": "vertical_alignment_desktop",
+			"label": "Vertical Alignment",
+			"info": "Will apply to the desktop view of 'Linear' layout",
+			"options": [
+				{
+					"value": "start",
+					"label": "Top"
+				},
+				{
+					"value": "center",
+					"label": "Center"
+				},
+				{
+					"value": "end",
+					"label": "Bottom"
+				}
+			],
+			"default": "center"
+		},
+		{
+			"type": "text_alignment",
+			"id": "text_alignment_desktop",
+			"label": "Text Alignment",
+			"default": "left"
+		},
+		{
+			"type": "select",
+			"id": "horizontal_alignment_desktop",
+			"label": "Horizontal Alignment",
+			"info": "Will apply to the desktop view of 'Linear' layout",
+			"options": [
+				{
+					"value": "start",
+					"label": "Left"
+				},
+				{
+					"value": "center",
+					"label": "Center"
+				},
+				{
+					"value": "end",
+					"label": "Right"
+				}
+			],
+			"default": "start"
+		},
+		{
+			"type": "text_alignment",
+			"id": "text_alignment_mobile",
+			"label": "Text Alignment Mobile",
+			"default": "left"
+		},
+		{
+			"type": "select",
+			"id": "horizontal_alignment_mobile",
+			"label": "Horizontal Alignment",
+			"info": "Will apply to the desktop view of 'Linear' layout",
+			"options": [
+				{
+					"value": "start",
+					"label": "Left"
+				},
+				{
+					"value": "center",
+					"label": "Center"
+				},
+				{
+					"value": "end",
+					"label": "Right"
+				}
+			],
+			"default": "start"
+		}
+	],
+	"blocks": [
+		{
+			"type": "_two-buttons"
+		}
+	],
+	"presets": [
+		{
+			"name": "Image / Copy Block"
+		}
+	]
+}
+{% endschema %}

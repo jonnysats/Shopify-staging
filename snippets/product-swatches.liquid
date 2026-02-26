@@ -1,0 +1,30 @@
+{%- comment -%}
+	Render square color product swatches
+
+	Accepts:
+	- product: {Object} Shopify product object
+
+	Usage:
+	{%- render 'product-grid', product: product-%}
+{%- endcomment -%}
+<div class="product-swatches d-flex gap-2 align-items-center">
+	{%- assign color_option_names = "color|colors|colour|colours" | split: "|" -%}
+	{%- for option in product.options_with_values -%}
+		{%- assign downcased_option_name = option.name | downcase -%}
+		{%- if color_option_names contains downcased_option_name -%}
+			{%- assign swatch_max = 4 -%}
+			{%- assign swatch_counter = 0 -%}
+			{%- for value in option.values -%}
+				{%- assign variant = value.variant -%}
+				{%- if variant.featured_image and swatch_counter <= swatch_max -%}
+					{%- assign swatch_counter = swatch_counter | plus: 1 -%}
+					<a class="swatch swatch-{{ value.name | handleize }}" href="{{ variant.url }}">{%- render 'responsive-image', image: variant.featured_image, lazyloading_style: "lazy", width: 24, height: 24 -%}</a>
+				{%- endif -%} 
+			{%- endfor -%}
+			{%- assign difference = option.values.size | minus: swatch_counter -%}
+			{%- if difference > 0 -%}
+				<a class="swatch-counter" href="{{ product.url }}">+{{ difference }}</a>
+			{%- endif -%}
+		{%- endif -%}
+	{%- endfor -%}
+</div>

@@ -1,0 +1,52 @@
+{%- if block.settings.image != blank -%}
+	{%- comment -%} Use for setting only {%- endcomment -%}
+	{%- assign product_dots_list = section.settings.product_dot_lists -%}
+	{%- assign second_product_dots_list = section.settings.second_product_dot_lists -%}
+	<div class="col-12" data-slider-slide {{ block.shopify_attributes }}>
+		<div class="img-wrapper w-100 position-relative">
+			{%- render 'responsive-image', image: block.settings.image, image_class: 'img-fluid' -%}
+			{%- comment -%} ?info Note: In order to keep dynamic content reachable at this nested block is needed to render all sliders dots and remove them later {%- endcomment -%}
+			{%- if product_dots_list != blank -%}
+				{%- for product_dot_list in product_dots_list -%}
+					{%- comment -%} Display product dot list {%- endcomment -%}
+					{%- for product_dot in product_dot_list.dot_list.value -%}
+						{%- comment -%} For native or product dynamic content, remove dynamically dots that aren't supposed to show {%- endcomment -%}
+						<div data-product-dot data-product-list="0" data-dot-index="{{ forloop.parentloop.index0 }}">
+							{%- render 'product-dot', product_item: product_dot.product.value, horizontal_offset: product_dot.horizontal_offset.value, vertical_offset: product_dot.vertical_offset.value -%}	
+						</div>
+					{%- endfor -%}
+				{%- endfor -%}
+			{%- endif -%}
+			{%- if second_product_dots_list != blank -%}
+				{%- for product_dot_list in second_product_dots_list -%}
+					{%- comment -%} Display product dot list {%- endcomment -%}
+					{%- for product_dot in product_dot_list.dot_list.value -%}
+						{%- comment -%} For native or product dynamic content, remove dynamically dots that aren't supposed to show {%- endcomment -%}
+						<div data-product-dot data-product-list="1" data-dot-index="{{ forloop.parentloop.index0 }}">
+							{%- render 'product-dot', product_item: product_dot.product.value, horizontal_offset: product_dot.horizontal_offset.value, vertical_offset: product_dot.vertical_offset.value -%}	
+						</div>
+					{%- endfor -%}
+				{%- endfor -%}
+			{%- endif -%}
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Carousel Image",
+  "tag": null,
+  "settings": [
+	{
+		"type": "image_picker",
+		"id": "image",
+		"label": "Image"
+	},
+  ],
+  "presets": [
+	{
+	  "name": "Carousel Image",
+	  "blocks": []
+	}
+  ]
+}
+{% endschema %}

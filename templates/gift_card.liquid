@@ -1,0 +1,117 @@
+{%- layout none -%}
+
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+	<head>
+		{%- comment -%} Preconnect Google fonts {%- endcomment -%}
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		{%- comment -%} Load Google font with preload {%- endcomment -%}
+		{%- # theme-check-disable -%}
+		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=optional" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+		{% # theme-check-enable %}
+		<noscript>
+			<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=optional" rel="stylesheet" type="text/css"/>
+		</noscript>
+		{%- liquid
+			comment
+			# Store metadata attributes
+			endcomment
+			render 'metadata'
+
+			comment
+			# Inline CSS
+			endcomment
+			render 'inline-css'
+		-%}
+		{{ 'bootstrap.css' | asset_url | stylesheet_tag: preload: true }}
+		{{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
+		<!-- THEME SETTINGS -->
+		{%- render 'theme-settings' -%}
+		<script src="{{ 'bootstrap.js' | asset_url }}" defer crossorigin="anonymous"></script>
+		{{ content_for_header }}
+		{%- comment -%} QR code script {%- endcomment -%}
+		<script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+	</head>
+
+	<body class="gradient gift-card">
+		<header>
+			<div class="gift-card text-center py-3">
+				<h1>
+					{%- if settings.currency_code_enabled -%}
+						{{- gift_card.balance | money_with_currency -}}
+					{%- else -%}
+						{{- gift_card.balance | money -}}
+					{%- endif -%}
+				</h1>
+				{%- if gift_card.enabled == false or gift_card.expired -%}
+					<p class="badge badge--expired">{{ 'gift_cards.issued.expired' | t }}</p>
+				{%- endif -%}
+			</div>
+			{%- if gift_card.expires_on -%}
+				{%- assign gift_card_expiration_date = gift_card.expires_on | date: '%B %e, %Y' -%}
+				<p class="gift-card-text text-center pb-3">
+					{{- 'gift_cards.issued.expiration_date' | t: expires_on: gift_card_expiration_date -}}
+				</p>
+			{%- endif -%}
+		</header>
+
+		<main>
+			<section class="shopify-section section-hero-slider">
+				<div class="container">
+					<div class="row">
+						<div class="col-12 text-center">
+							<div class="image-wrapper pb-2">
+								{%- if settings.logo != blank -%}
+									{%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+									{{ settings.logo | image_url: width: 570 | image_tag: class: 'gift-card-image', alt: logo_alt }}
+								{%- else %}
+									<img class="gift-card-image" src="{{ 'gift-card/card.svg' | shopify_asset_url }}" alt="Gift Card image" height="{{ 570 | divided_by: 1.5 }}" width="570" loading="eager" />
+								{%- endif %}
+							</div>
+							<h2 class="h2">{{ shop.name }}</h2>
+							<div class="content-wrapper pb-3">
+								<p class="gift-card-text">{{ 'gift_cards.issued.how_to_use_gift_card' | t }}</p>
+							</div>
+							<p id="gift-card-code" class="gift-card__number">{{ gift_card.code | format_code }}</p>
+						</div>
+						<div class="col-12 d-flex justify-content-center">
+							{%- comment -%} TODO use data attributes instead {%- endcomment -%}
+							<div class="gift-card-qr-code" data-qr-code data-identifier="{{ gift_card.qr_identifier }}"></div>
+							{%- comment -%} Apple wallet {%- endcomment -%}
+							{%- if gift_card.pass_url -%}
+								<a href="{{ gift_card.pass_url }}" class="gift_card__apple-wallet no-print">
+									<img src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" height="40" alt="{{ 'gift_cards.issued.add_to_apple_wallet' | t }}" loading="lazy" />
+								</a>
+							{%- endif -%}
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="buttons-wrapper d-flex flex-column align-items-center pt-3 no-print">
+								{%- comment -%} TODO use data attributes instead {%- endcomment -%}
+								<span class="gift-card-copy-success form__message" data-gift-copy-success role="status"></span>
+								<template>
+									<span class="text-success">{{- 'gift_cards.issued.copy_code_success' | t -}}</span>
+								</template>
+								{%- comment -%} Copy BTN {%- endcomment -%}
+								{%- comment -%} TODO use data attributes instead {%- endcomment -%}
+								<button class="btn btn-primary gift-card-copy-button mb-3" data-copy-btn>{{ 'gift_cards.issued.copy_code' | t }}</button>
+								{%- comment -%} Shop Link {%- endcomment -%}
+								<a href="{{ shop.url }}" class="btn btn-secondary mb-3" target="_blank" rel="noopener" aria-describedby="a11y-new-window-message">
+									{{- 'gift_cards.issued.shop_link' | t -}}
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<div hidden>
+			<span id="a11y-new-window-message">{{ 'accessibility.link_messages.new_window' | t }}</span>
+		</div>
+		
+		{%- render 'gift-card-qr-code' -%}
+	</body>
+</html>

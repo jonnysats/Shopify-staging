@@ -1,0 +1,40 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "hero-slider-flickity",
+      "settings": {}
+    },
+    "image-copy-blocks": {
+      "type": "image-copy-blocks",
+      "settings": {}
+    },
+    "cards": {
+      "type": "collection-cards",
+      "settings": {}
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {}
+    },
+    "follow-us-social": {
+      "type": "follow-us-social",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "image-copy-blocks",
+    "cards",
+    "newsletter",
+    "follow-us-social"
+  ]
+}

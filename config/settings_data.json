@@ -1,0 +1,49 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "favicon": "shopify://shop_images/Untitled_design_14.png",
+    "quickshop_enabled": true,
+    "no_image": "shopify://shop_images/default-Iamge-reno.jpg",
+    "pass_overlay": true,
+    "psas_overlay_opacity": 70,
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {}
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {}
+      },
+      "16498708311b4385b0": {
+        "type": "hero-slider-flickity",
+        "blocks": {
+          "6820bfc6-88cb-4c11-b1f6-023f3f10fa7d": {
+            "type": "image",
+            "settings": {}
+          },
+          "a617d280-b6d6-4dd8-b044-ea0bccc86906": {
+            "type": "image",
+            "settings": {}
+          }
+        },
+        "block_order": [
+          "6820bfc6-88cb-4c11-b1f6-023f3f10fa7d",
+          "a617d280-b6d6-4dd8-b044-ea0bccc86906"
+        ],
+        "settings": {}
+      }
+    },
+    "content_for_index": [
+      "16498708311b4385b0"
+    ]
+  }
+}

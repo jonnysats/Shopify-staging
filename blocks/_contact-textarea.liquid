@@ -1,0 +1,50 @@
+{%- if block.settings.heading != blank -%}
+	{%- liquid
+		comment
+			# clean label input
+		endcomment
+		assign label = block.settings.heading | escape
+		assign label_id = block.settings.heading | handleize | replace: '-', '_'
+		assign label_name = label_id | prepend: 'contact[' | replace: '-', ' ' | append: ']'
+
+		if block.settings.required == true or block.settings.precheck == true
+			assign label = block.settings.heading | append: '<sup>*</sup>'
+		endif
+	-%}
+	<div class="col-12 w-100 mb-2 mb-lg-3" {{ block.shopify_attributes }}>
+		<div class="form-floating">
+			<textarea id="{{ block.id }}{{ label_id }}" name="{{ label_name }}" class="form-control"{% if block.settings.placeholder != blank %} placeholder="{{ block.settings.placeholder | escape }}"{% endif %}{% if block.settings.required == true %} required{% endif %}></textarea>
+			<label for="{{ block.id }}{{ label_id }}" class="form-label">{{ label }}</label>
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Textarea",
+	"tag": null,
+	"settings": [
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Label",
+		},
+		{
+			"type": "text",
+			"id": "placeholder",
+			"label": "Placeholder",
+			"info": "(optional but nice)"
+		},
+		{
+			"type": "checkbox",
+			"id": "required",
+			"label": "Required?",
+			"default": false
+		}
+	],
+	"presets": [
+		{
+			"name": "Textarea"
+		}
+	]
+}
+{% endschema %}

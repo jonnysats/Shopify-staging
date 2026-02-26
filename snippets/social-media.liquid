@@ -1,0 +1,97 @@
+{%- comment -%}
+	Renders social list of social media icons from Shopify Brand
+	
+	Usage:
+	{%- render 'social-media' -%}
+
+{%- endcomment -%}
+<ul class="list-group list-group-horizontal justify-content-center flex-wrap social-media-list mt-1 mt-lg-0">
+	{%- if shop.brand.metafields.social_links.instagram.value != blank -%}
+	<li class="list-group-item px-1">
+		<a class="btn sm-icon d-block border border-white" href="{{ shop.brand.metafields.social_links.instagram.value }}" title="{{ 'social.instagram' | t }}" target="_blank">
+			<span class="anim-wrapper">
+				<span class="initial">{% render 'icons' with 'instagram' %}</span>
+				<span class="end">{% render 'icons' with 'instagram' %}</span>
+			</span>
+			<span class="visually-hidden">{{ 'social.instagram' | t }}</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.facebook.value != blank -%}
+	<li class="list-group-item px-1">
+		<a class="btn sm-icon d-block border border-white" href="{{ shop.brand.metafields.social_links.facebook.value }}" title="{{ 'social.facebook' | t }}" target="_blank">
+			<span class="anim-wrapper">
+				<span class="initial">{% render 'icons' with 'facebook' %}</span>
+				<span class="end">{% render 'icons' with 'facebook' %}</span>
+			</span>
+			<span class="visually-hidden">{{ 'social.facebook' | t }}</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.twitter.value != blank -%}
+	<li class="list-group-item px-1">
+		<a class="btn sm-icon d-block border border-white" href="{{ shop.brand.metafields.social_links.twitter.value }}" title="{{ 'social.twitter' | t }}" target="_blank">
+			<span class="anim-wrapper">
+				<span class="initial">{% render 'icons' with 'twitter' %}</span>
+				<span class="end">{% render 'icons' with 'twitter' %}</span>
+			</span>
+			<span class="visually-hidden">{{ 'social.twitter' | t }}</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.pinterest.value != blank -%}
+	<li class="list-group-item px-1">
+		<a class="btn sm-icon d-block border border-white" href="{{ shop.brand.metafields.social_links.pinterest.value }}" title="{{ 'social.pinterest' | t }}" target="_blank">
+			<span class="anim-wrapper">
+				<span class="initial">{% render 'icons' with 'pinterest' %}</span>
+				<span class="end">{% render 'icons' with 'pinterest' %}</span>
+			</span>
+			<span class="visually-hidden">{{ 'social.pinterest' | t }}</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.snapchat.value != blank -%}
+	<li class="list-group-item px-1">
+		<a class="btn sm-icon d-block border border-white" href="{{ shop.brand.metafields.social_links.snapchat.value }}" title="{{ 'social.snapchat' | t }}" target="_blank">
+			<span class="anim-wrapper">
+				<span class="initial">{% render 'icons' with 'snapchat' %}</span>
+				<span class="end">{% render 'icons' with 'snapchat' %}</span>
+			</span>
+			<span class="visually-hidden">{{ 'social.snapchat' | t }}</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.tiktok.value != blank -%}
+	<li class="list-group-item px-1">
+		<a class="btn sm-icon d-block border border-white" href="{{ shop.brand.metafields.social_links.tiktok.value }}" title="{{ 'social.tiktok' | t }}" target="_blank">
+			<span class="anim-wrapper">
+				<span class="initial">{% render 'icons' with 'tiktok' %}</span>
+				<span class="end">{% render 'icons' with 'tiktok' %}</span>
+			</span>
+			<span class="visually-hidden">{{ 'social.tiktok' | t }}</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.youtube.value != blank -%}
+	<li class="list-group-item px-1">
+		<a class="btn sm-icon d-block border border-white" href="{{ shop.brand.metafields.social_links.youtube.value }}" title="{{ 'social.youtube' | t }}" target="_blank">
+			<span class="anim-wrapper">
+				<span class="initial">{% render 'icons' with 'youtube' %}</span>
+				<span class="end">{% render 'icons' with 'youtube' %}</span>
+			</span>
+			<span class="visually-hidden">{{ 'social.youtube' | t }}</span>
+		</a>
+	</li>
+	{%- endif -%}
+	{%- if shop.brand.metafields.social_links.vimeo.value != blank -%}
+	<li class="list-group-item px-1">
+		<a class="btn sm-icon d-block border border-white" href="{{ shop.brand.metafields.social_links.vimeo.value }}" title="{{ 'social.vimeo' | t }}" target="_blank">
+			<span class="anim-wrapper">
+				<span class="initial">{% render 'icons' with 'vimeo' %}</span>
+				<span class="end">{% render 'icons' with 'vimeo' %}</span>
+			</span>
+			<span class="visually-hidden">{{ 'social.vimeo' | t }}</span>
+		</a>
+	</li>
+	{%- endif -%}
+</ul>

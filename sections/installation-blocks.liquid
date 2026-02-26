@@ -1,0 +1,178 @@
+{%- if section.blocks.size > 0 -%}
+	{%- liquid
+		comment
+		Check is this is the first section on the page
+		endcomment
+		assign is_first_section = false
+		if section.index == 1
+			assign is_first_section = true
+		endif
+	-%}
+	{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom -%}
+	{{ 'contact-blocks.css' | asset_url | stylesheet_tag }}
+	<div class="container">
+		<div class="row gy-4 g-lg-custom px-xxl-custom">
+			{%- if section.settings.header != blank -%}
+			<div class="col-12">
+				<div class="header-wrapper text-center mt-4 mb-3 mb-lg-0 pt-3">
+					{%- if is_first_section == true or section.settings.is_h1 == true -%}
+						<h1 class="h1">{{ section.settings.header }}</h1>
+					{%- else -%}
+						<h2 class="h1">{{ section.settings.header }}</h2>
+					{%- endif -%}
+				</div>
+			</div>
+			{%- endif -%}
+			{%- for block in section.blocks -%}
+				{%- if block.settings.page != blank -%}
+					{%- assign page_object = block.settings.page -%}
+					<div class="col-12 col-lg-6" {{ block.shopify_attributes }}>
+						<div class="contact-wrapper border p-4 d-lg-flex flex-lg-column">
+							<div class="copy-wrapper pb-lg-3 pe-3">
+								<h2 class="h5">{{ page_object.title }}</h2>
+								{%- if block.settings.copy != blank -%}
+									<p>{{ block.settings.copy }}</p>
+								{%- elsif block.settings.page.excerpt != blank -%}
+									<p>{{ page_object.excerpt | strip_html }}</p>
+								{%- else -%}
+									<p>{{ page_object.content | strip_html | truncate: 150 }}</p>
+								{%- endif -%}
+							</div>
+							{%- liquid
+								assign download_btn = page_object.metafields.theme.download
+								assign btn_label = block.settings.btn_copy
+								assign btn_label_2 = block.settings.btn_copy_2
+							-%}
+							{%- if btn_label != blank or btn_label_2 != blank -%}
+								<div class="btn-wrapper d-flex gap-3 mt-lg-auto pt-2">
+									{%- if btn_label != blank and download_btn != blank -%}
+										<a class="d-flex align-items-center gap-1" href="{{ download_btn | file_url }}" title="{{ btn_label | escape }}" download="{{ page_object.title }}">
+											{%- render 'icons' with 'arrow-right' -%}
+											<span>{{ btn_label | capitalize }}</span>
+										</a>
+									{%- endif -%}
+									{%- if btn_label_2 != blank -%}
+										<a class="link-secondary d-flex align-items-center gap-1" href="{{ page_object.url }}" title="{{ btn_label_2 | escape }}">
+											{%- render 'icons' with 'arrow-angle-chevron' -%}
+											<span>{{ btn_label_2 | capitalize }}</span>
+										</a>
+									{%- endif -%}
+								</div>
+							{%- endif -%}
+						</div>
+					</div>
+				{%- endif -%}
+			{%- endfor -%}
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Installation Blocks",
+	"class": "section-contact-blocks",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "text",
+			"id": "header",
+			"label": "Header"
+		},
+		{
+			"type": "checkbox",
+			"id": "is_h1",
+			"label": "Show this Heading as H1",
+			"default": false,
+			"info": "Use ONE H1 per page, if you don't have one already. Tips: If you have a Hero with text at the top of the page you already have a H1"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"blocks": [
+		{
+			"type": "installation",
+			"name": "Installation Block",
+			"settings": [
+				{
+					"type": "page",
+					"id": "page",
+					"label": "Page"
+				},
+				{
+					"type": "inline_richtext",
+					"id": "copy",
+					"label": "Copy",
+					"info": "Replace page excerpt"
+				},
+				{
+					"type": "text",
+					"id": "btn_copy",
+					"label": "Download link label"
+				},
+				{
+					"type": "text",
+					"id": "btn_copy_2",
+					"label": "See Page link label"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

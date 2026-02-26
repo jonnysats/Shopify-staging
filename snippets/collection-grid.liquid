@@ -1,0 +1,69 @@
+{%- comment -%}
+	Renders the collection grid
+
+	Accepts:
+	 - collection: {Object}
+	 - block: {Object} 
+	 - alternate_bg_color: {String}
+	 - loop_count {Number}
+
+	Usage:
+	{%- render 'collection-grid' -%}
+
+{%- endcomment -%}
+{%- liquid
+	assign collection_image	= block.settings.image | default: collection.image
+-%}
+<div class="collection py-4{% if loop_count == 1 %} pt-lg-0{% else %} pt-lg-5{% endif %} pb-lg-6" style="--bg-color: {{ alternate_bg_color }}">
+	<div class="container">
+		<div class="row row-cols-1 row-cols-lg-2 pt-3{% if loop_count == 1 %} pt-lg-0{% else %} pt-lg-3{% endif %}">
+			<div class="col collection-info{% if collection.description == blank %} pb-4 pb-lg-5{% endif %}">
+				<div class="copy-wrapper">
+					<h2 class="h3 mb-3">{{ collection.title }}</h2>
+					{%- if collection.description != blank -%}
+						<p>{{ collection.description }}</p>
+					{%- endif -%}
+				</div>
+				{%- render 'tag-label',
+					tags: collection.metafields.theme.tags.value,
+					wrapper_classes: 'pb-3 pt-lg-2 pb-lg-4 mb-lg-1'
+				-%}
+			</div>
+			<div class="col d-none d-lg-flex justify-content-end align-items-start">
+				<a href="{{ collection.url }}" class="btn btn-primary" title="{{ collection.title | escape }}">{{ collection.title }}</a>
+			</div>
+		</div>
+		<div class="row row-cols-1 row-cols-lg-2 gy-4 gx-lg-3">
+			<div class="col">
+				<div class="image-wrapper position-relative">
+					{%- render 'tag-label',
+						product_count: collection.products_count,
+						featured_tag: collection.metafields.theme.featured_tag.value,
+						wrapper_classes: 'tags-featured-wrapper position-absolute'
+					-%}
+					{%- render 'responsive-image', 
+						image: collection_image, 
+						image_class: 'img-fluid' 
+					-%}
+				</div>
+			</div>
+			{%- comment -%} Product grid {%- endcomment -%}
+			<div class="col">
+				<div class="row row-cols-2 row-cols-lg-3 product-grid gy-4">
+					{%- for product in collection.products limit: 6 -%}
+						{%- render 'product-grid', 
+							product: product, 
+							col_sm: 2, 
+							col_lg: 3, 
+							show_description: false,
+							show_swatches: false
+						-%}
+					{%- endfor -%}
+				</div>
+			</div>
+			<div class="col-12 d-lg-none py-3">
+				<a href="{{ collection.url }}" class="btn btn-primary w-100" title="{{ collection.title | escape }}">{{ 'collections.general.browse_all' | t }}</a>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,114 @@
+{%- comment -%}
+	Inner code for the single Hero or a Hero slider sections
+
+	Accepts:
+	- is_first_section {Boolean}
+	- show_overlay {Boolean}
+	- overlay_color: {Object: color} hero overlay color
+	- overlay_opacity: {Object: range} hero overlay opacity
+	- image: {Object} 
+	- image_mobile {Object}
+	- lazyloading_style {String} eager|lazy
+	- heading {String}
+	- subheading {String}
+	- copy {String}
+	- button_copy_1 {String}
+	- button_url_1: {String}
+	- button_copy_2 {String}
+	- button_url_2: {String}
+	- vertical_alignment_desktop {String}
+	- vertical_alignment_mobile {String}
+	- horizontal_alignment_desktop {String}
+	- horizontal_alignment_mobile {String}
+	- text_alignment_desktop {String}
+	- text_alignment_mobile {String}
+	- featured_product {Object)
+	- featured_product_short_name {String}
+
+	Usage:
+	{%- render 'hero-inner-section' 
+		overlay_color: section.settings.hero_overlay_color,
+		overlay_opacity: section.settings.range_opacity,
+		image: image,
+		image_mobile: image_mobile
+		lazyloading_style: {String}
+	-%}
+
+{%- endcomment -%}
+{%- liquid 
+	comment
+	  count the number of button to adjust the HTML accordingly
+	endcomment
+	assign button_count = 0
+	
+	if button_copy_1 != blank and button_url_1 != blank
+		assign button_count = button_count | plus: 1
+	endif
+
+	if button_copy_2 != blank and button_url_2 != blank
+		assign button_count = button_count | plus: 1
+	endif
+
+	comment
+	  Has featured product
+	endcomment
+	assign has_featured_product = false
+	if featured_product.id != blank
+		assign has_featured_product = true
+	endif
+-%}
+<div class="d-flex justify-content-{{ horizontal_alignment_mobile }} justify-content-lg-{{ horizontal_alignment_desktop }} align-items-{{ vertical_alignment_mobile }} align-items-lg-{{ vertical_alignment_desktop }} p-4 p-lg-5{% if has_featured_product == true %} has-featured-product{% endif %}">
+	{%- if show_overlay == true -%}<div class="overlay" style="--overlay-color: {{ overlay_color }}; --overlay-opacity: {{ overlay_opacity | divided_by: 100.0 }};"></div>{%- endif -%}
+	<div class="copy-wrapper text-{{ text_alignment_mobile }} text-lg-{{ text_alignment_desktop }}">
+		{%- if heading != blank -%}
+			{%- if is_first_section == true -%}
+				<h1>{{ heading }}</h1>
+			{%- else -%}
+				<h2>{{ heading }}</h2>
+			{%- endif -%}
+		{%- endif -%}
+		{%- if subheading != blank -%}
+			<h2 class="subheading">{{ subheading }}</h2>
+		{%- endif -%}
+		{%- if copy != blank -%}
+			<p>{{ copy }}</p>
+		{%- endif -%}
+		{%- comment -%} Buttons {%- endcomment -%}
+		{%- if button_count > 0 -%}
+			<div class="row row-cols-auto justify-content-{{ text_alignment_mobile }} justify-content-lg-{{ text_alignment_desktop }} gy-3">
+				{%- if button_copy_1 != blank and button_url_1 != blank -%}
+				<div class="col">
+					<a class="btn btn-ternary" href="{{ button_url_1 }}" title="{{ button_copy_1 | escape }}">
+						<span class="anim-wrapper">
+							<span class="initial">{{ button_copy_1 }}</span>
+							<span class="end">{{ button_copy_1 }}</span>
+						</span>
+					</a>
+				</div>
+				{%- endif -%}
+				{%- if button_copy_2 != blank and button_url_2 != blank -%}
+					<div class="col">
+						<a class="btn btn-secondary" href="{{ button_url_2 }}" title="{{ button_copy_2 | escape }}">
+							<span class="anim-wrapper">
+								<span class="initial">{{ button_copy_2 }}</span>
+								<span class="end">{{ button_copy_2 }}</span>
+							</span>
+						</a>
+					</div>
+				{%- endif -%}
+			</div>
+		{%- endif -%}
+	</div>
+	{%- comment -%} FEATURED PRODUCT {%- endcomment -%}
+	{%- if featured_product.id != blank -%}
+		<div class="featured-product d-none d-lg-block product-grid">
+			{%- render 'product-grid',
+				product: featured_product,
+				product_short_name: featured_product_short_name
+			-%}
+		</div>
+	{%- endif -%}
+</div>
+<div class="position-absolute w-100 h-100 top-0">
+	{%- render 'responsive-bg-image', image: image, image_mobile: image_mobile, lazyloading_style: lazyloading_style -%}
+</div>

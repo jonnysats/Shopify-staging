@@ -1,0 +1,157 @@
+{%- if section.blocks.size > 0 -%}
+	{%- liquid
+		assign is_first_section = false
+		if section.index == 1
+			assign is_first_section = true
+		endif
+		render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom
+		assign topics = ''
+		for block in section.blocks
+			if block.settings.topic != blank and block.settings.title != blank and block.settings.answer != blank
+				assign topics = topics | append: block.settings.topic | append: ', '
+			endif
+		endfor
+		assign topics = topics | join: ',' | split: ', ' | uniq
+	-%}
+	{{ 'faq-accordions.css' | asset_url | stylesheet_tag }}
+	<script src="{{ 'faq-accordions.js' | asset_url }}" defer crossorigin="anonymous"></script>
+	{%- comment -%} ?info Since theme blocks can't communicate with parents, we make sure we hide elements that aren't available with CSS {%- endcomment -%}
+	{%- if metaobjects.faq_topic.values_count > 0 -%}
+		<style>
+			{%- for topic in metaobjects.faq_topic.values -%}
+				#shopify-section-{{ section.id }}.section-faqs:not(:has(#{{ topic.title.value | handleize }}Wrapper)) [data-scroll-target="#{{ topic.title.value | handleize }}"] {
+					display: none;
+				}
+			{%- endfor -%}
+		</style>
+	{%- endif -%}
+	<div class="container" data-section-id="{{ section.id }}" data-section-type="faqAccordions">
+		<div class="row">
+			<div class="col-12">
+				<div class="copy-wrapper mb-lg-2 pb-lg-1">
+					{%- if is_first_section == true or section.settings.is_h1 == true -%}
+						<h1 class="h1 mb-3 pb-1">{{ section.settings.header }}</h1>
+					{%- else -%}
+						<h2 class="h1 mb-3 pb-1">{{ section.settings.header }}</h2>
+					{%- endif -%}
+					<div class="copy">
+						{%- if section.settings.copy != blank -%}
+							<p>{{ section.settings.copy }}</p>
+						{%- endif -%}
+					</div>
+				</div>
+				{%- if metaobjects.faq_topic.values_count > 0 -%}
+					<div class="btns-wrapper d-flex flex-wrap">
+						{%- for topic in metaobjects.faq_topic.values -%}
+							<a href="#{{ topic.title.value | handleize }}" class="btn btn-outline-primary{% if forloop.first %} active{% endif %}" title="{{ topic.title.value | escape }}" data-collapse-trigger="collapseTopic{{ topic.title.value | handleize }}" data-scroll-target="#{{ topic.title.value | handleize }}">
+								<span class="anim-wrapper">
+									<span class="initial">{{ topic.title.value }}</span>
+									<span class="end">{{ topic.title.value }}</span>
+								</span>
+							</a>
+						{%- endfor -%}
+					</div>
+				{%- endif -%}
+			</div>
+			<div class="col-12">
+				<div id="topicsAccordion" class="accordion-wrapper accordion accordion-flush mt-4 mt-lg-5 mb-3 mb-lg-5 pt-lg-3">
+					{%- content_for "blocks" -%}
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+
+{% schema %}
+{
+	"name": "FAQs",
+	"class": "section-faqs",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "header",
+			"content": "FAQs Header",
+		},
+		{
+			"type": "text",
+			"id": "header",
+			"label": "Header"
+		},
+		{
+			"type": "checkbox",
+			"id": "is_h1",
+			"label": "Show this Heading as H1",
+			"default": false,
+			"info": "Use ONE H1 per page, if you don't have one already. Tips: If you have a Hero with text at the top of the page you already have a H1"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "copy",
+			"label": "Copy"
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"blocks": [
+		{ "type": "_faq-accordion" }
+ 	]
+}
+{% endschema %}

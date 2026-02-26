@@ -1,0 +1,527 @@
+{%- if block.settings.collection.id != blank -%}
+	{%- liquid
+		assign flickity_arrows = false
+		assign flickity_dots = false
+		assign flickity_loop = true 
+		assign flickity_group_cells = true
+		assign flickity_adaptive_height = false
+		
+		assign collection = block.settings.collection
+
+		assign collection_title = collection.title
+		if block.settings.collection_name_overwrite != blank
+			assign collection_title = block.settings.collection_name_overwrite
+		endif
+
+		comment
+		# Adjust products count when variants option is enable
+		endcomment
+		if block.settings.show_variants == true
+			comment
+			# Create a list of variant ids to loop on 2 row sliders
+			endcomment
+			assign list_of_variant_ids = ''
+			assign items_count = 0
+
+			comment
+			# Loop for each available product to show
+			endcomment
+			for product in collection.products limit: section.settings.number_of_products
+				comment
+				# Loop for each product's variants
+				endcomment
+				for variant in product.variants
+					comment
+					# Add variant to the max items count
+					endcomment
+					assign items_count = items_count | plus: 1
+				
+					comment
+					# Add id to the list
+					endcomment
+					assign list_of_variant_ids = list_of_variant_ids | append: variant.id | append: ','	
+				endfor
+			endfor
+
+			comment
+			# Convert id list into an array
+			endcomment
+			assign list_of_variant_ids = list_of_variant_ids | split: ','
+		else
+			assign items_count = collection.products_count
+		endif
+
+		comment
+		# Do calculation to split how many slides we're going to have
+		endcomment
+		assign max_products = section.settings.number_of_products
+		assign products_per_slide = block.settings.products_per_view | ceil | times: 1.0
+
+		comment
+		  Range Max for Mobile / Desktop
+		endcomment
+		assign range_max_mobile = 0
+		assign range_max_desktop = 0
+
+		if max_products > items_count
+			assign max_products = items_count
+		endif
+
+		if max_products == 2
+			assign range_max_mobile = max_products | divided_by: 2 | ceil
+		endif
+		if max_products > 2
+			assign range_max_mobile = max_products | minus: 1.8 | ceil
+		endif
+		if max_products > 3
+			assign range_max_desktop = max_products | divided_by: products_per_slide | ceil
+
+			comment
+			# match 2 row view on mobile too 
+			endcomment
+			if products_per_slide == 6
+				assign range_max_mobile = range_max_desktop | minus: 1
+			endif
+		endif
+
+		comment
+		  Display vars
+		endcomment	
+		assign range_max_mobile_display = range_max_mobile | plus: 1
+		assign range_max_desktop_display = range_max_desktop
+
+		comment
+		  Display with leading 0
+		endcomment		
+		if range_max_mobile < 10
+			assign range_max_mobile_display = range_max_mobile_display | prepend: '0'
+		endif
+		if range_max_desktop < 10
+			assign range_max_desktop_display = range_max_desktop_display | prepend: '0'
+		endif
+
+		comment
+		  Margin bottom on image based on presence of description 
+		endcomment
+		assign mb_image = 'mb-0'
+		if collection.description != blank
+			assign mb_image = 'mb-3'
+		endif
+	-%}
+	<div class="product-grid pt-4 pb-5 my-2 py-lg-4 my-lg-4" id="sliderCollection-{{ block.id }}" data-section-id="{{ block.id }}" data-section-type="tilesCollectionsSlider" {{ block.shopify_attributes }}>
+		{%- comment -%}
+		  Top part : Title + Slider control
+		{%- endcomment -%}
+		<div class="row pb-lg-2 align-items-start">
+			<div class="col col-lg-5 pb-3 pb-lg-4 mb-lg-1">
+				<h2 class="header px-1 px-lg-0 pb-1 pb-lg-0">{{ collection_title }}</h2>
+			</div>
+			{%- if items_count > 3 -%}
+				<div class="col-7 d-none d-lg-flex align-items-center justify-content-end pt-lg-1">
+					<div class="flex-grow-1 pe-4" data-slider-range>
+						{%- comment -%}
+						Desktop version (Max differ from Desktop)
+						{%- endcomment -%}
+						<div class="d-none d-lg-flex align-items-center">
+							<input type="range" class="form-range" value="0" min="0" max="{{ range_max_desktop | minus: 1 }}" id="sliderRange-{{ block.id }}"{% if range_max_desktop == 0 %} disabled{% endif %}>
+							<label for="sliderRange-{{ block.id }}" class="form-label mb-0 ps-3"><span data-value-index>01</span>/{{ range_max_desktop_display }}</label>
+						</div>
+					</div>
+					{%- liquid
+						assign disable_buttons = false
+
+						if range_max_desktop == 1
+							assign disable_buttons = true
+						endif
+					-%}
+					{%- render 'slider-custom-nav-buttons', justify_style: "end", disable_buttons: disable_buttons -%}
+				</div>
+			{%- endif -%}
+		</div>
+		{%- comment -%}
+		  Slider
+		{%- endcomment -%}
+		<div class="row row-cols-1 row-cols-lg-2">
+			<div class="col">
+				<div class="image-wrapper position-relative" data-section-id="{{ block.id }}" data-section-type="shopTheLookSlider" data-show-first-tooltip-default="{{ section.settings.show_first_dot_by_default }}">
+					{%- content_for "blocks" -%}
+					{%- render 'tag-label',
+						product_count: items_count
+						featured_tag: collection.metafields.theme.featured_tag.value,
+						wrapper_classes: 'position-absolute'
+					-%}
+					{%- render 'responsive-image',
+						image: block.settings.image,
+						image_class: 'img-fluid',
+						wrapper_class: mb_image
+					-%}
+					<a class="btn btn-ternary" href="{{ collection.url }}" title="{{ collection.title | escape }}">{{ 'collections.general.shop' | t }}</a>
+				</div>
+				{%- if collection.description != blank -%}
+					<div class="copy-wrapper pe-3 pe-lg-6 mb-2">
+						<p class="description mb-1">{{ collection.description | truncatewords: 12, "..." }}</p>
+					</div>
+				{%- endif -%}
+			</div>
+			<div class="col{% if products_per_slide == 3 %} pt-3 pt-lg-0 ps-3 pe-0 pe-lg-2 overflow-hidden{% else %} px-3 pt-3 pt-lg-0 pe-lg-2 overflow-hidden{% endif %}">
+				<div class="row" data-generic-slider data-arrows="{{ flickity_arrows }}" data-dots="{{ flickity_dots }}" data-loop="{{ flickity_loop }}" data-adaptive-height="{{ flickity_adaptive_height }}" data-group-cells="{{ flickity_group_cells }}">
+					{%- comment -%} One row slider {%- endcomment -%}
+					{%- if products_per_slide == 3 -%}
+						{%- comment -%} If variant option is enabled/disabled apply a different strategy for two row sliders {%- endcomment -%}
+						{%- if block.settings.show_variants == false -%}
+							{%- for product in collection.products limit: section.settings.number_of_products -%}
+								{%- liquid 
+									assign product_grid_classes = "col col-6 col-lg-4 px-2 px-lg-3 col-slider" 
+
+									comment
+										First tag (New)
+									endcomment
+									assign first_tag = nil
+									if product.metafields.theme.new == true
+										assign first_tag = 'New'
+									endif
+
+									comment
+										Second tag (% OFF)
+									endcomment
+									assign second_tag = nil
+
+									if section.settings.show_percent_off == true
+										capture discount_percentage
+											render "product-price-discount-percentage", product: product
+										endcapture
+										
+										assign discount_percentage = discount_percentage | strip
+										
+										if discount_percentage != nil and discount_percentage != blank and discount_percentage != ""
+											assign second_tag = discount_percentage | append: '% Off'
+										endif
+									endif
+								-%}
+								{%- comment -%} Validate if variant option is enabled before rendering the items {%- endcomment -%}
+								{%- render 'product-grid', 
+									product: product, 
+									classes: product_grid_classes, 
+									col_sm: 2, 
+									col_lg: 3,
+									show_description: section.settings.show_description, 
+									show_swatches: section.settings.show_swatches,
+									first_tag: first_tag,
+									second_tag: second_tag,
+									show_secondary_image: block.settings.show_image_hover
+								-%}
+							{%- endfor -%}
+						{%- else -%}
+							{%- comment -%} Loop for each variant to show it instead of individual product grid {%- endcomment -%}
+							{%- for variant_id in list_of_variant_ids limit: section.settings.number_of_products -%}
+								{%- liquid
+									comment
+									# Since we're looping using variant ids, add a new variant variable to hold correct variant object
+									endcomment
+									assign variant_item = blank
+									
+									comment
+									# Loop for all available products to get the variants
+									endcomment
+									for product in collection.products limit: section.settings.number_of_products
+										for variant in product.variants
+											comment
+											# Validate product variant is meant to be showed on this page, and stop the loops
+											endcomment	
+											if variant_id contains variant.id
+												assign variant_item = variant
+												break
+											endif
+										endfor
+									endfor
+
+									comment
+									# Do not show grid item if no variant found
+									endcomment
+									if variant_item == blank
+										continue
+									endif
+
+									assign product_grid_classes = "col col-6 col-lg-4 px-2 px-lg-3 col-slider" 
+
+									comment
+										First tag (New)
+									endcomment
+									assign first_tag = nil
+									if product.metafields.theme.new == true
+										assign first_tag = 'New'
+									endif
+
+									comment
+										Second tag (% OFF)
+									endcomment
+									assign second_tag = nil
+
+									if section.settings.show_percent_off == true
+										capture discount_percentage
+											render "product-price-discount-percentage", product: product
+										endcapture
+										
+										assign discount_percentage = discount_percentage | strip
+										
+										if discount_percentage != nil and discount_percentage != blank and discount_percentage != ""
+											assign second_tag = discount_percentage | append: '% Off'
+										endif
+									endif
+								-%}
+								{%- render 'product-grid', 
+									product: variant_item, 
+									show_swatches: false,
+									classes: product_grid_classes, 
+									col_sm: 2, 
+									col_lg: 3,
+									show_description: section.settings.show_description,
+									first_tag: first_tag,
+									second_tag: second_tag,
+									is_variant: true,
+									show_secondary_image: block.settings.show_image_hover
+								-%}
+							{%- endfor -%}
+						{%- endif -%}
+					{%- else -%}
+						{%- comment -%} Two row slider {%- endcomment -%}
+						{%- liquid
+							assign product_loop_limit = products_per_slide | replace: '.0', ''
+							assign product_index_start = 0
+							assign product_index_end = products_per_slide
+							
+							comment
+							# Prevent max range be lower than initial index
+							endcomment
+							if items_count <= products_per_slide
+								assign range_max_desktop = 1
+							endif
+						-%}
+						{%- for i in (1..range_max_desktop) -%}
+							<div class="col-12 col-multi-row-slide px-2 px-lg-3">
+								{%- liquid
+									comment
+									# Remove extra products from last slide
+									endcomment
+									if product_index_end > max_products
+										assign extra_products = product_index_end | minus: max_products
+										assign product_loop_limit = product_loop_limit | minus: extra_products | replace: '.0', '' | round
+									endif
+								-%}
+								<div class="row row-cols-3 gy-4">
+									{%- comment -%} If variant option is enabled/disabled apply a different strategy for two row sliders {%- endcomment -%}
+									{%- if block.settings.show_variants == false -%}
+										{%- comment -%} For 6 products per slide, divide for each into chunks {%- endcomment -%}
+										{%- for product in collection.products offset: product_index_start limit: product_loop_limit -%}
+											{%- liquid
+												assign product_grid_classes = "col" 
+
+												comment
+													First tag (New)
+												endcomment
+												assign first_tag = nil
+												if product.metafields.theme.new == true
+													assign first_tag = 'New'
+												endif
+
+												comment
+													Second tag (% OFF)
+												endcomment
+												assign second_tag = nil
+
+												if section.settings.show_percent_off == true
+													capture discount_percentage
+														render "product-price-discount-percentage", product: product
+													endcapture
+													
+													assign discount_percentage = discount_percentage | strip
+													
+													if discount_percentage != nil and discount_percentage != blank and discount_percentage != ""
+														assign second_tag = discount_percentage | append: '% Off'
+													endif
+												endif
+											-%}
+											{%- render 'product-grid', 
+												product: product, 
+												classes: product_grid_classes, 
+												col_sm: 2, 
+												col_lg: 3,
+												show_description: section.settings.show_description, 
+												show_swatches: section.settings.show_swatches,
+												first_tag: first_tag,
+												second_tag: second_tag,
+												show_secondary_image: block.settings.show_image_hover
+											-%}
+										{%- endfor -%}
+									{%- else -%}
+										{%- comment -%} Loop for chunk of variants per current page (using ID as reference)  {%- endcomment -%}
+										{%- for variant_id in list_of_variant_ids offset: product_index_start limit: product_loop_limit -%}
+											{%- liquid
+												comment
+												# Since we're looping using variant ids, add a new variant variable to hold correct variant object
+												endcomment
+												assign variant_item = blank
+												
+												comment
+												# Loop for all available products to get the variants
+												endcomment
+												for product in collection.products limit: section.settings.number_of_products
+													for variant in product.variants
+														comment
+														# Validate product variant is meant to be showed on this page, and stop the loops
+														endcomment	
+														if variant_id contains variant.id
+															assign variant_item = variant
+															break
+														endif
+													endfor
+												endfor
+
+												comment
+												# Do not show grid item if no variant found
+												endcomment
+												if variant_item == blank
+													continue
+												endif
+
+												assign product_grid_classes = "col col-6 col-lg-4 px-2 px-lg-3 col-slider" 
+
+												comment
+													First tag (New)
+												endcomment
+												assign first_tag = nil
+												if variant_item.product.metafields.theme.new == true
+													assign first_tag = 'New'
+												endif
+
+												comment
+													Second tag (% OFF)
+												endcomment
+												assign second_tag = nil
+
+												if section.settings.show_percent_off == true
+													capture discount_percentage
+														render "product-price-discount-percentage", product: variant_item
+													endcapture
+													
+													assign discount_percentage = discount_percentage | strip
+													
+													if discount_percentage != nil and discount_percentage != blank and discount_percentage != ""
+														assign second_tag = discount_percentage | append: '% Off'
+													endif
+												endif
+											-%}
+											{%- comment -%} Show variant grid item {%- endcomment -%}
+											{%- render 'product-grid', 
+												product: variant_item, 
+												show_swatches: false,
+												classes: product_grid_classes, 
+												col_sm: 2, 
+												col_lg: 3,
+												show_description: section.settings.show_description,
+												first_tag: first_tag,
+												second_tag: second_tag,
+												is_variant: true,
+												show_secondary_image: block.settings.show_image_hover
+											-%}
+										{%- endfor -%}
+									{%- endif -%}
+								</div>
+							</div>
+							{%- comment -%} Reset new offset and limit vars {%- endcomment -%}
+							{%- liquid
+								assign product_index_start = product_index_end | plus: 1 | replace: '.0', ''
+								assign product_index_end = product_index_end | plus: products_per_slide
+							-%}
+						{%- endfor -%}
+					{%- endif -%}
+				</div>
+			</div>
+		</div><!-- / .row -->
+		{%- if items_count > 0 -%}
+			<div class="row d-block d-lg-none pt-4">
+				{%- capture range_slider -%}
+					<div class="flex-grow-1 px-3" data-slider-range>
+						{%- comment -%}
+						Mobile version (Max differ from Desktop)
+						{%- endcomment -%}
+						<div class="d-flex align-items-center d-lg-none">
+							<input type="range" class="form-range" value="0" min="0" max="{{ range_max_mobile }}" id="sliderRangeMobile-{{ block.id }}"{% if range_max_desktop == 0 %} disabled{% endif %}>
+							<label for="sliderRangeMobile-{{ block.id }}" class="form-label mb-0 ps-3"><span data-value-index>01</span>/{{ range_max_mobile_display }}</label>
+						</div>
+					</div>
+				{%- endcapture -%}
+				{%- render 'slider-custom-nav-buttons', justify_style: "between", custom_content_between: range_slider -%}
+			</div>
+		{%- endif -%}
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Slider Collections",
+	"tag": null,
+	"settings": [
+		{
+			"type": "header",
+			"content": "Product Grid"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_variants",
+			"label": "Show product variants",
+			"info": "Showcase product variants as separate visual items"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_image_hover",
+			"label": "Show secondary image on hover",
+			"default": true
+		},
+		{
+			"type": "header",
+			"content": "Collection"
+		},
+		{
+			"type": "collection",
+			"id": "collection",
+			"label": "Collection"
+		},
+		{
+			"type": "image_picker",
+			"id": "image",
+			"label": "Collection image (required)"
+		},
+		{
+			"type": "text",
+			"id": "collection_name_overwrite",
+			"label": "Replace collection name",
+			"info": "Will replace the original collection name"
+		},
+		{
+			"type": "select",
+			"id": "products_per_view",
+			"label": "Products Slider Style",
+			"info": "Number of rows per slide for Collection Slider",
+			"options": [
+				{
+					"value": "3",
+					"label": "1 Row"
+				},
+				{
+					"value": "6",
+					"label": "2 Rows"
+				}
+			],
+			"default": "6"
+		}
+	],
+	"blocks": [
+		{ "type": "_product-dot" }
+  	],
+	"presets": [
+		{
+			"name": "Slider Collections"
+		}
+	]
+}
+{% endschema %}

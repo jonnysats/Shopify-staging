@@ -1,0 +1,154 @@
+{%- if predictive_search.performed -%}
+	<div data-search-results>
+		{%- comment -%} Products search information {%- endcomment -%}
+		{%- capture product_results -%}
+			{%- if predictive_search.resources.products.size > 0 -%}
+				<div class="search-results-wrapper product-grid">
+					<div class="header-wrapper border-top border-bottom border-light-subtle py-1 px-3 position-relative px-lg-0">
+						<h3 class="h2 my-3 no-animation">{{ 'general.search.predictive.products_heading' | t }}</h3>
+					</div>
+					<ul class="list-group list-group-flush">
+						{%- for product in predictive_search.resources.products -%}
+							<li class="list-group-item border-light-subtle p-3 ps-lg-0 py-lg-4 position-relative">
+								{%- liquid
+									assign product_grid_classes = "search-result-product-item position-relative"
+									render 'product-grid', product: product, classes: product_grid_classes, show_secondary_image: false, show_description: false, show_swatches: false
+								-%}
+								<a href="{{ product.url }}" title="{{ product.title | escape }}" class="position-absolute top-0 end-0 mt-3 me-3 mt-lg-4 me-lg-4 pe-lg-3">
+									{%- render 'icons' with 'arrow-angle-chevron' -%}
+								</a>
+							</li>
+						{%- endfor -%}
+					</ul>
+				</div>
+			{%- endif -%}
+		{%- endcapture -%}
+		{%- comment -%} Search Articles {%- endcomment -%}
+		{%- capture articles_results -%}
+			{%- comment -%} Search Articles {%- endcomment -%}
+			{%- if predictive_search.resources.articles.size > 0 and settings.show_search_articles == true -%}
+				<div class="search-results-wrapper border-top border-light-subtle">
+					<div class="header-wrapper border-bottom border-light-subtle position-relative py-1 px-3 px-lg-4">
+						<h3 class="h2 my-3 mx-lg-3 no-animation">{{ 'general.search.predictive.articles_heading' | t }}</h3>
+					</div>
+					<div class="list-group list-group-flush pt-3 pb-lg-4 mb-lg-2">
+						{%- comment -%} Articles {%- endcomment -%}
+						{%- for article in predictive_search.resources.articles -%}
+							<div class="px-3 py-2 mb-2 px-lg-4 mx-lg-3 mt-lg-3 pb-lg-0">
+								<div class="header-wrapper">
+									<a href="{{ article.url }}" class="h4 no-animation" tabindex="-1">{{- article.title | escape -}}</a>
+									{%- if article.content != blank -%}
+										<p class="link-description d-none d-lg-block fw-medium mt-1 mb-0">{{ article.content | strip_html | truncatewords: 20 }}</p>
+									{%- endif -%}
+								</div>
+							</div>
+						{%- endfor -%}
+					</div>
+				</div>
+			{%- endif -%}
+		{%- endcapture -%}
+		{%- comment -%} Search Pages {%- endcomment -%}
+		{%- capture pages_results -%}
+			{%- if predictive_search.resources.pages.size > 0 and settings.show_search_pages == true -%}
+				<div class="search-results-wrapper border-top border-light-subtle">
+					<div class="header-wrapper border-bottom border-light-subtle position-relative py-1 px-3 px-lg-4">
+						<h3 class="h2 my-3 mx-lg-3 no-animation">{{ 'general.search.predictive.pages_heading' | t }}</h3>
+					</div>
+					<div class="list-group list-group-flush pt-3 pb-lg-4 mb-lg-2">
+						{%- for page in predictive_search.resources.pages -%}
+							<div class="px-3 py-2 mb-2 px-lg-4 mx-lg-3 mt-lg-3 pb-lg-0">
+								<div class="header-wrapper">
+									<a href="{{ page.url }}" class="h4 no-animation" tabindex="-1">{{- page.title | escape -}}</a>
+									{%- if page.content != blank -%}
+										<p class="link-description d-none d-lg-block fw-medium mt-1 mb-0">{{ page.content | strip_html }}</p>
+									{%- endif -%}
+								</div>
+							</div>
+						{%- endfor -%}
+					</div>
+				</div>
+			{%- endif -%}
+		{%- endcapture -%}
+		{%- comment -%} Search Suggestions {%- endcomment -%}
+		{%- capture suggestions_results -%}
+			{%- if predictive_search.resources.queries.size > 0 and settings.show_search_suggestions == true -%}
+				<div class="search-results-wrapper border-top border-light-subtle">
+					<div class="header-wrapper border-bottom border-light-subtle position-relative py-1 px-3 px-lg-4">
+						<h3 class="h2 my-3 mx-lg-3 no-animation">{{ 'general.search.predictive.suggestions_heading' | t }}</h3>
+					</div>
+					<div class="list-group list-group-flush pt-3 pb-lg-4 mb-lg-2">
+						{%- for query in predictive_search.resources.queries -%}
+							<div class="px-3 py-2 mb-2 px-lg-4 mx-lg-3 mt-lg-3 pb-lg-0">
+								<a href="{{ query.url }}" class="h4 no-animation" tabindex="-1">
+									{{ query.styled_text }}
+								</a>
+							</div>
+						{%- endfor -%}
+					</div>
+				</div>
+			{%- endif -%}
+		{%- endcapture -%}
+		{%- comment -%} No quick results shown {%- endcomment -%}
+		{%- capture no_results -%}
+			<div class="border-top border-light-subtle pt-4 pb-lg-4 px-3">
+				<span>{{ 'general.search.no_quick_results' | t }}</span>
+			</div>
+		{%- endcapture -%}
+		{%- comment -%} Mobile version {%- endcomment -%}
+		<div class="search-wrapper pt-4 pb-0 px-0 d-lg-none">
+			{%- if predictive_search.resources.products.size == 0 and predictive_search.resources.articles.size == 0 and predictive_search.resources.pages.size == 0 -%}
+				{{- no_results -}}
+			{%- endif -%}
+			{{- product_results -}}
+			{{- articles_results -}}
+			{{- pages_results -}}
+			{{- suggestions_results -}}
+		</div>
+		{%- comment -%} Desktop version {%- endcomment -%}
+		<div class="container-xl px-xl-0 search-wrapper d-none d-lg-block">
+			{%- if predictive_search.resources.products.size == 0 and predictive_search.resources.articles.size == 0 and predictive_search.resources.pages.size == 0 -%}
+				<div class="row">
+					<div class="col-12">
+						{{- no_results -}}
+					</div>
+				</div>
+			{%- else -%}
+				{%- liquid
+					assign only_products = true
+
+					if settings.show_search_suggestions == true or settings.show_search_pages == true or settings.show_search_articles == true 
+						assign only_products = false
+					endif
+				-%}
+				<div class="row g-0">
+					<div class="col{% if only_products == true %}-12{% endif %} product-results position-relative{% if only_products == true %} product-search-only{% endif %}">
+						{%- if predictive_search.resources.products.size > 0 -%}
+							{{- product_results -}}
+						{%- else -%}
+							<div class="search-results-wrapper product-grid">
+								<div class="header-wrapper border-top border-bottom border-light-subtle py-1 px-3 position-relative px-lg-0">
+									<h3 class="h2 my-3 no-animation">{{ 'general.search.predictive.products_heading' | t }}</h3>
+								</div>
+								<p class="mt-3 no-animation">{{ 'general.search.no_quick_results' | t }}</p>
+							</div>
+						{%- endif -%}
+					</div>
+					{%- if only_products == false -%}
+						<div class="col regular-results">
+							{{- articles_results -}}
+							{{- pages_results -}}
+							{{- suggestions_results -}}
+						</div>
+					{%- endif -%}
+				</div>
+			{%- endif -%}
+		</div>
+		{%- unless predictive_search.resources.products.size == 0 and predictive_search.resources.articles.size == 0 and predictive_search.resources.pages.size == 0 -%}
+			<form action="/search" method="get" role="search" class="search-more d-flex justify-content-center align-items-center border-top border-light-subtle mt-3 pt-4 pb-lg-4 mt-lg-0">
+				<input type="hidden" name="type" value="product">
+				<input class="form-control visually-hidden" name="q" type="search" value="{{ predictive_search.terms }}" placeholder="Search" aria-label="Search" autocomplete="off" required>
+				<button class="btn btn-transparent border-0 text-primary border-bottom p-0" type="submit">{{ "general.search.predictive.search_all" | t }}</button>
+			</form>
+		{%- endunless -%}
+	</div>
+{%- endif -%}

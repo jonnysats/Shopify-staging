@@ -1,0 +1,123 @@
+{%- if section.settings.title != blank or section.settings.social_links != blank -%}
+	{%- render 'section-padding', padding_amount_top: section.settings.padding_amount_top, padding_amount_bottom: section.settings.padding_amount_bottom -%}
+	{{ 'follow-us-social.css' | asset_url | stylesheet_tag }}
+	<div class="container">
+		<div class="row py-4">
+			<div class="col-12">
+				<div class="copy-wrapper text-center pb-1 pb-lg-4 mb-lg-1">
+					<h2 class="mb-4">{{ section.settings.title }}</h2>
+				</div>
+				<div class="row justify-content-center g-3 g-lg-4">
+					{%- for metaobject in section.settings.social_links -%}
+						{%- if metaobject.link != blank and metaobject.icon != blank -%}
+							{%- assign icon = metaobject.icon | downcase -%}
+							<div class="col-auto icon-wrapper">
+								<a href="{{ metaobject.link.value.url }}" class="btn d-flex p-3 bg-light-subtle" title="{{ metaobject.link.value.text }}{% if metaobject.open_in_a_new_tab == true %}, Note: opens in a new window{% endif %}"{% if metaobject.open_in_a_new_tab == true %} target="_blank" rel="noopener noreferrer"{% endif %}>
+									<span class="anim-wrapper">
+										<span class="initial">{%- render 'icons' with icon, icon_classes: 'social-icon m-lg-1' -%}</span>
+										<span class="end">{%- render 'icons' with icon, icon_classes: 'social-icon m-lg-1' -%}</span>
+									</span>
+								</a>
+							</div>
+						{%- endif -%}
+					{%- endfor -%}
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Follow us on social",
+	"tag": "section",
+	"class": "recurring-sections section-follow-us-social",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Content"
+		},
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Title"
+		},
+		{
+			"type": "header",
+			"content": "Social Links"
+		},
+		{
+			"type": "metaobject_list",
+			"id": "social_links",
+			"label": "Social Links",
+			"metaobject_type": "follow_us_on_social",
+			"limit": 7,
+			"info": "You can add more entries for this setting [Here](/admin/content/metaobjects/entries/follow_us_on_social)."
+		},
+		{
+			"type": "header",
+			"content": "Section Settings"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_top",
+			"label": "Top Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		},
+		{
+			"type": "select",
+			"id": "padding_amount_bottom",
+			"label": "Bottom Section Padding",
+			"options": [
+				{
+					"value": "no",
+					"label": "None"
+				},
+				{
+					"value": "small",
+					"label": "Small"
+				},
+				{
+					"value": "default",
+					"label": "Medium (Default)"
+				},
+				{
+					"value": "large",
+					"label": "Large"
+				},
+				{
+					"value": "xlarge",
+					"label": "Extra Large"
+				}
+			],
+			"default": "default"
+		}
+	],
+	"presets": [
+		{
+			"name": "Follow us on social"
+		}
+	]
+}
+{% endschema %}

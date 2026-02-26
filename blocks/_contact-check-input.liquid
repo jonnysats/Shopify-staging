@@ -1,0 +1,95 @@
+{%- if block.settings.heading != blank -%}
+	{%- liquid
+		comment
+			# clean label input
+		endcomment
+		assign label = block.settings.heading | escape
+
+		if block.settings.required == true or block.settings.precheck == true
+			assign label = block.settings.heading | append: '<sup>*</sup>'
+		endif
+	-%}
+	<div class="col mb-2 mb-lg-3" {{ block.shopify_attributes }}>
+		<div class="form-label">{{ label }}</div>
+		{%- liquid 
+			comment
+			# Build the Option list for Select
+			endcomment
+			assign option_split = block.settings.option_list | split: ';'
+		-%}
+		{%- for option in option_split -%}
+			{%- liquid
+				assign label_id_option = option | handleize | replace: '-', '_'
+				assign label_name_option = option | prepend: 'contact[' | replace: '-', ' ' | append: ']'
+
+				comment
+				# Name must be the same for Radio buttons
+				endcomment
+				if block.settings.input_type == 'radio'
+					assign label_name_handleize = block.settings.heading | handleize
+					assign label_name_option = label_name_handleize | prepend: 'contact[' | replace: '-', ' ' | append: ']'
+				endif
+
+				comment
+					# If preselect first element we check the box.ratio
+				endcomment
+				assign checked = ''
+				if forloop.first == true and block.settings.precheck == true
+					assign checked = ' checked'
+				endif
+			-%}
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="{{ block.settings.input_type }}" id="{{ block.id }}{{ label_id_option }}" name="{{ label_name_option }}"{{ checked }}{%- if block.settings.input_type == 'radio' -%} value="{{ option | strip | escape }}"{%- endif -%}>
+				<label class="form-check-label" for="{{ block.id }}{{ label_id_option }}">{{ option | escape }}</label>
+			</div>
+		{%- endfor -%}
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Check inputs",
+	"tag": null,
+	"settings": [
+        {
+			"type": "text",
+			"id": "heading",
+			"label": "Label",
+		},
+		{
+			"type": "select",
+			"id": "input_type",
+			"label": "Input type",
+			"default": "checkbox",
+			"info": "Checkboxes can have multiple selections while radio buttons allow only 1 selection",
+			"options": [
+				{
+					"label": "Checkbox",
+					"value": "checkbox"
+				},
+				{
+					"label": "Radio button",
+					"value": "radio"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "option_list",
+			"label": "Option list",
+			"info": "IMPORTANT: Separate each option by a semicolumn (;)",
+			"placeholder": "First message; Following up"
+		},
+		{
+			"type": "checkbox",
+			"id": "precheck",
+			"label": "Precheck first option?",
+			"default": false
+		}
+	],
+	"presets": [
+		{
+			"name": "Check inputs"
+		}
+	]
+}
+{% endschema %}

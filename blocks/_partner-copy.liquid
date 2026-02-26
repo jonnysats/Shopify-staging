@@ -1,0 +1,35 @@
+{%- if block.settings.heading != blank -%}
+	<div class="copy-wrapper p-4 my-2 mb-lg-3 text-center"{% if block.settings.color != blank %} style="--top-color: {{ block.settings.color }};"{% endif %}>
+		<h4 class="mt-1 mb-3">{{ block.settings.heading }}</h4>
+		{%- if block.settings.copy != blank -%}<p class="mb-2">{{ block.settings.copy }}</p>{%- endif -%}
+	</div>
+{%- endif -%}
+{% schema %}
+{
+	"name": "Partner - Copy",
+	"tag": null,
+	"settings": [
+		{
+			"type": "inline_richtext",
+			"id": "heading",
+			"label": "Partner Subheading"
+		},
+		{
+			"type": "inline_richtext",
+			"id": "copy",
+			"label": "Partner Copy"
+		},
+		{
+			"type": "color",
+			"id": "color",
+			"label": "Top Line Color",
+			"default": "#FD6908"
+		}
+	],
+	"presets": [
+		{
+			"name": "Partner - Copy"
+		}
+	]
+}
+{% endschema %}

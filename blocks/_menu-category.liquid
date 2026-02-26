@@ -1,0 +1,78 @@
+{%- if block.settings.title != blank -%}
+	{%- comment -%} Content for Blocks {%- endcomment -%}
+	{%- capture blocks -%}
+		{%- content_for 'blocks' -%}
+	{%- endcapture -%}
+	{%- comment -%} Mobile Version {%- endcomment -%}
+	<div class="accordion-item border-end-0 border-start-0 border-top-0 border-dark-subtle d-lg-none" {{ block.shopify_attributes }}>
+		<h2 class="accordion-header no-animation">
+			<button class="accordion-button px-0 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ block.id }}" aria-expanded="false" aria-controls="collapseOne">
+				{{ block.settings.title }}
+			</button>
+		</h2>
+		<div id="collapse{{ block.id }}" class="accordion-collapse collapse">
+			<div class="accordion-body py-0 px-0">
+				{%- if block.settings.img != blank -%}
+					<div class="banner-wrapper">
+						{%- render 'responsive-bg-image', image: block.settings.img, image_mobile: block.settings.img_mobile -%}
+					</div>
+				{%- endif -%}
+				<ul class="subcategories list-unstyled mb-0">
+					{{- blocks -}}
+				</ul>
+			</div>
+		</div>
+	</div>
+	{%- comment -%} Desktop Version {%- endcomment -%}
+	<div class="col d-none d-lg-block">
+		<div class="py-4 px-lg-3 px-xxl-4">
+			<div class="header-wrapper px-xxl-3">
+				{%- if block.settings.img != blank -%}
+					<div class="img-wrapper mb-3">
+						{%- render 'responsive-bg-image', image: block.settings.img, image_mobile: block.settings.img_mobile -%}
+					</div>
+				{%- endif -%}
+				<h2 class="no-animation">{{ block.settings.title }}</h2>
+			</div>
+			<ul class="subcategories list-unstyled mb-0 px-xxl-3">
+				{{- blocks -}}
+			</ul>
+		</div>
+	</div>
+{%- endif -%}
+
+{% schema %}
+{
+	"name": "Menu Category",
+	"tag": null,
+	"settings": [
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Category Name",
+			"info": "Required to show the submenu list."
+		},
+		{
+			"type": "header",
+			"content": "Images",
+			"info": "On mobile the image will show after category name and on desktop will show before the category name."
+		},
+		{
+			"type": "image_picker",
+			"id": "img",
+			"label": "Image"
+		},
+		{
+			"type": "image_picker",
+			"id": "img_mobile",
+			"label": "Image Mobile"
+		}
+	],
+	"blocks": [
+		{ "type": "_sub-category-item" }
+	],
+	"presets": [
+		{ "name": "Menu Category" }
+	]
+}
+{% endschema %}

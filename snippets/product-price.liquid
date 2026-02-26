@@ -1,0 +1,238 @@
+{%- comment -%}
+	Make price / price discount / sold out display for product grids, product page and cart page
+
+	Accepts:
+	- context {String} product|item
+	- product {Object} use 'with, as' keywords
+	- is_variant {Boolean}: Check if grid item is a variant instead of a product
+	- alternate: {Boolean} Check if price is shown on alternate PDP
+
+	Usage:
+	{%- render 'product-price' with item as product, context: 'item' -%}
+
+{%- endcomment -%}
+{%- comment -%} Correct way to use the liquid code {%- endcomment -%}
+{%- liquid
+	assign price_display = ''
+
+	comment
+	# Show Sqft price instead of box/regular price based on variant or product
+	endcomment
+	assign unit_price = product.metafields.theme.price_per_unit
+	assign unit_price_money = blank
+
+	comment
+	  All price types
+	endcomment
+	assign on_sale = false
+	assign price = product.price | money
+	assign compare_at_price = product.compare_at_price | money
+	assign price_min = product.price_min | money
+	assign price_max = product.price_max | money
+	assign compare_price_min = product.compare_at_price_min | money
+	assign compare_price_max = product.compare_at_price_max | money
+
+	comment
+		Avoid using product related values for grid variant items
+	endcomment
+	if is_variant == false
+		assign price_varies = product.price_varies
+		assign compare_at_price_varies = product.compare_at_price_varies
+	else
+		assign price_varies = false
+		assign compare_at_price_varies = false
+	endif
+
+	comment
+	# Only trigger when sf price is meant to show
+	endcomment
+	unless show_sf_price == false
+		comment
+		# If current item is a variant grab directly sf value from metafield
+		endcomment
+		if is_variant == true
+			comment
+			# Display metafield price only if current variant have a value already
+			endcomment
+			if unit_price != blank
+				assign unit_price_money = unit_price | times: 100 | money
+				assign price = unit_price_money
+			endif
+		else
+			comment
+			# If current item is a product, proceed to calculate min and max metafield sf prices
+			endcomment
+			assign sf_lowest = 999999
+			assign sf_highest = 0
+			
+			comment
+			# Loop for each variant in current product item
+			endcomment
+			for variant in product.variants
+				comment
+				# Make metafield value into float
+				endcomment
+				assign unit = variant.metafields.theme.price_per_unit.value | times: 1.0
+				
+
+				comment
+				# Find lowest price in variant sf meta price list
+				endcomment
+				if unit <= sf_lowest
+					assign sf_lowest = unit
+				endif
+
+				comment
+				# Find highest price in variant sf meta price list
+				endcomment
+				if unit >= sf_highest
+					assign sf_highest = unit
+				endif
+			endfor
+
+			comment
+			# Overwrite regular prices labels only if min and max meta values found
+			endcomment
+			if sf_lowest != 0.0 and sf_highest != 0.0
+				assign price_min = sf_lowest | times: 100 | money
+				assign price_max = sf_highest | times: 100 | money
+
+				comment
+				# Check if min and max varies between them, to display them both
+				endcomment
+				if price_min != price_max
+					assign price_varies = true
+					assign unit_price_money = price_max
+				else
+					assign price_varies = false
+					assign unit_price_money = price_min | default: price_max
+				endif
+			endif
+		endif
+	endunless
+
+	comment
+	# If price comes from metafield, reset regular price variables
+	endcomment
+	if unit_price_money != blank
+		assign compare_price_min = blank
+		assign compare_price_max = blank
+		assign compare_at_price = blank
+	endif
+
+	if context != 'product-page'
+		comment
+			Regular Price (No Discount)
+		endcomment
+		if price_varies == false and compare_at_price_varies == false
+			assign price_display = price
+		elsif price_varies == true and compare_at_price_varies == false
+			comment
+				Price varies between Variants (No Discount)
+			endcomment
+			assign price_display = 'products.product.from_range_text_html' | t: price_min: price_min, price_max: price_max
+		endif
+
+		comment
+			Compare at Price (On Sale) - Single Price discount
+		endcomment
+		if price_varies == false and product.compare_at_price > product.price
+			assign on_sale = true
+			assign compare_price_display = 'products.product.on_sale_from_html' | t: price: compare_at_price
+			assign price_display = price
+		elsif price_varies == true and compare_at_price_varies == true
+			comment
+				Price varies between Variants (On Sale)
+			endcomment
+			assign on_sale = true
+			assign compare_price_display = 'products.product.from_range_text_html' | t: price_min: compare_price_min, price_max: compare_price_max
+			assign price_display = 'products.product.from_range_text_html' | t: price_min: price_min, price_max: price_max
+		endif
+	else
+		comment
+			Compare at Price (On Sale) - Single Price discount
+		endcomment
+		if product.compare_at_price != blank and product.compare_at_price > product.price
+			assign on_sale = true
+			assign compare_price_display = 'products.product.on_sale_from_html' | t: price: compare_at_price
+			assign price_display = price
+		else
+			assign price_display = price
+		endif
+	endif
+
+	comment
+		Validate Price Unit value is coming from variant product or regular product
+	endcomment
+	if is_variant == true
+		assign unit_value = product.product.metafields.theme.price_unit_label
+	else
+		assign unit_value = product.metafields.theme.price_unit_label
+	endif
+
+	comment
+	# Show unit price square foot label only if we're meant to show sf prices and price is not empty/null
+	endcomment
+	if unit_value != blank and show_sf_price == true and unit_price_money != blank
+		assign unit_label = unit_value | prepend: '/'
+		assign compare_price_display = compare_price_display | append: unit_label
+		assign price_display = price_display | append: unit_label
+		assign on_sale = false
+	endif
+-%}
+{%- if context == 'product' -%}
+	{%- comment -%}
+	  COLLECTIONS / COLLECTION / STAND ALONE
+	{%- endcomment -%}
+	<div class="price-wrapper{% if on_sale == true %} sale{% endif %}{% if price_varies == true or compare_at_price_varies == true %} price-varies{% endif %}">
+		<span class="price pe-2">{{ price_display }}</span>
+		{%- if on_sale == true -%}
+			<s class="compare-at-price price">{{ compare_price_display }}</s>
+		{%- endif -%}
+	</div>
+{%- elsif context == 'product-page' -%}
+	{%- comment -%} 
+	  PDP
+	{%- endcomment -%}
+	<div class="price-wrapper d-flex align-items-center pb-2 pb-lg-0{% if on_sale == true %} sale{% endif %}" data-price-wrapper>
+		<span class="price{% if alternate == false %} pe-2{% endif %}" data-product-price>{{ price_display }}</span>
+		<s class="compare-at-price price" data-compare-price>{{ compare_price_display }}<span class="visually-hidden">Compare at price label</span></s>
+	</div>
+{%- elsif context == 'item' -%}
+	{%- comment -%}
+	  DRAWER CART / CART page
+	{%- endcomment -%}
+	{%- liquid
+		assign on_sale = false
+		if item.variant.compare_at_price > item.variant.price 
+			assign on_sale = true
+		endif
+		
+		assign discounted = false
+		if item.original_price > item.final_price
+			assign discounted = true
+		endif
+	-%}
+	<div class="line-item-price price-wrapper d-flex align-items-end align-items-lg-end justify-content-center{% if template == "cart" %} flex-column flex-lg-row gap-0 gap-lg-2{% else %} flex-column{% endif %}{% if on_sale or discounted %} sale{% endif %}">
+		{{ item.original }}
+		<span class="price">{{- item.final_line_price | money -}}</span>
+		{%- if discounted-%}
+			<s class="compare-at-price price">{{- item.original_price | times: item.quantity | money -}}</s>
+		{%- elsif on_sale -%}
+			<s class="compare-at-price price">{{- item.variant.compare_at_price | times: item.quantity | money -}}</s>
+		{%- endif -%}
+	</div>
+{%- elsif context == 'upsell' -%}
+	{%- comment -%}
+		DRAWER CART / CART page
+	{%- endcomment -%}
+	{%- liquid
+		assign do_price_varies = false
+		if product.price_varies == true and product.compare_at_price_varies == true
+			assign do_price_varies = true
+		endif 
+	-%}
+	<div class="upsell-item-price price-wrapper d-flex flex-column">
+		<span class="price">{%- if do_price_varies == true -%}From {% endif %}{{ product.price_min | money }}</span>
+	</div>
+{%- endif -%}
