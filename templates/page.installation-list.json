@@ -88,6 +88,60 @@
             "btn_copy": "Download pdf",
             "btn_copy_2": "See page"
           }
+        },
+        "installation_hardwood": {
+          "type": "installation",
+          "settings": {
+            "page": "engineered-hardwood-installation-guide",
+            "copy": "",
+            "btn_copy": "Download pdf",
+            "btn_copy_2": "See page"
+          }
+        },
+        "installation_large_format": {
+          "type": "installation",
+          "settings": {
+            "page": "large-format-porcelain-tile-installation-guide-rs",
+            "copy": "",
+            "btn_copy": "Download pdf",
+            "btn_copy_2": "See page"
+          }
+        },
+        "installation_marble": {
+          "type": "installation",
+          "settings": {
+            "page": "marble-tile-installation-guide",
+            "copy": "",
+            "btn_copy": "Download pdf",
+            "btn_copy_2": "See page"
+          }
+        },
+        "installation_small_format": {
+          "type": "installation",
+          "settings": {
+            "page": "small-format-porcelain-tile-installation-guide",
+            "copy": "",
+            "btn_copy": "Download pdf",
+            "btn_copy_2": "See page"
+          }
+        },
+        "installation_terracotta": {
+          "type": "installation",
+          "settings": {
+            "page": "terracotta-tile-installation-guide",
+            "copy": "",
+            "btn_copy": "Download pdf",
+            "btn_copy_2": "See page"
+          }
+        },
+        "installation_lvp": {
+          "type": "installation",
+          "settings": {
+            "page": "vinyl-lvp-installation-guide",
+            "copy": "",
+            "btn_copy": "Download pdf",
+            "btn_copy_2": "See page"
+          }
         }
       },
       "block_order": [
@@ -95,7 +149,13 @@
         "installation_KxBbtX",
         "installation_hx6mVz",
         "installation_atVYfR",
-        "installation_ceramic"
+        "installation_ceramic",
+        "installation_hardwood",
+        "installation_large_format",
+        "installation_marble",
+        "installation_small_format",
+        "installation_terracotta",
+        "installation_lvp"
       ],
       "settings": {
         "header": "{{ page.title }}",
