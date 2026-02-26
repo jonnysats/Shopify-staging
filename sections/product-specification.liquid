@@ -111,8 +111,8 @@
 									</div>
 								{%- endif -%}
 							{%- when 'installation' -%}
-								{%- assign page_object = block.settings.content_page | default: block.settings.content -%}
-								{%- if block.settings.content_page != blank or block.settings.content != blank -%}
+							{%- assign page_object = product.metafields.theme.product_installation_content | default: block.settings.content_page | default: block.settings.content -%}
+							{%- if product.metafields.theme.product_installation_content != blank or block.settings.content_page != blank or block.settings.content != blank -%}
 									<div id="collapsePdpAccordion{{ block.type | handleize }}" class="accordion-collapse installation-collapse collapse{% if forloop.first == true and section.settings.open_first == true %} show{% endif %}">
 										<div class="accordion-body pt-1 pb-4 px-0 pb-lg-3">
 											{%- if page_object.title != blank -%}
