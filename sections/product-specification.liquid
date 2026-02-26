@@ -56,7 +56,7 @@
 								<div class="absolute-wrapper position-absolute left-0">
 									<span class="accordion-button opacity-0">{{ clean_heading }}</span>
 									{%- liquid
-										assign page_object = block.settings.content_page | default: block.settings.content
+										assign page_object = product.metafields.theme.product_installation_content | default: block.settings.content_page | default: block.settings.content
 										assign download_btn = page_object.metafields.theme.download
 									-%}
 									{%- if download_btn != blank -%}
